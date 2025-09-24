@@ -15,11 +15,12 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-    ];
+    'name',
+    'email',
+    'password',
+    'role',
+    'sgguserid', // tambahkan ini
+];
 
     protected $hidden = [
         'password',

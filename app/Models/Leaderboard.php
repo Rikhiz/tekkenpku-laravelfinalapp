@@ -9,7 +9,7 @@ class Leaderboard extends Model
 {
     use HasFactory;
 
-    protected $table = 'leaderboard';
+    protected $table = 'leaderboards';
     protected $primaryKey = 'id';
 
     protected $fillable = [

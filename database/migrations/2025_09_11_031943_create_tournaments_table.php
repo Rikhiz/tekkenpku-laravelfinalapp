@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('desc')->nullable();
             $table->string('prizepool')->nullable();
             $table->integer('max_pemain')->nullable();
+            $table->integer('sggid')->nullable()->unique();
             $table->string('url_yt')->nullable();
             $table->string('url_startgg')->nullable(); // simpan original URL
-            $table->string('sggid')->nullable();       // simpan event id dari GraphQL
             $table->enum('status', ['Selesai', 'Pendaftaran Dibuka'])->default('Pendaftaran Dibuka');
             $table->timestamps();
         });

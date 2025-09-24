@@ -11,7 +11,7 @@ class AuthenticatedSessionController extends Controller
 {
     public function create()
     {
-        return Inertia::render('Auth/Login'); // kalau mau page login
+         return redirect('/'); // kalau mau page login
     }
 
     public function store(Request $request)

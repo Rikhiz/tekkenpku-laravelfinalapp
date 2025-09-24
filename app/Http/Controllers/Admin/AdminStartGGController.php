@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Tournament;
+use app\Models\User;
 use Illuminate\Support\Facades\Http;
 
 class AdminStartGGController extends Controller
@@ -78,5 +80,65 @@ class AdminStartGGController extends Controller
         }
 
         return $apiData;
+    }
+     public function syncAllPlayers()
+    {
+        $tournaments = Tournament::all();
+        $syncedCount = 0;
+
+        foreach ($tournaments as $tournament) {
+            $query = <<<'GRAPHQL'
+            query TournamentEntrants($slug: String!) {
+              tournament(slug: $slug) {
+                id
+                name
+                participants(query: { perPage: 100 }) {
+                  nodes {
+                    id
+                    gamerTag
+                    user {
+                      id
+                      name
+                    }
+                  }
+                }
+              }
+            }
+            GRAPHQL;
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('STARTGG_API_KEY'),
+            ])->post('https://api.start.gg/gql/alpha', [
+                'query' => $query,
+                'variables' => [
+                    'slug' => $tournament->slug, // pakai slug dari DB tournaments
+                ],
+            ]);
+
+            $data = $response->json();
+
+            if (!isset($data['data']['tournament'])) {
+                continue; // skip kalau data ga valid
+            }
+
+            $players = $data['data']['tournament']['participants']['nodes'] ?? [];
+
+            foreach ($players as $player) {
+                if (isset($player['user']['id'])) {
+                    User::updateOrCreate(
+                        ['sgguserid' => $player['user']['id']],
+                        [
+                            'name' => $player['gamerTag'] ?? $player['user']['name'] ?? 'Unknown',
+                            'role' => 'player',
+                            'email' => null,
+                            'password' => null,
+                        ]
+                    );
+                    $syncedCount++;
+                }
+            }
+        }
+
+        return back()->with('success', "Sinkronisasi selesai. Total {$syncedCount} player diproses.");
     }
 }
