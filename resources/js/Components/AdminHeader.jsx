@@ -8,12 +8,12 @@ const AdminHeader = ({ user }) => {
 
   const menuItems = [
     {
-      path: "/admin/dashboard",
+      path: route("dashboard"),
       label: "Dashboard",
       icon: BarChart3,
     },
     {
-      path: "/admin/tournaments",
+      path: route("tournaments.index"),
       label: "Tournaments",
       icon: Trophy,
     },

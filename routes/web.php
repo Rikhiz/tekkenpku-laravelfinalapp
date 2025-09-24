@@ -21,7 +21,14 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
+    //get
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/tournaments', [AdminTournamentsController::class, 'index'])->name('tournaments');
+
+    //post
+    
+
+    //resource
     Route::resource('gallery', AdminGalleriesController::class);
     Route::resource('users', AdminUsersController::class);
     Route::resource('tournaments', AdminTournamentsController::class);
