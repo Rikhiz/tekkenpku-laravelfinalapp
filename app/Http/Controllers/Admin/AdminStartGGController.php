@@ -4,54 +4,79 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Models\RelasiTour;
-use App\Models\Tournament;
-use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class AdminStartGGController extends Controller
 {
-    public function index()
+    /**
+     * Ambil data tournament dari StartGG API berdasarkan slug
+     */
+    public function getTournamentData(string $slug): ?array
     {
-        $relasi = RelasiTour::with(['user', 'tournament'])->latest()->get();
+        $apiKey = env('STARTGG_API_KEY');
+        $videogameId = env('tekken_id');
 
-        return Inertia::render('Admin/StartGG/Index', [
-            'relasi' => $relasi,
-            'tournaments' => Tournament::select('tourid', 'name')->get(),
-            'users' => User::select('id', 'name')->get(),
+        $query = <<<'GRAPHQL'
+        query GetTournamentData($tourneySlug: String!, $videogameId: [ID]!, $page: Int!, $perPage: Int!) {
+          allEvents: tournament(slug: $tourneySlug) {
+            id
+            name
+            events {
+              id
+              name
+              standings(query: { perPage: $perPage, page: $page }) {
+                nodes {
+                  entrant { id name }
+                }
+              }
+            }
+          }
+          tekkenEvents: tournament(slug: $tourneySlug) {
+            id
+            name
+            events(filter: { videogameId: $videogameId }) {
+              id
+              name
+            }
+          }
+        }
+    GRAPHQL;
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Content-Type'  => 'application/json',
+        ])->post('https://api.start.gg/gql/alpha', [
+            'query' => $query,
+            'variables' => [
+                'tourneySlug' => $slug,
+                'videogameId' => [(int) $videogameId],
+                'page' => 1,
+                'perPage' => 500,
+            ],
         ]);
-    }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'tourid' => 'required|exists:tournaments,tourid',
-            'placement' => 'required|integer',
-        ]);
+        if ($response->failed()) {
+            return null;
+        }
 
-        RelasiTour::create($request->all());
+        $result = $response->json();
 
-        return redirect()->back()->with('success', 'Relasi berhasil ditambahkan.');
-    }
+        if (empty($result['data']['allEvents'])) {
+            return null;
+        }
 
-    public function update(Request $request, RelasiTour $relasiTour)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'tourid' => 'required|exists:tournaments,tourid',
-            'placement' => 'required|integer',
-        ]);
+        $tourney = $result['data']['allEvents'];
 
-        $relasiTour->update($request->all());
+        $apiData = [
+            'name'   => $tourney['name'] ?? null,
+            'tourid' => $tourney['id'] ?? null,
+        ];
 
-        return redirect()->back()->with('success', 'Relasi berhasil diperbarui.');
-    }
+        if (!empty($tourney['events'][0])) {
+            $apiData['sggid']      = $tourney['events'][0]['id'];
+            $apiData['max_pemain'] = count($tourney['events'][0]['standings']['nodes'] ?? []);
+        }
 
-    public function destroy(RelasiTour $relasiTour)
-    {
-        $relasiTour->delete();
-
-        return redirect()->back()->with('success', 'Relasi berhasil dihapus.');
+        return $apiData;
     }
 }

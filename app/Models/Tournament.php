@@ -13,20 +13,24 @@ class Tournament extends Model
     protected $primaryKey = 'tourid';
 
     protected $fillable = [
-        'name',
-        'total',
-        'category',
-        'created_by',
-        'start_date',
-        'end_date',
-        'image_url',
-        'desc',
-        'prizepool',
-        'max_pemain',
-        'url_yt',
-        'url_startgg',
-        'status',
-    ];
+    'name',
+    'created_by',
+    'category',
+    'total',
+    'start_date',
+    'end_date',
+    'image_url',
+    'desc',
+    'prizepool',
+    'max_pemain',
+    'url_yt',
+    'url_startgg',
+    'status',
+    'tourid',
+    'event_id',
+    'sggid', // <- ini
+];
+
 
     public function creator()
     {

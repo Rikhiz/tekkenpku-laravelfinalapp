@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tournaments', function (Blueprint $table) {
-            $table->id('tourid');
+            $table->id('tourid'); // id internal database
             $table->string('name');
             $table->integer('total')->default(0);
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('prizepool')->nullable();
             $table->integer('max_pemain')->nullable();
             $table->string('url_yt')->nullable();
-            $table->string('url_startgg')->nullable();
+            $table->string('url_startgg')->nullable(); // simpan original URL
+            $table->string('sggid')->nullable();       // simpan event id dari GraphQL
             $table->enum('status', ['Selesai', 'Pendaftaran Dibuka'])->default('Pendaftaran Dibuka');
             $table->timestamps();
         });
