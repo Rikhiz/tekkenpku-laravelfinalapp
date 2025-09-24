@@ -1,7 +1,43 @@
 import React from "react";
-import { LogOut, User, ChevronRight, Settings } from "lucide-react";
+import { LogOut, User, ChevronRight, Settings, BarChart3, Trophy, Image, Users, Gamepad2 } from "lucide-react";
+import { Link, usePage } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 
-const AdminHeader = ({ user, currentPage, menuItems = [], onNavigate }) => {
+const AdminHeader = ({ user }) => {
+  const { url } = usePage();
+
+  const menuItems = [
+    {
+      path: "/admin/dashboard",
+      label: "Dashboard",
+      icon: BarChart3,
+    },
+    {
+      path: "/admin/tournaments",
+      label: "Tournaments",
+      icon: Trophy,
+    },
+    {
+      path: "/admin/gallery",
+      label: "Gallery",
+      icon: Image,
+    },
+    {
+      path: "/admin/users",
+      label: "Users",
+      icon: Users,
+    },
+    {
+      path: "/admin/startgg",
+      label: "StartGG",
+      icon: Gamepad2,
+    },
+  ];
+
+  const handleLogout = () => {
+    router.post("/logout");
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* User Info */}
@@ -22,11 +58,11 @@ const AdminHeader = ({ user, currentPage, menuItems = [], onNavigate }) => {
         <ul className="space-y-3">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentPage === item.path;
+            const isActive = url === item.path;
             return (
               <li key={item.path}>
-                <button
-                  onClick={() => onNavigate(item.path)}
+                <Link
+                  href={item.path}
                   className={`
                     w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors
                     ${
@@ -39,7 +75,7 @@ const AdminHeader = ({ user, currentPage, menuItems = [], onNavigate }) => {
                   <Icon size={20} />
                   <span className="font-medium">{item.label}</span>
                   {isActive && <ChevronRight size={16} className="ml-auto" />}
-                </button>
+                </Link>
               </li>
             );
           })}
@@ -54,7 +90,7 @@ const AdminHeader = ({ user, currentPage, menuItems = [], onNavigate }) => {
             <span>Settings</span>
           </button>
           <button
-            onClick={() => onNavigate("logout")}
+            onClick={handleLogout}
             className="w-full flex items-center gap-3 px-3 py-3 text-gray-300 hover:bg-red-600 hover:text-white rounded-lg transition-colors"
           >
             <LogOut size={20} />
