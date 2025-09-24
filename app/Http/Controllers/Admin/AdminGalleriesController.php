@@ -16,7 +16,8 @@ class AdminGalleriesController extends Controller
 
         return Inertia::render('Admin/Galleries/Index', [
             'galleries' => $galleries,
-            'tournaments' => Tournament::select('tourid', 'name')->get()
+            'tournaments' => Tournament::select('tourid', 'name')->get(),
+            'authUser' => auth()->user()
         ]);
     }
 

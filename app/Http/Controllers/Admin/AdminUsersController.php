@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Models\Tournament;
+use App\Models\RelasiTour;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 
 class AdminUsersController extends Controller
 {
@@ -22,14 +25,14 @@ class AdminUsersController extends Controller
         return Inertia::render('Admin/Users/Index', [
             'usersall' => $users,
             'users'    => User::select('id', 'name')->get(),
-            'authUser' => auth()->user(), // ✅ user login
+            'authUser' => auth()->user(),
         ]);
     }
 
     public function create()
     {
         return Inertia::render('Admin/Users/Create', [
-            'authUser' => auth()->user(), // ✅ user login
+            'authUser' => auth()->user(),
         ]);
     }
 
@@ -37,7 +40,7 @@ class AdminUsersController extends Controller
     {
         return Inertia::render('Admin/Users/Edit', [
             'user'     => $user,
-            'authUser' => auth()->user(), // ✅ user login
+            'authUser' => auth()->user(),
         ]);
     }
 
@@ -47,7 +50,7 @@ class AdminUsersController extends Controller
             'name'      => 'required|string|max:255',
             'email'     => 'nullable|email|unique:users,email',
             'sgguserid' => 'nullable|integer|unique:users,sgguserid',
-            'password'  => 'nullable|string|min:6',
+            'password'  => 'required|string|min:6',
             'role'      => 'required|in:admin,player',
         ]);
 
@@ -55,11 +58,11 @@ class AdminUsersController extends Controller
             'name'      => $request->name,
             'email'     => $request->email,
             'sgguserid' => $request->sgguserid,
-            'password'  => $request->password ? Hash::make($request->password) : null,
+            'password'  => Hash::make($request->password),
             'role'      => $request->role,
         ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'User created successfully');
+        return redirect()->route('users.index')->with('success', 'User created successfully');
     }
 
     public function update(Request $request, User $user)
@@ -72,20 +75,233 @@ class AdminUsersController extends Controller
             'role'      => 'required|in:admin,player',
         ]);
 
-        $user->update([
+        $updateData = [
             'name'      => $request->name,
             'email'     => $request->email,
             'sgguserid' => $request->sgguserid,
-            'password'  => $request->password ? Hash::make($request->password) : $user->password,
             'role'      => $request->role,
-        ]);
+        ];
 
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully');
+        if ($request->password) {
+            $updateData['password'] = Hash::make($request->password);
+        }
+
+        $user->update($updateData);
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully');
+        return redirect()->route('users.index')->with('success', 'User deleted successfully');
+    }
+
+    /**
+     * Sync all players from all tournaments using GraphQL
+     */
+    public function syncAllPlayers()
+    {
+        $tournaments = Tournament::whereNotNull('url_startgg')->get();
+        $syncedCount = 0;
+        $errorCount = 0;
+        $apiKey = env('STARTGG_API_KEY');
+
+        if (!$apiKey) {
+            return back()->with('error', 'Start.gg API key tidak ditemukan di environment.');
+        }
+
+        foreach ($tournaments as $tournament) {
+            try {
+                $query = <<<'GRAPHQL'
+                query TournamentEntrants($slug: String!) {
+                  tournament(slug: $slug) {
+                    id
+                    name
+                    participants(query: { perPage: 500 }) {
+                      nodes {
+                        id
+                        gamerTag
+                        user {
+                          id
+                          name
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+                GRAPHQL;
+
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Content-Type'  => 'application/json',
+                ])->timeout(30)->post('https://api.start.gg/gql/alpha', [
+                    'query' => $query,
+                    'variables' => [
+                        'slug' => $tournament->url_startgg,
+                    ],
+                ]);
+
+                if ($response->failed()) {
+                    $errorCount++;
+                    continue;
+                }
+
+                $data = $response->json();
+
+                if (!isset($data['data']['tournament'])) {
+                    $errorCount++;
+                    continue;
+                }
+
+                $participants = $data['data']['tournament']['participants']['nodes'] ?? [];
+
+                foreach ($participants as $participant) {
+                    if (isset($participant['user']['id'])) {
+                        // Cek apakah user dengan sgguserid ini sudah ada
+                        $existingUser = User::where('sgguserid', $participant['user']['id'])->first();
+                        
+                        if (!$existingUser) {
+                            User::create([
+                                'name' => $participant['gamerTag'] ?? $participant['user']['name'] ?? 'Unknown Player',
+                                'sgguserid' => $participant['user']['id'],
+                                'role' => 'player',
+                                'email' => null,
+                                'password' => null,
+                            ]);
+                            $syncedCount++;
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                $errorCount++;
+                continue;
+            }
+        }
+
+        $message = "Sinkronisasi selesai. {$syncedCount} player baru berhasil ditambahkan.";
+        if ($errorCount > 0) {
+            $message .= " {$errorCount} tournament gagal diproses.";
+        }
+
+        return back()->with('success', $message);
+    }
+
+    /**
+     * Sync participants for all tournaments
+     */
+    public function syncParticipants()
+    {
+        $tournaments = Tournament::whereNotNull('url_startgg')
+                                ->whereNotNull('sggid')
+                                ->get();
+        $syncedCount = 0;
+        $errorCount = 0;
+        $apiKey = env('STARTGG_API_KEY');
+
+        if (!$apiKey) {
+            return back()->with('error', 'Start.gg API key tidak ditemukan di environment.');
+        }
+
+        foreach ($tournaments as $tournament) {
+            try {
+                $query = <<<'GRAPHQL'
+                query EventStandings($eventId: ID!, $page: Int!, $perPage: Int!) {
+                  event(id: $eventId) {
+                    id
+                    name
+                    standings(query: {
+                      perPage: $perPage,
+                      page: $page
+                    }) {
+                      nodes {
+                        placement
+                        entrant {
+                          id
+                          name
+                          participants {
+                            id
+                            gamerTag
+                            user {
+                              id
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                GRAPHQL;
+
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Content-Type'  => 'application/json',
+                ])->timeout(30)->post('https://api.start.gg/gql/alpha', [
+                    'query' => $query,
+                    'variables' => [
+                        'eventId' => $tournament->sggid,
+                        'page' => 1,
+                        'perPage' => 500,
+                    ],
+                ]);
+
+                if ($response->failed()) {
+                    $errorCount++;
+                    continue;
+                }
+
+                $data = $response->json();
+
+                if (!isset($data['data']['event']['standings']['nodes'])) {
+                    $errorCount++;
+                    continue;
+                }
+
+                $standings = $data['data']['event']['standings']['nodes'];
+
+                foreach ($standings as $standing) {
+                    $placement = $standing['placement'];
+                    $participants = $standing['entrant']['participants'] ?? [];
+
+                    foreach ($participants as $participant) {
+                        if (isset($participant['user']['id'])) {
+                            // Cari user berdasarkan sgguserid
+                            $user = User::where('sgguserid', $participant['user']['id'])->first();
+
+                            if ($user) {
+                                // Cek apakah relasi sudah ada
+                                $existingRelation = RelasiTour::where('user_id', $user->id)
+                                                             ->where('tourid', $tournament->tourid)
+                                                             ->first();
+
+                                if (!$existingRelation) {
+                                    RelasiTour::create([
+                                        'user_id' => $user->id,
+                                        'tourid' => $tournament->tourid,
+                                        'placement' => $placement,
+                                    ]);
+                                    $syncedCount++;
+                                } else {
+                                    // Update placement jika sudah ada
+                                    $existingRelation->update(['placement' => $placement]);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                $errorCount++;
+                continue;
+            }
+        }
+
+        $message = "Sinkronisasi participants selesai. {$syncedCount} relasi berhasil ditambahkan/diupdate.";
+        if ($errorCount > 0) {
+            $message .= " {$errorCount} tournament gagal diproses.";
+        }
+
+        return back()->with('success', $message);
     }
 }
