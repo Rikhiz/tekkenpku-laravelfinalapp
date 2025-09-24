@@ -4,38 +4,46 @@ import { Link, usePage } from "@inertiajs/react";
 import { router } from "@inertiajs/react";
 
 const AdminHeader = ({ user }) => {
-  const { url } = usePage();
+  const { url, component } = usePage();
 
   const menuItems = [
     {
-      path: route("dashboard"),
+      path: "/admin/dashboard",
       label: "Dashboard",
       icon: BarChart3,
+      matchPaths: ["/admin/dashboard"],
     },
     {
-      path: route("tournaments.index"),
+      path: "/admin/tournaments",
       label: "Tournaments",
       icon: Trophy,
+      matchPaths: ["/admin/tournaments"],
     },
     {
       path: "/admin/gallery",
       label: "Gallery",
       icon: Image,
+      matchPaths: ["/admin/gallery"],
     },
     {
       path: "/admin/users",
       label: "Users",
       icon: Users,
-    },
-    {
-      path: "/admin/startgg",
-      label: "StartGG",
-      icon: Gamepad2,
+      matchPaths: ["/admin/users"],
     },
   ];
 
   const handleLogout = () => {
     router.post("/logout");
+  };
+
+  // Function to check if menu item is active
+  const isMenuActive = (item) => {
+    // Check exact URL match
+    if (url === item.path) return true;
+    
+    // Check if current URL starts with any of the match paths
+    return item.matchPaths.some(path => url.startsWith(path));
   };
 
   return (
@@ -58,7 +66,8 @@ const AdminHeader = ({ user }) => {
         <ul className="space-y-3">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = url === item.path;
+            const isActive = isMenuActive(item);
+            
             return (
               <li key={item.path}>
                 <Link

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminDashboard;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminGalleriesController;
 use App\Http\Controllers\Admin\AdminStartGGController;
@@ -21,14 +20,10 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
-    //get
+    // Dashboard route
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/tournaments', [AdminTournamentsController::class, 'index'])->name('tournaments');
-
-    //post
     
-
-    //resource
+    // Resource routes (ini sudah include GET /admin/tournaments)
     Route::resource('gallery', AdminGalleriesController::class);
     Route::resource('users', AdminUsersController::class);
     Route::resource('tournaments', AdminTournamentsController::class);

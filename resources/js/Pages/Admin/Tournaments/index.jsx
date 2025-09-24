@@ -481,7 +481,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         URL Start.gg
                                     </label>
                                     <input
-                                        type="url"
+                                        type="text"
                                         value={data.url_startgg}
                                         onChange={(e) => setData('url_startgg', e.target.value)}
                                         className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white"

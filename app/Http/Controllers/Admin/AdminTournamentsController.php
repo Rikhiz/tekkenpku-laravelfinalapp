@@ -38,7 +38,17 @@ class AdminTournamentsController extends Controller
             'status' => 'required|in:Selesai,Pendaftaran Dibuka',
         ]);
 
-        Tournament::create($request->all());
+        $data = $request->all();
+
+        // Jika ada url_startgg, ambil slug tournament
+        if (!empty($data['url_startgg'])) {
+            // regex untuk ambil slug
+            if (preg_match('/tournament\/([^\/]+)/', $data['url_startgg'], $matches)) {
+                $data['url_startgg'] = $matches[1];
+            }
+        }
+
+        Tournament::create($data);
 
         return redirect()->back()->with('success', 'Tournament berhasil ditambahkan.');
     }
