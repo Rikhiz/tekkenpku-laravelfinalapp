@@ -23,12 +23,15 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
-    // route
+    // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    
+    // Users
     Route::post('users/sync-all', [AdminUsersController::class, 'syncAllPlayers'])->name('users.syncAll');
     Route::post('users/sync-participants', [AdminUsersController::class, 'syncParticipants'])->name('users.syncParticipants');
-     Route::prefix('participants')->name('participants.')->group(function () {
-        
+    
+    // Participants
+    Route::prefix('participants')->name('participants.')->group(function () {
         // Main participants page - shows tournament list
         Route::get('/', [AdminParticipantController::class, 'index'])->name('index');
         
@@ -52,7 +55,12 @@ Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\Adm
         
         // Stats API
         Route::get('/stats', [AdminParticipantController::class, 'getTournamentStats'])->name('stats');
-     });
+    });
+    
+    // Leaderboard - Add recalculate route before resource
+    Route::post('leaderboard/recalculate', [AdminLeaderboardController::class, 'recalculate'])->name('leaderboard.recalculate');
+    
+    // Resource routes
     Route::resource('gallery', AdminGalleriesController::class);
     Route::resource('users', AdminUsersController::class);
     Route::resource('tournaments', AdminTournamentsController::class);
@@ -66,9 +74,5 @@ Route::fallback(function () {
         'status' => 404,
     ]);
 });
-
-
-
-
 
 require __DIR__ . '/auth.php';
