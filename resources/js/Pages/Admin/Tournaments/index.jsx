@@ -172,7 +172,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     <img
                                         src={tournament.image_url}
                                         alt={tournament.name}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover blur-xs"
                                     />
                                 ) : (
                                     <div className="flex items-center justify-center h-full">

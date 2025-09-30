@@ -17,7 +17,7 @@ return new class extends Migration
             $table->dateTime('end_date')->nullable();
             $table->string('image_url')->nullable();
             $table->string('desc')->nullable();
-            $table->string('prizepool')->nullable();
+            $table->integer('prizepool')->nullable();
             $table->integer('max_pemain')->nullable();
             $table->integer('sggid')->nullable()->unique();
             $table->string('url_yt')->nullable();

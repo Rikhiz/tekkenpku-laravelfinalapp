@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AdminStartGGController;
 use App\Http\Controllers\Admin\AdminTournamentsController;
 use App\Http\Controllers\Admin\AdminUsersController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Admin\AdminBanListController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Leaderboard;
 use Illuminate\Foundation\Application;
@@ -69,6 +70,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\Adm
     Route::resource('startgg', AdminStartGGController::class);
     Route::resource('leaderboard', AdminLeaderboardController::class);
     Route::resource('participant', AdminParticipantController::class);
+    Route::resource('banlist', AdminBanListController::class);
 });
 
 Route::fallback(function () {

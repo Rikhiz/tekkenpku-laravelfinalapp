@@ -32,34 +32,35 @@ const AdminHeader = ({ user }) => {
             matchPaths: ["/admin/tournaments"],
         },
         {
-            path: "/admin/gallery",
-            label: "Gallery",
-            icon: Image,
-            matchPaths: ["/admin/gallery"],
-        },
-        {
             path: "/admin/users",
             label: "Users",
             icon: Users,
             matchPaths: ["/admin/users"],
         },
-        {
-            path: "/admin/leaderboard",
-            label: "Leaderboard",
-            icon: Award, // bisa diganti icon lain sesuai preferensi
-            matchPaths: ["/admin/leaderboard"],
-        },
+     
         {
             path: "/admin/participant",
             label: "Participants",
             icon: UserCheck, // icon baru untuk participants
             matchPaths: ["/admin/participant"],
         },
+           {
+            path: "/admin/leaderboard",
+            label: "Leaderboard",
+            icon: Award, // bisa diganti icon lain sesuai preferensi
+            matchPaths: ["/admin/leaderboard"],
+        },
         {
             path: "/admin/banlist",
             label: "Ban List",
             icon: Shield, // misalnya pakai icon Shield
             matchPaths: ["/admin/banlist"],
+        },
+        {
+            path: "/admin/gallery",
+            label: "Gallery",
+            icon: Image,
+            matchPaths: ["/admin/gallery"],
         },
     ];
 
