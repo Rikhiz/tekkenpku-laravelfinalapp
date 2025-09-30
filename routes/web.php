@@ -7,19 +7,15 @@ use App\Http\Controllers\Admin\AdminParticipantController;
 use App\Http\Controllers\Admin\AdminStartGGController;
 use App\Http\Controllers\Admin\AdminTournamentsController;
 use App\Http\Controllers\Admin\AdminUsersController;
-use App\Http\Controllers\Admin\AdminBanListController;
+use App\Http\Controllers\ProfileController;
+use App\Models\Leaderboard;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+use App\Http\Controllers\WelcomeController;
+
+Route::get('/', [WelcomeController::class, 'index']);
 
 Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
     // Dashboard
@@ -60,7 +56,6 @@ Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\Adm
     Route::post('leaderboard/recalculate', [AdminLeaderboardController::class, 'recalculate'])->name('leaderboard.recalculate');
     
     // Resource routes
-    Route::resource('banlist', AdminBanListController::class);
     Route::resource('gallery', AdminGalleriesController::class);
     Route::resource('users', AdminUsersController::class);
     Route::resource('tournaments', AdminTournamentsController::class);
