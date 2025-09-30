@@ -14,8 +14,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\TournamentsController;
 
 Route::get('/', [WelcomeController::class, 'index']);
+Route::get('/tournaments', [TournamentsController::class, 'index'])->name('tournaments.index');
+Route::get('/tournaments/{id}', [TournamentsController::class, 'show'])->name('tournaments.show');
 
 Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
     // Dashboard

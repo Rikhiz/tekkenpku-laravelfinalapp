@@ -262,6 +262,8 @@ const Welcome = ({ videoTournaments = [], latestTournaments = [] }) => {
                         )}
                     </div>
 
+                    <br />
+
                     {/* Latest Tournament Section */}
                     <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6 lg:p-8 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-[#FF2146]/5 to-[#F2AF29]/5"></div>
