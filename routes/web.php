@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminParticipantController;
 use App\Http\Controllers\Admin\AdminStartGGController;
 use App\Http\Controllers\Admin\AdminTournamentsController;
 use App\Http\Controllers\Admin\AdminUsersController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Leaderboard;
 use Illuminate\Foundation\Application;
@@ -19,6 +20,9 @@ use App\Http\Controllers\TournamentsController;
 Route::get('/', [WelcomeController::class, 'index']);
 Route::get('/tournaments', [TournamentsController::class, 'index'])->name('tournaments.index');
 Route::get('/tournaments/{id}', [TournamentsController::class, 'show'])->name('tournaments.show');
+// web.php
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+
 
 Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
     // Dashboard

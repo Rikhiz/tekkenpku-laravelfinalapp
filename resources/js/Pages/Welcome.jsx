@@ -5,19 +5,27 @@ import { Trophy, Users, TrendingUp, Gamepad2 } from "lucide-react";
 import tkchar from "@/images/tkchar.png";
 import herobg from "@/images/hero-background.jpg";
 
-const Welcome = ({ videoTournaments = [], latestTournaments = [] }) => {
+const Welcome = ({
+    videoTournaments = [],
+    latestTournaments = [],
+    stats = [],
+}) => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
         setIsVisible(true);
     }, []);
 
-    const stats = [
-        { value: "10K+", label: "Active Players" },
-        { value: "500+", label: "Tournaments" },
-        { value: "$50K", label: "Prize Pool" },
-        { value: "24/7", label: "Support" },
-    ];
+    const formatStatValue = (value, label) => {
+        if (label === "Total Prize Pool") {
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0,
+            }).format(value);
+        }
+        return value.toLocaleString("id-ID");
+    };
 
     const getThumbnail = (video) => {
         if (!video) return "https://via.placeholder.com/480x360?text=No+Image";
@@ -83,7 +91,7 @@ const Welcome = ({ videoTournaments = [], latestTournaments = [] }) => {
                     <img
                         src={herobg}
                         alt="Hero Background"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover blur-sm"
                     />
                     <div className="absolute inset-0 bg-gradient-to-br from-[#0D0C0C]/80 via-[#0D0C0C]/60 to-[#0D0C0C]/90"></div>
                 </div>
@@ -139,7 +147,7 @@ const Welcome = ({ videoTournaments = [], latestTournaments = [] }) => {
                                         className="text-center lg:text-left space-y-1"
                                     >
                                         <div className="text-xl lg:text-2xl xl:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                                            {stat.value}
+                                            {formatStatValue(stat.value, stat.label)}
                                         </div>
                                         <div className="text-[#69747C] text-sm">
                                             {stat.label}

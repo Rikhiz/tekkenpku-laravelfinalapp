@@ -11,7 +11,27 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        // Get latest tournaments with video URLs (for video section)
+        // Ambil statistik dari database
+        $activePlayers = \App\Models\User::count(); // total player
+        $totalTournaments = Tournament::count();    // total turnamen
+        $totalPrizePool = Tournament::sum('prizepool'); // total hadiah
+
+        $stats = [
+            [
+                'value' => $activePlayers,
+                'label' => 'Active Players'
+            ],
+            [
+                'value' => $totalTournaments,
+                'label' => 'Tournaments'
+            ],
+            [
+                'value' => $totalPrizePool,
+                'label' => 'Total Prize Pool'
+            ],
+        ];
+
+        // yang sudah ada → video & latest tournament
         $videoTournaments = Tournament::whereNotNull('url_yt')
             ->where('url_yt', '!=', '')
             ->orderBy('created_at', 'desc')
@@ -30,17 +50,14 @@ class WelcomeController extends Controller
                 ];
             });
 
-        // Get latest tournaments (for tournament section)
         $latestTournaments = Tournament::orderBy('created_at', 'desc')
             ->take(4)
             ->get()
             ->map(function ($tournament) {
-                // Status mapping based on database enum
-                $statusColor = $tournament->status === 'Pendaftaran Dibuka' 
-                    ? 'bg-[#F2AF29]/20 text-[#F2AF29]' 
+                $statusColor = $tournament->status === 'Pendaftaran Dibuka'
+                    ? 'bg-[#F2AF29]/20 text-[#F2AF29]'
                     : 'bg-[#69747C]/20 text-[#69747C]';
 
-                // Count participants from relasitour
                 $participantCount = $tournament->relasi()->count();
                 $maxParticipants = $tournament->max_pemain ?? 0;
 
@@ -61,12 +78,9 @@ class WelcomeController extends Controller
             });
 
         return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
             'videoTournaments' => $videoTournaments,
             'latestTournaments' => $latestTournaments,
+            'stats' => $stats, // ⬅️ kirim stats ke React
         ]);
     }
 
@@ -81,7 +95,7 @@ class WelcomeController extends Controller
 
         // Handle different YouTube URL formats
         preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i', $url, $matches);
-        
+
         return $matches[1] ?? null;
     }
 
@@ -91,7 +105,7 @@ class WelcomeController extends Controller
     private function getYoutubeThumbnail($url)
     {
         $videoId = $this->extractYoutubeId($url);
-        
+
         if (!$videoId) {
             return null;
         }

@@ -32,7 +32,7 @@ const Footer = () => {
                     {/* Brand Section */}
                     <div className="space-y-4">
                         <h3 className="text-2xl font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                            Tournament Portal
+                            TPC HUB
                         </h3>
                         <p className="text-[#69747C] leading-relaxed">
                             The ultimate destination for competitive gaming. Join tournaments, connect with players, and dominate the leaderboards.

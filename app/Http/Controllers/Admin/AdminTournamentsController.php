@@ -21,7 +21,7 @@ class AdminTournamentsController extends Controller
 
         return Inertia::render('Admin/Tournaments/Index', [
             'tournaments' => $tournaments,
-            'users' => User::select('id', 'name')->get()
+            'users' => User::where('role', 'admin')->select('id', 'name')->get()
         ]);
     }
 
@@ -108,7 +108,7 @@ class AdminTournamentsController extends Controller
             'end_date'    => 'nullable|date',
             'image_url'   => 'nullable|string|max:255',
             'desc'        => 'nullable|string|max:255',
-            'prizepool'   => 'nullable|string|max:255',
+            'prizepool'   => 'nullable|integer',
             'max_pemain'  => 'nullable|integer',
             'url_yt'      => 'nullable|string|max:255',
             'url_startgg' => 'nullable|string|max:255',
@@ -116,16 +116,24 @@ class AdminTournamentsController extends Controller
             'sggid'       => 'nullable|integer',
         ]);
 
+        // ✅ Hanya update image_url kalau ada isinya
+        if ($request->filled('image_url')) {
+            // Cek apakah ini link Google Drive
+            if (str_contains($request->image_url, 'drive.google.com')) {
+                $validated['image_url'] = $this->handleGoogleDriveImage($request->image_url);
+            } else {
+                // Biarkan URL lama apa adanya (tidak diproses ulang)
+                $validated['image_url'] = $request->image_url;
+            }
+        } else {
+            unset($validated['image_url']); // kalau kosong, jangan overwrite
+        }
+
         // 🎯 ubah link StartGG -> slug
         if (!empty($validated['url_startgg'])) {
             if (preg_match('/tournament\/([^\/]+)/', $validated['url_startgg'], $matches)) {
                 $validated['url_startgg'] = $matches[1];
             }
-        }
-
-        // 🎯 ubah link Google Drive -> direct link
-        if (!empty($validated['image_url'])) {
-            $validated['image_url'] = $this->handleGoogleDriveImage($validated['image_url']);
         }
 
         // 🎯 kalau status berubah jadi "Selesai"
@@ -144,6 +152,7 @@ class AdminTournamentsController extends Controller
 
         return redirect()->back()->with('success', 'Tournament berhasil diperbarui.');
     }
+
 
     /**
      * Convert Google Drive link -> direct link
