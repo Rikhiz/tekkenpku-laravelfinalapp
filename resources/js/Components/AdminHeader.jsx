@@ -8,7 +8,7 @@ import {
     Trophy,
     Image,
     Users,
-    Gamepad2,
+    Shield,
     Award,
     UserCheck,
 } from "lucide-react";
@@ -54,6 +54,12 @@ const AdminHeader = ({ user }) => {
             label: "Participants",
             icon: UserCheck, // icon baru untuk participants
             matchPaths: ["/admin/participant"],
+        },
+        {
+            path: "/admin/banlist",
+            label: "Ban List",
+            icon: Shield, // misalnya pakai icon Shield
+            matchPaths: ["/admin/banlist"],
         },
     ];
 

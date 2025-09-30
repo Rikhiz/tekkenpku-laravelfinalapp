@@ -7,8 +7,7 @@ use App\Http\Controllers\Admin\AdminParticipantController;
 use App\Http\Controllers\Admin\AdminStartGGController;
 use App\Http\Controllers\Admin\AdminTournamentsController;
 use App\Http\Controllers\Admin\AdminUsersController;
-use App\Http\Controllers\ProfileController;
-use App\Models\Leaderboard;
+use App\Http\Controllers\Admin\AdminBanListController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -61,6 +60,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\Adm
     Route::post('leaderboard/recalculate', [AdminLeaderboardController::class, 'recalculate'])->name('leaderboard.recalculate');
     
     // Resource routes
+    Route::resource('banlist', AdminBanListController::class);
     Route::resource('gallery', AdminGalleriesController::class);
     Route::resource('users', AdminUsersController::class);
     Route::resource('tournaments', AdminTournamentsController::class);

@@ -591,13 +591,29 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         onChange={(e) =>
                                             setData("image_url", e.target.value)
                                         }
-                                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white"
+                                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg 
+        shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white"
                                         placeholder="https://example.com/image.jpg"
                                     />
                                     {errors.image_url && (
                                         <p className="mt-1 text-sm text-red-400">
                                             {errors.image_url}
                                         </p>
+                                    )}
+
+                                    {/* Preview Gambar */}
+                                    {data.image_url && (
+                                        <div className="mt-3">
+                                            <img
+                                                src={data.image_url}
+                                                alt="Preview"
+                                                className="w-full h-48 object-cover rounded-lg border border-gray-700"
+                                                onError={(e) =>
+                                                    (e.target.style.display =
+                                                        "none")
+                                                }
+                                            />
+                                        </div>
                                     )}
                                 </div>
 

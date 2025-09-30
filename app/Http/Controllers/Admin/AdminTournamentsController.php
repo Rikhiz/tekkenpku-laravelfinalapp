@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\AdminStartGGController;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Tournament;
@@ -49,7 +53,7 @@ class AdminTournamentsController extends Controller
 
         // 🎯 ubah link Google Drive -> direct link
         if (!empty($validated['image_url'])) {
-            $validated['image_url'] = $this->convertGoogleDriveLink($validated['image_url']);
+            $validated['image_url'] = $this->handleGoogleDriveImage($validated['image_url']);
         }
 
         // 🎯 kalau status = Selesai, ambil data StartGG
@@ -63,6 +67,34 @@ class AdminTournamentsController extends Controller
         Tournament::create($validated);
 
         return redirect()->back()->with('success', 'Tournament berhasil ditambahkan.');
+    }
+    private function handleGoogleDriveImage(string $url): ?string
+    {
+        // Ambil fileId dari Google Drive link
+        if (preg_match('/file\/d\/([^\/]+)/', $url, $matches)) {
+            $fileId = $matches[1];
+            $downloadUrl = "https://drive.google.com/uc?export=download&id=" . $fileId;
+
+            try {
+                // Download file dari Drive
+                $response = Http::get($downloadUrl);
+
+                if ($response->successful()) {
+                    $fileContent = $response->body();
+                    $filename = 'tournaments/' . Str::random(40) . '.jpg';
+
+                    // Upload ke storage default (misalnya S3 / local)
+                    Storage::disk('public')->put($filename, $fileContent);
+
+                    // Return URL publik
+                    return Storage::disk('public')->url($filename);
+                }
+            } catch (\Exception $e) {
+                \Log::error("Failed to download Google Drive image: " . $e->getMessage());
+            }
+        }
+
+        return null;
     }
 
     public function update(Request $request, Tournament $tournament)
@@ -93,14 +125,15 @@ class AdminTournamentsController extends Controller
 
         // 🎯 ubah link Google Drive -> direct link
         if (!empty($validated['image_url'])) {
-            $validated['image_url'] = $this->convertGoogleDriveLink($validated['image_url']);
+            $validated['image_url'] = $this->handleGoogleDriveImage($validated['image_url']);
         }
 
         // 🎯 kalau status berubah jadi "Selesai"
-        if ($tournament->status !== 'Selesai' 
-            && $validated['status'] === 'Selesai' 
-            && !empty($validated['url_startgg'])) 
-        {
+        if (
+            $tournament->status !== 'Selesai'
+            && $validated['status'] === 'Selesai'
+            && !empty($validated['url_startgg'])
+        ) {
             $apiData = app(AdminStartGGController::class)->getTournamentData($validated['url_startgg']);
             if ($apiData) {
                 $validated = array_merge($validated, $apiData);
