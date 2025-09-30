@@ -96,8 +96,10 @@ const Welcome = () => {
                         <div className={`w-full lg:w-3/5 xl:w-2/3 space-y-6 lg:space-y-8 text-center lg:text-left transform transition-all duration-1000 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'}`}>
                             <div className="space-y-4 lg:space-y-6">
                                 <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight text-white">
+                                    Welcome to
+                                    <br />
                                     <TypingEffect
-                                        text={`Welcome to <span class="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">Tournament Portal</span>`}
+                                        text={` <span class="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">Tekken Pekanbaru Comunity</span>`}
                                         speed={80}
                                     />
                                 </h1>
