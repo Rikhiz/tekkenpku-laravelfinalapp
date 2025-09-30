@@ -5,10 +5,30 @@ const Footer = () => {
     const [hoveredSocial, setHoveredSocial] = useState(null);
 
     const socials = [
-        { label: "WhatsApp", icon: "W", tooltip: "Go to WhatsApp", link: "https://wa.me/123456789" },
-        { label: "Discord", icon: "D", tooltip: "Go to Discord", link: "https://discord.gg/" },
-        { label: "Instagram", icon: "I", tooltip: "Go to Instagram", link: "https://instagram.com/" },
-        { label: "YouTube", icon: "Y", tooltip: "Go to YouTube", link: "https://youtube.com/" },
+        {
+            label: "WhatsApp",
+            icon: "W",
+            tooltip: "Go to WhatsApp",
+            link: "https://wa.me/123456789",
+        },
+        {
+            label: "Discord",
+            icon: "D",
+            tooltip: "Go to Discord",
+            link: "https://discord.gg/",
+        },
+        {
+            label: "Instagram",
+            icon: "I",
+            tooltip: "Go to Instagram",
+            link: "https://instagram.com/",
+        },
+        {
+            label: "YouTube",
+            icon: "Y",
+            tooltip: "Go to YouTube",
+            link: "https://youtube.com/",
+        },
     ];
 
     const gradients = [
@@ -30,24 +50,42 @@ const Footer = () => {
                 {/* Main Footer Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                     {/* Brand Section */}
-                    <div className="space-y-4">
-                        <h3 className="text-2xl font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                    <div className="space-y-5 lg:col-span-2">
+                        <h3 className="text-3xl font-extrabold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
                             TPC HUB
                         </h3>
-                        <p className="text-[#69747C] leading-relaxed">
-                            The ultimate destination for competitive gaming. Join tournaments, connect with players, and dominate the leaderboards.
+                        <p className="text-[#9CA3AF] leading-relaxed max-w-2xl">
+                            The ultimate destination for competitive gaming.
+                            Join tournaments, connect with players, and dominate
+                            the leaderboards. Whether you’re a casual fighter or
+                            a pro,
+                            <span className="font-semibold text-[#F2AF29]">
+                                {" "}
+                                TPC HUB{" "}
+                            </span>
+                            is your battleground to grow, compete, and shine.
                         </p>
 
                         {/* Social Buttons */}
-                        <div className="flex space-x-4">
+                        <div className="flex space-x-5 pt-2">
                             {socials.map((social, idx) => (
-                                <div key={social.label} className="relative group">
+                                <div
+                                    key={social.label}
+                                    className="relative group"
+                                >
                                     <button
                                         type="button"
-                                        onClick={() => window.open(social.link, "_blank")}
-                                        className={`w-10 h-10 bg-gradient-to-r ${gradients[idx]} rounded-full flex items-center justify-center hover:scale-110 transition-transform cursor-pointer relative`}
-                                        onMouseEnter={() => setHoveredSocial(idx)}
-                                        onMouseLeave={() => setHoveredSocial(null)}
+                                        onClick={() =>
+                                            window.open(social.link, "_blank")
+                                        }
+                                        className={`w-12 h-12 bg-gradient-to-r ${gradients[idx]} rounded-full flex items-center justify-center 
+                               hover:scale-110 transition-transform cursor-pointer relative`}
+                                        onMouseEnter={() =>
+                                            setHoveredSocial(idx)
+                                        }
+                                        onMouseLeave={() =>
+                                            setHoveredSocial(null)
+                                        }
                                     >
                                         <span className="text-[#F2F2F2] text-sm font-bold">
                                             {social.icon}
@@ -64,7 +102,6 @@ const Footer = () => {
                                     >
                                         <div className="bg-[#0D0C0C] text-[#F2F2F2] text-xs font-medium px-3 py-2 rounded-lg shadow-lg border border-[#69747C]/30 whitespace-nowrap">
                                             {social.tooltip}
-                                            {/* Arrow */}
                                             <div className="absolute top-full left-1/2 transform -translate-x-1/2">
                                                 <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#0D0C0C]"></div>
                                             </div>
@@ -74,73 +111,33 @@ const Footer = () => {
                             ))}
                         </div>
                     </div>
-
-                    {/* Quick Links */}
-                    <div className="space-y-4">
-                        <h4 className="text-[#F2F2F2] font-bold text-lg">Quick Links</h4>
-                        <div className="space-y-2">
-                            {["Home", "Tournaments", "Leaderboard", "Gallery", "About"].map((link) => (
-                                <a
-                                    key={link}
-                                    href="#"
-                                    className="block text-[#69747C] hover:text-[#FF2146] transition-colors hover:translate-x-1 transform duration-200"
-                                >
-                                    {link}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Support */}
-                    <div className="space-y-4">
-                        <h4 className="text-[#F2F2F2] font-bold text-lg">Support</h4>
-                        <div className="space-y-2">
-                            {["Help Center", "Contact Us", "Rules & Guidelines", "FAQ", "Report Issue"].map((link) => (
-                                <a
-                                    key={link}
-                                    href="#"
-                                    className="block text-[#69747C] hover:text-[#FF2146] transition-colors hover:translate-x-1 transform duration-200"
-                                >
-                                    {link}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Newsletter */}
-                    <div className="space-y-4">
-                        <h4 className="text-[#F2F2F2] font-bold text-lg">Stay Updated</h4>
-                        <p className="text-[#69747C] text-sm">
-                            Get the latest tournament news and updates
-                        </p>
-                        <div className="space-y-3">
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                className="w-full px-4 py-3 bg-[#0D0C0C]/50 border border-[#69747C]/50 rounded-lg text-[#F2F2F2] placeholder-[#69747C] focus:border-[#FF2146] focus:outline-none transition-colors"
-                            />
-                            <button className="w-full px-4 py-3 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
-                                Subscribe
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Bottom Bar */}
                 <div className="border-t border-[#69747C]/30 pt-8">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div className="text-[#69747C] text-sm">
-                            © 2024 Tournament Portal. All rights reserved.
+                            © 2024 Tekken Pekanbaru Community. All rights
+                            reserved.
                         </div>
                         <div className="flex space-x-6 text-sm">
-                            <a href="#" className="text-[#69747C] hover:text-[#FF2146] transition-colors">
-                                Privacy Policy
+                            <a
+                                href="#"
+                                className="text-[#69747C] hover:text-[#FF2146] transition-colors"
+                            >
+                                RikaBogor
                             </a>
-                            <a href="#" className="text-[#69747C] hover:text-[#FF2146] transition-colors">
-                                Terms of Service
+                            <a
+                                href="#"
+                                className="text-[#69747C] hover:text-[#FF2146] transition-colors"
+                            >
+                                Salam
                             </a>
-                            <a href="#" className="text-[#69747C] hover:text-[#FF2146] transition-colors">
-                                Cookie Policy
+                            <a
+                                href="#"
+                                className="text-[#69747C] hover:text-[#FF2146] transition-colors"
+                            >
+                                NakiRika
                             </a>
                         </div>
                     </div>

@@ -9,8 +9,8 @@ use App\Http\Controllers\Admin\AdminTournamentsController;
 use App\Http\Controllers\Admin\AdminUsersController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AdminBanListController;
-use App\Http\Controllers\ProfileController;
-use App\Models\Leaderboard;
+use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\GalleryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -71,7 +71,11 @@ Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\Adm
     Route::resource('leaderboard', AdminLeaderboardController::class);
     Route::resource('participant', AdminParticipantController::class);
     Route::resource('banlist', AdminBanListController::class);
+    Route::resource('leaderboard',LeaderboardController::class);
 });
+
+Route::get('/leaderboards', [LeaderboardController::class, 'index'])->name('leaderboards.index');
+Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
 
 Route::fallback(function () {
     return Inertia::render('Errors/NotFound', [

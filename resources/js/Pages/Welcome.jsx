@@ -140,14 +140,17 @@ const Welcome = ({
                                 </button>
                             </div>
 
-                            <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 pt-6 lg:pt-8">
+                            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 pt-6 lg:pt-8">
                                 {stats.map((stat, index) => (
                                     <div
                                         key={index}
                                         className="text-center lg:text-left space-y-1"
                                     >
-                                        <div className="text-xl lg:text-2xl xl:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                                            {formatStatValue(stat.value, stat.label)}
+                                        <div className="text-xl lg:text-2xl xl:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent break-words whitespace-nowrap">
+                                            {formatStatValue(
+                                                stat.value,
+                                                stat.label
+                                            )}
                                         </div>
                                         <div className="text-[#69747C] text-sm">
                                             {stat.label}
