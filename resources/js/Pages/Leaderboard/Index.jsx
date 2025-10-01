@@ -3,7 +3,7 @@ import AppLayout from "@/Layouts/AppLayout";
 import { router } from "@inertiajs/react";
 import { Trophy, Medal, Award, ChevronLeft, ChevronRight } from "lucide-react";
 
-const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
+const LeaderboardIndex = ({ leaderboards, maxPoints,mostover8,mostover4,tourtotal }) => {
     const [hoveredPlayer, setHoveredPlayer] = useState(null);
     const [expandedPlayer, setExpandedPlayer] = useState(null);
 
@@ -51,7 +51,7 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
                 </div>
 
                 {/* Stats Footer */}
-                <div className="max-w-7xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="max-w-7xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center">
                         <div className="text-4xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
                             {leaderboards.total}
@@ -60,15 +60,21 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
                     </div>
                     <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center">
                         <div className="text-4xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                            {maxPoints}
+                            {mostover8.user?.name}
                         </div>
-                        <div className="text-[#69747C] font-semibold mt-2">Highest Score</div>
+                        <div className="text-[#69747C] font-semibold mt-2">Most Top 8</div>
                     </div>
                     <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center">
                         <div className="text-4xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                            {leaderboards.last_page}
+                            {mostover4.user?.name}
                         </div>
-                        <div className="text-[#69747C] font-semibold mt-2">Total Pages</div>
+                        <div className="text-[#69747C] font-semibold mt-2">Most Top 4</div>
+                    </div>
+                    <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center">
+                        <div className="text-4xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                            {tourtotal}
+                        </div>
+                        <div className="text-[#69747C] font-semibold mt-2">Total Tournaments</div>
                     </div>
                 </div>
                 <br />

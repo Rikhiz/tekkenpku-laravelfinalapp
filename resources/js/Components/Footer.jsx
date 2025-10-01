@@ -1,5 +1,6 @@
 // resources/js/Components/Footer.jsx
 import React, { useState } from "react";
+import { FaWhatsapp, FaDiscord, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
     const [hoveredSocial, setHoveredSocial] = useState(null);
@@ -7,26 +8,26 @@ const Footer = () => {
     const socials = [
         {
             label: "WhatsApp",
-            icon: "W",
-            tooltip: "Go to WhatsApp",
-            link: "https://wa.me/123456789",
+            icon: <FaWhatsapp size={22} />,
+            tooltip: "WhatsApp",
+            link: "https://chat.whatsapp.com/Crz5d5RsOBTHSSl7fHvaC7",
         },
         {
             label: "Discord",
-            icon: "D",
-            tooltip: "Go to Discord",
+            icon: <FaDiscord size={22} />,
+            tooltip: "Discord",
             link: "https://discord.gg/QzFd5fTv",
         },
         {
             label: "Instagram",
-            icon: "I",
-            tooltip: "Go to Instagram",
+            icon: <FaInstagram size={22} />,
+            tooltip: "Instagram",
             link: "https://www.instagram.com/tekkenpku",
         },
         {
             label: "YouTube",
-            icon: "Y",
-            tooltip: "Go to YouTube",
+            icon: <FaYoutube size={22} />,
+            tooltip: "YouTube",
             link: "https://www.youtube.com/@tekkenpekanbarucommunity",
         },
     ];
@@ -55,8 +56,8 @@ const Footer = () => {
                             TPC HUB
                         </h3>
                         <p className="text-[#9CA3AF] leading-relaxed max-w-2xl">
-                            Routine offline meetup, event and tournament.
-                                    Play, Grow and Connect with us here
+                            Routine offline meetup, event and tournament. Play,
+                            Grow and Connect with us here
                             <span className="font-semibold text-[#F2AF29]">
                                 {" "}
                                 TPC HUB{" "}

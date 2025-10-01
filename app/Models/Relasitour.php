@@ -18,6 +18,15 @@ class RelasiTour extends Model
         'placement',
     ];
 
+    public function scopeMostOverPlacement($query, $limit = 1 , $f)
+{
+    return $query->selectRaw('user_id, COUNT(*) as total_over')
+        ->where('placement', '<', $f)
+        ->groupBy('user_id')
+        ->orderByDesc('total_over')
+        ->with('user')
+        ->limit($limit);
+}
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

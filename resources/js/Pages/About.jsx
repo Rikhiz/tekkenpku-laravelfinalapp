@@ -4,6 +4,7 @@ import { Target, Eye, Gamepad2, Users, Instagram } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import herobg from "@/images/hero-background.jpg";
 
+
 const SectionTitle = ({ icon: Icon, color, children }) => (
     <div className="flex items-center gap-3 mb-6">
         <Icon className={color} size={34} />
@@ -19,10 +20,10 @@ const SectionTitle = ({ icon: Icon, color, children }) => (
 const About = ({ community }) => {
     const { scrollY } = useScroll();
 
-    // Parallax transform untuk teks
-    const yHeading = useTransform(scrollY, [0, 300], [0, -80]); // naik pas scroll
-    const yTagline = useTransform(scrollY, [0, 300], [0, -40]); // lebih halus
-    const opacity = useTransform(scrollY, [0, 200], [1, 0.4]); // makin pudar
+    // Parallax efek teks
+    const yHeading = useTransform(scrollY, [0, 300], [0, -80]);
+    const yTagline = useTransform(scrollY, [0, 300], [0, -40]);
+    const opacity = useTransform(scrollY, [0, 200], [1, 0.4]);
 
     return (
         <AppLayout>
@@ -54,13 +55,13 @@ const About = ({ community }) => {
                         style={{ y: yTagline, opacity }}
                     >
                         {community.tagline ||
-                            "Pekanbaru based Tekken community. Routine offline meetup, events and tournaments."}
+                            "Komunitas Tekken berbasis di Pekanbaru. Rutin mengadakan gathering offline, event, dan turnamen."}
                     </motion.p>
                 </div>
 
                 {/* Content */}
                 <div className="relative max-w-5xl mx-auto px-6 py-16 grid gap-12 md:grid-cols-2">
-                    {/* Mission */}
+                    {/* Misi */}
                     {community.mission && (
                         <motion.div
                             initial={{ opacity: 0, y: 40 }}
@@ -70,7 +71,7 @@ const About = ({ community }) => {
                             className="p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-[#FF2146]/40 transition"
                         >
                             <SectionTitle icon={Target} color="text-[#FF2146]">
-                                Mission
+                                Misi
                             </SectionTitle>
                             <p className="text-gray-300 leading-relaxed">
                                 {community.mission}
@@ -78,7 +79,7 @@ const About = ({ community }) => {
                         </motion.div>
                     )}
 
-                    {/* Vision */}
+                    {/* Visi */}
                     {community.vision && (
                         <motion.div
                             initial={{ opacity: 0, y: 40 }}
@@ -88,7 +89,7 @@ const About = ({ community }) => {
                             className="p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-[#F2AF29]/40 transition"
                         >
                             <SectionTitle icon={Eye} color="text-[#F2AF29]">
-                                Vision
+                                Visi
                             </SectionTitle>
                             <p className="text-gray-300 leading-relaxed">
                                 {community.vision}
@@ -96,7 +97,7 @@ const About = ({ community }) => {
                         </motion.div>
                     )}
 
-                    {/* What We Do */}
+                    {/* Kegiatan Kami */}
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -105,28 +106,17 @@ const About = ({ community }) => {
                         className="p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-[#FF2146]/40 transition md:col-span-2"
                     >
                         <SectionTitle icon={Gamepad2} color="text-[#FF2146]">
-                            What We Do
+                            Kegiatan Kami
                         </SectionTitle>
                         <ul className="list-disc list-inside text-gray-300 leading-relaxed space-y-2">
-                            <li>
-                                Organize monthly Tekken tournaments (online &
-                                offline)
-                            </li>
-                            <li>
-                                Community meetups, trainings, and casual
-                                sessions
-                            </li>
-                            <li>
-                                Collaboration with local gaming hubs & sponsors
-                            </li>
-                            <li>
-                                Streaming and content sharing for matches &
-                                highlights
-                            </li>
+                            <li>Mengadakan turnamen Tekken bulanan (online & offline)</li>
+                            <li>Meetup komunitas, latihan bareng, dan sesi santai</li>
+                            <li>Kolaborasi dengan gaming hub & sponsor lokal</li>
+                            <li>Streaming serta berbagi konten pertandingan & highlight</li>
                         </ul>
                     </motion.div>
 
-                    {/* Join Us */}
+                    {/* Bergabunglah Bersama Kami */}
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -135,12 +125,12 @@ const About = ({ community }) => {
                         className="p-8 bg-gradient-to-r from-[#FF2146]/20 to-[#F2AF29]/20 backdrop-blur-md rounded-2xl border border-white/10 md:col-span-2"
                     >
                         <SectionTitle icon={Users} color="text-[#FF2146]">
-                            Join Us
+                            Bergabunglah Bersama Kami
                         </SectionTitle>
                         <p className="text-gray-300 leading-relaxed">
-                            We welcome Tekken players of all levels — beginner
-                            to tournament-ready. Stay updated by following us on
-                            Instagram:
+                            Kami menyambut semua pemain Tekken dari berbagai level — 
+                            mulai dari pemula hingga yang siap berlaga di turnamen. 
+                            Tetap terhubung dengan mengikuti kami di Instagram:
                         </p>
                         <a
                             href="https://www.instagram.com/tekkenpku"

@@ -40,7 +40,7 @@ const Welcome = ({
     };
 
     const getThumbnail = (video) => {
-        if (!video) return "https://via.placeholder.com/480x360?text=No+Image";
+        if (!video) return "https://placehold.co/480x360?text=No+Image";
 
         const getYoutubeId = (url) => {
             if (!url) return null;
@@ -56,10 +56,7 @@ const Welcome = ({
             return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
         }
 
-        return (
-            video.image_url ||
-            "https://via.placeholder.com/480x360?text=No+Image"
-        );
+        return video.image_url || "https://placehold.co/480x360?text=No+Image";
     };
 
     const formatCurrency = (amount) => {
@@ -108,7 +105,7 @@ const Welcome = ({
                         src={herobg}
                         alt="Hero Background"
                         loading="lazy"
-                        className="w-full h-full object-cover blur-sm"
+                        className="relative w-full h-full object-cover "
                     />
                     <div className="absolute inset-0 bg-gradient-to-br from-[#0D0C0C]/80 via-[#0D0C0C]/60 to-[#0D0C0C]/90"></div>
                 </div>
@@ -215,7 +212,10 @@ const Welcome = ({
                                     className="text-center space-y-1 bg-gradient-to-br from-[#0D0C0C]/50 to-[#69747C]/10 backdrop-blur-sm border border-[#69747C]/20 rounded-lg p-3"
                                 >
                                     <div className="text-lg sm:text-xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent break-words">
-                                        {formatStatValue(stat.value, stat.label)}
+                                        {formatStatValue(
+                                            stat.value,
+                                            stat.label
+                                        )}
                                     </div>
                                     <div className="text-[#69747C] text-xs leading-tight">
                                         {stat.label}
@@ -252,7 +252,9 @@ const Welcome = ({
                                             >
                                                 <div className="relative aspect-video overflow-hidden rounded-t-xl md:rounded-t-2xl">
                                                     <img
-                                                        src={getThumbnail(video)}
+                                                        src={getThumbnail(
+                                                            video
+                                                        )}
                                                         alt={video.name}
                                                         loading="lazy"
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -370,7 +372,8 @@ const Welcome = ({
                                                                         )}
                                                                     </div>
                                                                     <div className="text-[#69747C] text-xs">
-                                                                        Prize Pool
+                                                                        Prize
+                                                                        Pool
                                                                     </div>
                                                                 </div>
                                                                 <div className="text-center bg-[#0D0C0C]/50 rounded-lg p-2 md:p-3">
