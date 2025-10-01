@@ -3,7 +3,6 @@ import AppLayout from "@/Layouts/AppLayout";
 import TypingEffect from "@/Components/TypingEffect";
 import { Trophy, Gamepad2 } from "lucide-react";
 import { useInView } from "react-intersection-observer";
-import tkchar from "@/images/tkchar.png";
 import herobg from "@/images/hero-background.jpg";
 import { Link } from "@inertiajs/react";
 
@@ -121,12 +120,16 @@ const Welcome = ({
                     <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
                         {/* Text Content */}
                         <div
-                            className={`w-full lg:w-3/5 xl:w-2/3 space-y-4 md:space-y-6 lg:space-y-8 text-center lg:text-left transform transition-all duration-1000 ${
+                            className={`w-full lg:w-4/5 xl:w-2/3 space-y-4 md:space-y-6 lg:space-y-8 text-center lg:text-left transform transition-all duration-1000 ${
                                 isVisible
                                     ? "translate-x-0 opacity-100"
                                     : "-translate-x-10 opacity-0"
                             }`}
                         >
+                            <br />
+                            <br />
+                            <br />
+                            <br />
                             <div className="space-y-3 md:space-y-4 lg:space-y-6">
                                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight text-white px-2">
                                     Selamat Datang di
@@ -192,17 +195,7 @@ const Welcome = ({
                                     ? "translate-x-0 opacity-100"
                                     : "translate-x-10 opacity-0"
                             }`}
-                        >
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#FF2146]/20 to-[#F2AF29]/20 rounded-full blur-3xl transform scale-110"></div>
-                                <img
-                                    src={tkchar}
-                                    alt="Tekken Character"
-                                    loading="lazy"
-                                    className="relative w-40 sm:w-48 md:w-56 lg:w-72 xl:w-80 max-w-full h-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
-                                />
-                            </div>
-                        </div>
+                        ></div>
 
                         {/* Stats - Mobile */}
                         <div className="md:hidden grid grid-cols-2 gap-3 w-full pt-2 px-2">

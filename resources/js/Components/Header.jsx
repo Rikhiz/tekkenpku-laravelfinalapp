@@ -21,7 +21,6 @@ const Header = () => {
         router.visit(href);
     };
 
-    // Effect untuk mendeteksi scroll dengan debounce dan hysteresis
     useEffect(() => {
         let ticking = false;
         let lastScrollY = 0;
@@ -31,26 +30,20 @@ const Header = () => {
 
             if (!ticking) {
                 window.requestAnimationFrame(() => {
-                    // Menggunakan threshold yang lebih tinggi dan hysteresis
-                    // Untuk mencegah toggle berulang saat scroll di area threshold
-                    if (lastScrollY > 100) {
+                    if (lastScrollY > 50) {
                         setIsScrolled(true);
-                    } else if (lastScrollY < 80) {
+                    } else if (lastScrollY < 30) {
                         setIsScrolled(false);
                     }
-                    // Area 80-100 adalah "dead zone" untuk mencegah flickering
-
                     ticking = false;
                 });
-
                 ticking = true;
             }
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
 
-        // Set initial state
-        if (window.scrollY > 100) {
+        if (window.scrollY > 50) {
             setIsScrolled(true);
         }
 
@@ -63,11 +56,11 @@ const Header = () => {
         <>
             <nav
                 className={`
-          sticky top-0 z-50 transition-all duration-500 ease-in-out
+          fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out
           ${
               isScrolled
                   ? "bg-[#0D0C0C]/95 backdrop-blur-md shadow-lg border-b border-[#FF2146]/20"
-                  : "bg-gradient-to-b from-[#0D0C0C] to-[#0D0C0C]/95"
+                  : "bg-transparent"
           }
         `}
             >
@@ -77,7 +70,6 @@ const Header = () => {
             ${isScrolled ? "px-6 py-2" : "p-4"}
           `}
                 >
-                    {/* Logo */}
                     <TooltipWrapper text="Go to Home" position="bottom">
                         <button
                             onClick={() => handleNavigation("/")}
@@ -88,13 +80,12 @@ const Header = () => {
                                 alt="Logo"
                                 className={`
         transition-all duration-500 hover:brightness-110
-        ${isScrolled ? "size-14" : "size-20"}
+        ${isScrolled ? "size-14" : "size-24"}
       `}
                             />
                         </button>
                     </TooltipWrapper>
 
-                    {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-8">
                         {navLinks.map((link) => (
                             <TooltipWrapper
@@ -118,7 +109,6 @@ const Header = () => {
                         ))}
                     </div>
 
-                    {/* Desktop Sign In */}
                     <TooltipWrapper text="ADMIN ONLY" position="bottom">
                         <button
                             onClick={() => setShowLoginModal(true)}
@@ -134,7 +124,6 @@ const Header = () => {
                         </button>
                     </TooltipWrapper>
 
-                    {/* Mobile Menu Button */}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className={`
@@ -146,7 +135,6 @@ const Header = () => {
                     </button>
                 </div>
 
-                {/* Mobile Menu */}
                 {isMobileMenuOpen && (
                     <div className="md:hidden bg-[#0D0C0C]/98 backdrop-blur-md border-t border-[#FF2146]/20">
                         <div className="px-4 py-4 space-y-1">
@@ -186,7 +174,6 @@ const Header = () => {
                 )}
             </nav>
 
-            {/* Reusable Login Modal */}
             <LoginModal
                 show={showLoginModal}
                 onClose={() => setShowLoginModal(false)}

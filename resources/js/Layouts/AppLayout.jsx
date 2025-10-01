@@ -34,6 +34,7 @@ const AppLayout = ({ children }) => {
             ) : (
                 <div className="min-h-screen bg-gray-900 flex flex-col">
                     <Header />
+                    
 
                     <main className="flex-1">{children}</main>
 

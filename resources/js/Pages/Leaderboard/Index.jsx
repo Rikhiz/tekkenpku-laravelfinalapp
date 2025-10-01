@@ -39,6 +39,7 @@ const LeaderboardIndex = ({ leaderboards, maxPoints,mostover8,mostover4,tourtota
         <AppLayout>
             <div className="min-h-screen bg-gradient-to-br from-[#0D0C0C] via-[#0D0C0C] to-[#69747C]/20 py-12 px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
+                <br /><br /><br /><br /> <br />
                 <div className="max-w-7xl mx-auto mb-12">
                     <div className="text-center space-y-4">
                         <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
