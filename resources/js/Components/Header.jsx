@@ -3,7 +3,7 @@ import { Menu } from "lucide-react";
 import logo from "../images/test.png";
 import { router } from "@inertiajs/react";
 import LoginModal from "@/Components/LoginModal";
-import TooltipWrapper from "@/Components/TooltipWrapper"; // ⬅️ sesuaikan path
+import TooltipWrapper from "@/Components/TooltipWrapper";
 
 const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -21,16 +21,39 @@ const Header = () => {
         router.visit(href);
     };
 
-    // Effect untuk mendeteksi scroll
+    // Effect untuk mendeteksi scroll dengan debounce dan hysteresis
     useEffect(() => {
+        let ticking = false;
+        let lastScrollY = 0;
+
         const handleScroll = () => {
-            const scrollPosition = window.scrollY;
-            setIsScrolled(scrollPosition > 50); // Threshold 50px
+            lastScrollY = window.scrollY;
+
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    // Menggunakan threshold yang lebih tinggi dan hysteresis
+                    // Untuk mencegah toggle berulang saat scroll di area threshold
+                    if (lastScrollY > 100) {
+                        setIsScrolled(true);
+                    } else if (lastScrollY < 80) {
+                        setIsScrolled(false);
+                    }
+                    // Area 80-100 adalah "dead zone" untuk mencegah flickering
+                    
+                    ticking = false;
+                });
+
+                ticking = true;
+            }
         };
 
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", handleScroll, { passive: true });
 
-        // Cleanup listener saat component unmount
+        // Set initial state
+        if (window.scrollY > 100) {
+            setIsScrolled(true);
+        }
+
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
@@ -40,7 +63,7 @@ const Header = () => {
         <>
             <nav
                 className={`
-          sticky top-0 z-50 transition-all duration-300 ease-in-out
+          sticky top-0 z-50 transition-all duration-500 ease-in-out
           ${
               isScrolled
                   ? "bg-[#0D0C0C]/95 backdrop-blur-md shadow-lg border-b border-[#FF2146]/20"
@@ -50,7 +73,7 @@ const Header = () => {
             >
                 <div
                     className={`
-            max-w-7xl mx-auto flex items-center justify-between transition-all duration-300
+            max-w-7xl mx-auto flex items-center justify-between transition-all duration-500
             ${isScrolled ? "px-6 py-2" : "p-4"}
           `}
                 >
@@ -64,7 +87,7 @@ const Header = () => {
                                 src={logo}
                                 alt="Logo"
                                 className={`
-        transition-all duration-300 hover:brightness-110
+        transition-all duration-500 hover:brightness-110
         ${isScrolled ? "size-14" : "size-20"}
       `}
                             />

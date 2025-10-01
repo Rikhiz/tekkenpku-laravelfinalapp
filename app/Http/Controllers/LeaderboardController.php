@@ -10,7 +10,7 @@ class LeaderboardController extends Controller
 {
     public function index(Request $request)
     {
-        $perPage = 32;
+        $perPage = 16;
         
         // Get leaderboard data with pagination, ordered by total_points descending
         $leaderboards = Leaderboard::with('user')

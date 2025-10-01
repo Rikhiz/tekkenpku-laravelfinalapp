@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import AppLayout from "@/Layouts/AppLayout";
 import TypingEffect from "@/Components/TypingEffect";
-import { Trophy, Users, TrendingUp, Gamepad2 } from "lucide-react";
+import { Trophy, Gamepad2 } from "lucide-react";
+import { useInView } from "react-intersection-observer";
 import tkchar from "@/images/tkchar.png";
 import herobg from "@/images/hero-background.jpg";
 
@@ -11,6 +12,10 @@ const Welcome = ({
     stats = [],
 }) => {
     const [isVisible, setIsVisible] = useState(false);
+
+    // observer buat lazy render section
+    const [videoRef, videoInView] = useInView({ triggerOnce: true, rootMargin: "200px" });
+    const [tournamentRef, tournamentInView] = useInView({ triggerOnce: true, rootMargin: "200px" });
 
     useEffect(() => {
         setIsVisible(true);
@@ -30,7 +35,6 @@ const Welcome = ({
     const getThumbnail = (video) => {
         if (!video) return "https://via.placeholder.com/480x360?text=No+Image";
 
-        // helper ambil YouTube ID
         const getYoutubeId = (url) => {
             if (!url) return null;
             const regExp =
@@ -41,14 +45,19 @@ const Welcome = ({
 
         const videoId = getYoutubeId(video.youtube_url || video.url_yt);
 
+        if (videoId) {
+            // Thumbnail medium quality
+            return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+        }
+
         return (
             video.image_url ||
             "https://via.placeholder.com/480x360?text=No+Image"
         );
     };
+
     const formatCurrency = (amount) => {
         if (!amount) return "TBA";
-        // Check if amount is already formatted string with "Rp"
         if (typeof amount === "string" && amount.includes("Rp")) {
             return amount;
         }
@@ -91,6 +100,7 @@ const Welcome = ({
                     <img
                         src={herobg}
                         alt="Hero Background"
+                        loading="lazy"
                         className="w-full h-full object-cover blur-sm"
                     />
                     <div className="absolute inset-0 bg-gradient-to-br from-[#0D0C0C]/80 via-[#0D0C0C]/60 to-[#0D0C0C]/90"></div>
@@ -172,6 +182,7 @@ const Welcome = ({
                                 <img
                                     src={tkchar}
                                     alt="Tekken Character"
+                                    loading="lazy"
                                     className="relative w-48 md:w-64 lg:w-80 xl:w-96 max-w-full h-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
                                 />
                             </div>
@@ -199,188 +210,195 @@ const Welcome = ({
             {/* Main Content */}
             <div className="bg-gradient-to-b from-[#0D0C0C] to-[#0D0C0C]">
                 <div className="max-w-7xl mx-auto px-4 md:px-8 py-16 lg:py-20">
-                    {/* Latest Video Tournament Section */}
-                    <div className="mb-16 lg:mb-20">
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="p-2 lg:p-3 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] rounded-xl">
-                                <Gamepad2 className="w-5 h-5 lg:w-6 lg:h-6 text-[#F2F2F2]" />
-                            </div>
-                            <h2 className="text-[#F2F2F2] text-2xl lg:text-3xl font-bold">
-                                Latest Video Tournament
-                            </h2>
-                        </div>
 
-                        {videoTournaments.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
-                                {videoTournaments.map((video, index) => (
-                                    <div
-                                        key={video.id}
-                                        className="group relative overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl transition-all duration-500 hover:border-[#FF2146]/50 hover:transform hover:scale-105"
-                                    >
-                                        <div className="relative aspect-video overflow-hidden rounded-t-2xl">
-                                            <img
-                                                src={getThumbnail(video)}
-                                                alt={video.name}
-                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                            />
-                                            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all duration-300"></div>
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                <a
-                                                    href={video.url_yt}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="w-16 h-16 bg-[#FF2146]/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                                                >
-                                                    <div className="w-0 h-0 border-l-[12px] border-l-[#F2F2F2] border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div className="p-6">
-                                            <h3 className="text-[#F2F2F2] font-bold text-lg mb-2 group-hover:text-[#FF2146] transition-colors line-clamp-2">
-                                                {video.name}
-                                            </h3>
-                                            <p className="text-[#69747C] text-sm leading-relaxed mb-3 line-clamp-2">
-                                                {video.description ||
-                                                    "Watch the highlights from this amazing tournament"}
-                                            </p>
-                                            <div className="flex items-center justify-between text-xs text-[#69747C]">
-                                                <span>
-                                                    {getRelativeTime(
-                                                        video.created_at
-                                                    )}
-                                                </span>
-                                                <span>
-                                                    {formatDate(
-                                                        video.start_date
-                                                    )}
-                                                </span>
-                                            </div>
-                                        </div>
+                    {/* Latest Video Tournament Section */}
+                    <div ref={videoRef} className="mb-16 lg:mb-20">
+                        {videoInView && (
+                            <>
+                                <div className="flex items-center gap-3 mb-8">
+                                    <div className="p-2 lg:p-3 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] rounded-xl">
+                                        <Gamepad2 className="w-5 h-5 lg:w-6 lg:h-6 text-[#F2F2F2]" />
                                     </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-12 text-center">
-                                <Gamepad2 className="w-16 h-16 text-[#69747C] mx-auto mb-4" />
-                                <h3 className="text-[#F2F2F2] text-xl font-bold mb-2">
-                                    No Video Content Available
-                                </h3>
-                                <p className="text-[#69747C]">
-                                    Tournament videos will be published here
-                                    soon. Stay tuned!
-                                </p>
-                            </div>
+                                    <h2 className="text-[#F2F2F2] text-2xl lg:text-3xl font-bold">
+                                        Latest Video Tournament
+                                    </h2>
+                                </div>
+
+                                {videoTournaments.length > 0 ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+                                        {videoTournaments.map((video) => (
+                                            <div
+                                                key={video.id}
+                                                className="group relative overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl transition-all duration-500 hover:border-[#FF2146]/50 hover:transform hover:scale-105"
+                                            >
+                                                <div className="relative aspect-video overflow-hidden rounded-t-2xl">
+                                                    <img
+                                                        src={getThumbnail(video)}
+                                                        alt={video.name}
+                                                        loading="lazy"
+                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                    />
+                                                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all duration-300"></div>
+                                                    <div className="absolute inset-0 flex items-center justify-center">
+                                                        <a
+                                                            href={video.url_yt}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="w-16 h-16 bg-[#FF2146]/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                                                        >
+                                                            <div className="w-0 h-0 border-l-[12px] border-l-[#F2F2F2] border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div className="p-6">
+                                                    <h3 className="text-[#F2F2F2] font-bold text-lg mb-2 group-hover:text-[#FF2146] transition-colors line-clamp-2">
+                                                        {video.name}
+                                                    </h3>
+                                                    <p className="text-[#69747C] text-sm leading-relaxed mb-3 line-clamp-2">
+                                                        {video.description ||
+                                                            "Watch the highlights from this amazing tournament"}
+                                                    </p>
+                                                    <div className="flex items-center justify-between text-xs text-[#69747C]">
+                                                        <span>
+                                                            {getRelativeTime(
+                                                                video.created_at
+                                                            )}
+                                                        </span>
+                                                        <span>
+                                                            {formatDate(
+                                                                video.start_date
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-12 text-center">
+                                        <Gamepad2 className="w-16 h-16 text-[#69747C] mx-auto mb-4" />
+                                        <h3 className="text-[#F2F2F2] text-xl font-bold mb-2">
+                                            No Video Content Available
+                                        </h3>
+                                        <p className="text-[#69747C]">
+                                            Tournament videos will be published here
+                                            soon. Stay tuned!
+                                        </p>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
 
-                    <br />
-
                     {/* Latest Tournament Section */}
-                    <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6 lg:p-8 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#FF2146]/5 to-[#F2AF29]/5"></div>
-                        <div className="relative z-10">
-                            <div className="flex items-center gap-3 mb-6 lg:mb-8">
-                                <div className="p-2 lg:p-3 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] rounded-xl">
-                                    <Trophy className="w-5 h-5 lg:w-6 lg:h-6 text-[#F2F2F2]" />
-                                </div>
-                                <h2 className="text-[#F2F2F2] text-2xl lg:text-3xl font-bold">
-                                    Latest Tournament
-                                </h2>
-                            </div>
-
-                            {latestTournaments.length > 0 ? (
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-                                    {latestTournaments.map((tournament) => (
-                                        <div
-                                            key={tournament.id}
-                                            className="group relative overflow-hidden bg-gradient-to-r from-[#0D0C0C]/70 to-[#69747C]/20 rounded-xl border border-[#69747C]/20 hover:border-[#FF2146]/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
-                                        >
-                                            <div className="p-6">
-                                                <div className="flex items-center justify-between mb-4">
-                                                    <span
-                                                        className={`px-3 py-1 text-xs font-medium rounded-full ${tournament.status_color}`}
-                                                    >
-                                                        {tournament.status}
-                                                    </span>
-                                                    <span className="text-[#69747C] text-sm">
-                                                        {formatDate(
-                                                            tournament.start_date
-                                                        )}
-                                                    </span>
-                                                </div>
-
-                                                <h3 className="text-[#F2F2F2] font-bold text-xl mb-3 group-hover:text-[#FF2146] transition-colors line-clamp-2">
-                                                    {tournament.name}
-                                                </h3>
-
-                                                <p className="text-[#69747C] leading-relaxed text-sm mb-4 line-clamp-3">
-                                                    {tournament.description ||
-                                                        "Join this exciting tournament and compete with the best players!"}
-                                                </p>
-
-                                                <div className="grid grid-cols-2 gap-4 mb-4">
-                                                    <div className="text-center">
-                                                        <div className="text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                                                            {formatCurrency(
-                                                                tournament.prize_pool
-                                                            )}
-                                                        </div>
-                                                        <div className="text-[#69747C] text-xs">
-                                                            Prize Pool
-                                                        </div>
-                                                    </div>
-                                                    <div className="text-center">
-                                                        <div className="text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                                                            {
-                                                                tournament.participants
-                                                            }
-                                                            /
-                                                            {tournament.max_participants ||
-                                                                "∞"}
-                                                        </div>
-                                                        <div className="text-[#69747C] text-xs">
-                                                            Participants
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {tournament.status ===
-                                                    "UPCOMING" && (
-                                                    <button className="w-full px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
-                                                        Register Now
-                                                    </button>
-                                                )}
-
-                                                {tournament.status ===
-                                                    "LIVE NOW" && (
-                                                    <button className="w-full px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
-                                                        Watch Live
-                                                    </button>
-                                                )}
-
-                                                {tournament.status ===
-                                                    "COMPLETED" && (
-                                                    <button className="w-full px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29]">
-                                                        View Results
-                                                    </button>
-                                                )}
-                                            </div>
+                    <div ref={tournamentRef} className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6 lg:p-8 relative overflow-hidden">
+                        {tournamentInView && (
+                            <>
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#FF2146]/5 to-[#F2AF29]/5"></div>
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-3 mb-6 lg:mb-8">
+                                        <div className="p-2 lg:p-3 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] rounded-xl">
+                                            <Trophy className="w-5 h-5 lg:w-6 lg:h-6 text-[#F2F2F2]" />
                                         </div>
-                                    ))}
+                                        <h2 className="text-[#F2F2F2] text-2xl lg:text-3xl font-bold">
+                                            Latest Tournament
+                                        </h2>
+                                    </div>
+
+                                    {latestTournaments.length > 0 ? (
+                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                                            {latestTournaments.map((tournament) => (
+                                                <div
+                                                    key={tournament.id}
+                                                    className="group relative overflow-hidden bg-gradient-to-r from-[#0D0C0C]/70 to-[#69747C]/20 rounded-xl border border-[#69747C]/20 hover:border-[#FF2146]/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
+                                                >
+                                                    <div className="p-6">
+                                                        <div className="flex items-center justify-between mb-4">
+                                                            <span
+                                                                className={`px-3 py-1 text-xs font-medium rounded-full ${tournament.status_color}`}
+                                                            >
+                                                                {tournament.status}
+                                                            </span>
+                                                            <span className="text-[#69747C] text-sm">
+                                                                {formatDate(
+                                                                    tournament.start_date
+                                                                )}
+                                                            </span>
+                                                        </div>
+
+                                                        <h3 className="text-[#F2F2F2] font-bold text-xl mb-3 group-hover:text-[#FF2146] transition-colors line-clamp-2">
+                                                            {tournament.name}
+                                                        </h3>
+
+                                                        <p className="text-[#69747C] leading-relaxed text-sm mb-4 line-clamp-3">
+                                                            {tournament.description ||
+                                                                "Join this exciting tournament and compete with the best players!"}
+                                                        </p>
+
+                                                        <div className="grid grid-cols-2 gap-4 mb-4">
+                                                            <div className="text-center">
+                                                                <div className="text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                                                                    {formatCurrency(
+                                                                        tournament.prize_pool
+                                                                    )}
+                                                                </div>
+                                                                <div className="text-[#69747C] text-xs">
+                                                                    Prize Pool
+                                                                </div>
+                                                            </div>
+                                                            <div className="text-center">
+                                                                <div className="text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                                                                    {
+                                                                        tournament.participants
+                                                                    }
+                                                                    /
+                                                                    {tournament.max_participants ||
+                                                                        "∞"}
+                                                                </div>
+                                                                <div className="text-[#69747C] text-xs">
+                                                                    Participants
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {tournament.status ===
+                                                            "UPCOMING" && (
+                                                            <button className="w-full px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
+                                                                Register Now
+                                                            </button>
+                                                        )}
+
+                                                        {tournament.status ===
+                                                            "LIVE NOW" && (
+                                                            <button className="w-full px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
+                                                                Watch Live
+                                                            </button>
+                                                        )}
+
+                                                        {tournament.status ===
+                                                            "COMPLETED" && (
+                                                            <button className="w-full px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29]">
+                                                                View Results
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-12">
+                                            <Trophy className="w-16 h-16 text-[#69747C] mx-auto mb-4" />
+                                            <h3 className="text-[#F2F2F2] text-xl font-bold mb-2">
+                                                No Tournaments Available
+                                            </h3>
+                                            <p className="text-[#69747C]">
+                                                Check back soon for upcoming tournaments!
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
-                            ) : (
-                                <div className="text-center py-12">
-                                    <Trophy className="w-16 h-16 text-[#69747C] mx-auto mb-4" />
-                                    <h3 className="text-[#F2F2F2] text-xl font-bold mb-2">
-                                        No Tournaments Available
-                                    </h3>
-                                    <p className="text-[#69747C]">
-                                        Check back soon for upcoming
-                                        tournaments!
-                                    </p>
-                                </div>
-                            )}
-                        </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

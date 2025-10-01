@@ -15,19 +15,19 @@ const Footer = () => {
             label: "Discord",
             icon: "D",
             tooltip: "Go to Discord",
-            link: "https://discord.gg/",
+            link: "https://discord.gg/QzFd5fTv",
         },
         {
             label: "Instagram",
             icon: "I",
             tooltip: "Go to Instagram",
-            link: "https://instagram.com/",
+            link: "https://www.instagram.com/tekkenpku",
         },
         {
             label: "YouTube",
             icon: "Y",
             tooltip: "Go to YouTube",
-            link: "https://youtube.com/",
+            link: "https://www.youtube.com/@tekkenpekanbarucommunity",
         },
     ];
 

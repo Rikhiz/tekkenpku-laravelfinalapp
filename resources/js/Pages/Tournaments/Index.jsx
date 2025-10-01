@@ -111,7 +111,8 @@ const TournamentsIndex = ({ tournaments = [] }) => {
                         </motion.p>
                     </div>
                 </div>
-
+<br />
+<br />
                 {/* Filters */}
                 <motion.div
                     className="max-w-7xl mx-auto px-4 md:px-8 mb-8"

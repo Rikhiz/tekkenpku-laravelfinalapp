@@ -14,9 +14,9 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
     };
 
     const getRankIcon = (rank) => {
-        if (rank === 1) return <Trophy className="text-yellow-400" size={24} />;
-        if (rank === 2) return <Medal className="text-gray-400" size={24} />;
-        if (rank === 3) return <Award className="text-orange-400" size={24} />;
+        if (rank === 1) return <Trophy className="text-yellow-400" size={32} />;
+        if (rank === 2) return <Medal className="text-gray-400" size={28} />;
+        if (rank === 3) return <Award className="text-orange-400" size={28} />;
         return null;
     };
 
@@ -65,117 +65,111 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
                 <br />
                 {/* Leaderboard Container */}
                 <div className="max-w-7xl mx-auto">
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         {leaderboards.data.map((player) => {
                             const percentage = (player.total_points / maxPoints) * 100;
                             const isHovered = hoveredPlayer === player.id;
+                            const isTopThree = player.rank <= 3;
+                            const barHeight = isTopThree ? 'h-28' : 'h-20';
 
                             return (
                                 <div
                                     key={player.id}
-                                    className="relative bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl overflow-visible transition-all duration-300 hover:border-[#FF2146]/50 hover:shadow-lg hover:shadow-[#FF2146]/20"
-                                    onMouseEnter={() => setHoveredPlayer(player.id)}
-                                    onMouseLeave={() => setHoveredPlayer(null)}
+                                    className="relative"
                                 >
-                                    {/* Background Bar */}
                                     <div
-                                        className={`absolute left-0 top-0 h-full bg-gradient-to-r ${getRankColor(
-                                            player.rank
-                                        )} opacity-20 transition-all duration-500`}
-                                        style={{ width: `${percentage}%` }}
-                                    />
+                                        className={`relative bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl transition-all duration-300 hover:border-[#FF2146]/50 hover:shadow-lg hover:shadow-[#FF2146]/20 ${barHeight} ${isHovered ? 'mb-2' : 'mb-0'}`}
+                                        onMouseEnter={() => setHoveredPlayer(player.id)}
+                                        onMouseLeave={() => setHoveredPlayer(null)}
+                                    >
+                                        {/* Background Bar */}
+                                        <div
+                                            className={`absolute left-0 top-0 h-full bg-gradient-to-r ${getRankColor(
+                                                player.rank
+                                            )} opacity-20 transition-all duration-500 rounded-xl`}
+                                            style={{ width: `${percentage}%` }}
+                                        />
 
-                                    {/* Player Info Row */}
-                                    <div className="relative flex items-center gap-4 p-4">
-                                        {/* Rank Badge */}
-                                        <div className="flex-shrink-0 w-16 flex items-center justify-center">
-                                            {player.rank <= 3 ? (
-                                                <div className="flex items-center justify-center">
-                                                    {getRankIcon(player.rank)}
-                                                </div>
-                                            ) : (
-                                                <div className="text-2xl font-black text-[#F2F2F2]">
-                                                    #{player.rank}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Player Name */}
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="text-xl font-bold text-[#F2F2F2] truncate">
-                                                {player.player_name}
-                                            </h3>
-                                        </div>
-
-                                        {/* Total Points */}
-                                        <div className="flex-shrink-0 text-right">
-                                            <div className="text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                                                {player.total_points}
+                                        {/* Player Info Row */}
+                                        <div className="relative flex items-center gap-3 md:gap-4 h-full px-3 md:px-4">
+                                            {/* Rank Badge */}
+                                            <div className={`flex-shrink-0 flex items-center justify-center ${isTopThree ? 'w-16 md:w-20' : 'w-12 md:w-16'}`}>
+                                                {player.rank <= 3 ? (
+                                                    <div className="flex items-center justify-center">
+                                                        {getRankIcon(player.rank)}
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-xl md:text-2xl font-black text-[#F2F2F2]">
+                                                        #{player.rank}
+                                                    </div>
+                                                )}
                                             </div>
-                                            <div className="text-xs text-[#69747C] font-medium">
-                                                POINTS
+
+                                            {/* Player Name */}
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className={`font-bold text-[#F2F2F2] truncate ${isTopThree ? 'text-lg md:text-2xl' : 'text-base md:text-xl'}`}>
+                                                    {player.player_name}
+                                                </h3>
+                                            </div>
+
+                                            {/* Total Points */}
+                                            <div className="flex-shrink-0 text-right">
+                                                <div className={`font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent ${isTopThree ? 'text-2xl md:text-4xl' : 'text-xl md:text-3xl'}`}>
+                                                    {player.total_points}
+                                                </div>
+                                                <div className="text-[10px] md:text-xs text-[#69747C] font-medium">
+                                                    POINTS
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Hover Details - Popup from Bottom */}
+                                    {/* Hover Details - Dropdown from Bar */}
                                     {isHovered && (
-                                        <div className="absolute top-full left-20 mt-2 bg-white rounded-lg shadow-xl border-2 border-[#FF2146] p-3 z-50 animate-fadeIn w-80">
-                                            <div className="grid grid-cols-3 gap-3">
+                                        <div className="hidden md:block bg-gradient-to-br from-[#0D0C0C] to-[#1a1a1a] rounded-b-xl border-x-2 border-b-2 border-[#FF2146] shadow-2xl overflow-hidden animate-slideDown">
+                                            <div className="flex divide-x divide-[#69747C]/30">
                                                 {/* Major */}
-                                                <div className="text-center">
-                                                    <div className="text-[10px] text-gray-500 font-bold mb-1 uppercase">
+                                                <div className="flex-1 text-center py-3 px-2">
+                                                    <div className="text-[10px] text-[#69747C] font-bold mb-1 uppercase tracking-wider">
                                                         Major
                                                     </div>
-                                                    <div className="text-xl font-black text-[#FF2146]">
+                                                    <div className="text-2xl font-black text-[#FF2146] leading-none mb-1">
                                                         {player.major}
                                                     </div>
-                                                    <div className="text-[9px] text-gray-400">pts</div>
-                                                    <div className="text-xs font-semibold text-gray-700 bg-gray-100 rounded px-1 py-0.5 mt-1">
+                                                    <div className="text-[9px] text-[#69747C] mb-1.5">pts</div>
+                                                    <div className="inline-block text-xs font-bold text-white bg-gradient-to-r from-[#FF2146] to-[#ff4d6b] rounded-full px-2 py-0.5">
                                                         {player.counted_major_events}/{player.total_major_events}
-                                                    </div>
-                                                    <div className="text-[9px] text-gray-500 mt-0.5">
-                                                        events
                                                     </div>
                                                 </div>
 
                                                 {/* Minor */}
-                                                <div className="text-center border-x border-gray-200">
-                                                    <div className="text-[10px] text-gray-500 font-bold mb-1 uppercase">
+                                                <div className="flex-1 text-center py-3 px-2">
+                                                    <div className="text-[10px] text-[#69747C] font-bold mb-1 uppercase tracking-wider">
                                                         Minor
                                                     </div>
-                                                    <div className="text-xl font-black text-[#F2AF29]">
+                                                    <div className="text-2xl font-black text-[#F2AF29] leading-none mb-1">
                                                         {player.minor}
                                                     </div>
-                                                    <div className="text-[9px] text-gray-400">pts</div>
-                                                    <div className="text-xs font-semibold text-gray-700 bg-gray-100 rounded px-1 py-0.5 mt-1">
+                                                    <div className="text-[9px] text-[#69747C] mb-1.5">pts</div>
+                                                    <div className="inline-block text-xs font-bold text-white bg-gradient-to-r from-[#F2AF29] to-[#f5c563] rounded-full px-2 py-0.5">
                                                         {player.counted_minor_events}/{player.total_minor_events}
-                                                    </div>
-                                                    <div className="text-[9px] text-gray-500 mt-0.5">
-                                                        events
                                                     </div>
                                                 </div>
 
                                                 {/* Mini */}
-                                                <div className="text-center">
-                                                    <div className="text-[10px] text-gray-500 font-bold mb-1 uppercase">
+                                                <div className="flex-1 text-center py-3 px-2">
+                                                    <div className="text-[10px] text-[#69747C] font-bold mb-1 uppercase tracking-wider">
                                                         Mini
                                                     </div>
-                                                    <div className="text-xl font-black text-[#69747C]">
+                                                    <div className="text-2xl font-black text-[#69747C] leading-none mb-1">
                                                         {player.mini}
                                                     </div>
-                                                    <div className="text-[9px] text-gray-400">pts</div>
-                                                    <div className="text-xs font-semibold text-gray-700 bg-gray-100 rounded px-1 py-0.5 mt-1">
+                                                    <div className="text-[9px] text-[#69747C] mb-1.5">pts</div>
+                                                    <div className="inline-block text-xs font-bold text-white bg-[#69747C] rounded-full px-2 py-0.5">
                                                         {player.counted_mini_events}/{player.total_mini_events}
-                                                    </div>
-                                                    <div className="text-[9px] text-gray-500 mt-0.5">
-                                                        events
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {/* Arrow pointing up */}
-                                            <div className="absolute left-8 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white"></div>
                                         </div>
                                     )}
                                 </div>
@@ -185,19 +179,20 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
 
                     {/* Pagination */}
                     {leaderboards.last_page > 1 && (
-                        <div className="mt-8 flex items-center justify-center gap-2">
+                        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
                             {/* Previous Button */}
                             <button
                                 onClick={() => handlePageChange(leaderboards.prev_page_url)}
                                 disabled={!leaderboards.prev_page_url}
-                                className="px-4 py-2 bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] hover:border-[#FF2146] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2"
+                                className="px-3 md:px-4 py-2 bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] hover:border-[#FF2146] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-1 md:gap-2 text-sm md:text-base"
                             >
                                 <ChevronLeft size={18} />
-                                Previous
+                                <span className="hidden sm:inline">Previous</span>
+                                <span className="sm:hidden">Prev</span>
                             </button>
 
                             {/* Page Numbers */}
-                            <div className="flex gap-2">
+                            <div className="flex gap-1 md:gap-2">
                                 {Array.from({ length: leaderboards.last_page }, (_, i) => i + 1)
                                     .filter((page) => {
                                         const current = leaderboards.current_page;
@@ -211,14 +206,14 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
                                         if (index > 0 && array[index - 1] !== page - 1) {
                                             return (
                                                 <React.Fragment key={`ellipsis-${page}`}>
-                                                    <span className="px-3 py-2 text-[#69747C]">...</span>
+                                                    <span className="px-2 py-2 text-[#69747C] text-sm">...</span>
                                                     <button
                                                         onClick={() =>
                                                             handlePageChange(
                                                                 leaderboards.path + "?page=" + page
                                                             )
                                                         }
-                                                        className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                                                        className={`px-3 md:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm md:text-base ${
                                                             page === leaderboards.current_page
                                                                 ? "bg-gradient-to-r from-[#FF2146] to-[#F2AF29] text-white"
                                                                 : "bg-[#0D0C0C]/80 border border-[#69747C]/30 text-[#F2F2F2] hover:border-[#FF2146]"
@@ -237,7 +232,7 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
                                                         leaderboards.path + "?page=" + page
                                                     )
                                                 }
-                                                className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                                                className={`px-3 md:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm md:text-base ${
                                                     page === leaderboards.current_page
                                                         ? "bg-gradient-to-r from-[#FF2146] to-[#F2AF29] text-white"
                                                         : "bg-[#0D0C0C]/80 border border-[#69747C]/30 text-[#F2F2F2] hover:border-[#FF2146]"
@@ -253,7 +248,7 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
                             <button
                                 onClick={() => handlePageChange(leaderboards.next_page_url)}
                                 disabled={!leaderboards.next_page_url}
-                                className="px-4 py-2 bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] hover:border-[#FF2146] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2"
+                                className="px-3 md:px-4 py-2 bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] hover:border-[#FF2146] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-1 md:gap-2 text-sm md:text-base"
                             >
                                 Next
                                 <ChevronRight size={18} />
@@ -266,18 +261,18 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
 
             <style dangerouslySetInnerHTML={{
                 __html: `
-                    @keyframes fadeIn {
+                    @keyframes slideDown {
                         from {
+                            max-height: 0;
                             opacity: 0;
-                            transform: translateY(10px);
                         }
                         to {
+                            max-height: 100px;
                             opacity: 1;
-                            transform: translateY(0);
                         }
                     }
-                    .animate-fadeIn {
-                        animation: fadeIn 0.2s ease-out;
+                    .animate-slideDown {
+                        animation: slideDown 0.3s ease-out forwards;
                     }
                 `
             }} />

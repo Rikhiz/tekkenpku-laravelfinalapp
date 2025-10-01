@@ -25,6 +25,7 @@
     "dependencies": {
         "flowbite": "^3.1.2",
         "framer-motion": "^12.23.22",
-        "lucide-react": "^0.544.0"
+        "lucide-react": "^0.544.0",
+        "react-intersection-observer": "^9.16.0"
     }
 }

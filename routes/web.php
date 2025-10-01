@@ -71,7 +71,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\Adm
     Route::resource('leaderboard', AdminLeaderboardController::class);
     Route::resource('participant', AdminParticipantController::class);
     Route::resource('banlist', AdminBanListController::class);
-    Route::resource('leaderboard',LeaderboardController::class);
+
 });
 
 Route::get('/leaderboards', [LeaderboardController::class, 'index'])->name('leaderboards.index');
