@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tournament;
+use App\Models\BanList;
 use Inertia\Inertia;
 
 class TournamentsController extends Controller
@@ -19,7 +20,7 @@ class TournamentsController extends Controller
                 // Status mapping
                 $statusColor = $tournament->status === 'Pendaftaran Dibuka' 
                     ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30' 
-                    : 'bg-[#69747C]/20 text-[#69747C] border-[#69747C]/30';
+                    : 'bg-blue-500/20 text-blue-500 border-blue-500/30';
 
                 // Category mapping
                 $categoryMap = [
@@ -57,8 +58,23 @@ class TournamentsController extends Controller
                 ];
             });
 
+        // Get ban list with user information
+        $banList = BanList::with('user')->get()->map(function ($ban) {
+            return [
+                'id' => $ban->id,
+                'user_id' => $ban->user_id,
+                'user_name' => $ban->user->name ?? 'Unknown',
+                'user_email' => $ban->user->email ?? 'N/A',
+                'major' => $ban->major,
+                'minor' => $ban->minor,
+                'mini' => $ban->mini,
+                'created_at' => $ban->created_at,
+            ];
+        });
+
         return Inertia::render('Tournaments/Index', [
             'tournaments' => $tournaments,
+            'banList' => $banList,
         ]);
     }
 
@@ -74,7 +90,7 @@ class TournamentsController extends Controller
         // Status mapping
         $statusColor = $tournament->status === 'Pendaftaran Dibuka' 
             ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30' 
-            : 'bg-[#69747C]/20 text-[#69747C] border-[#69747C]/30';
+            : 'bg-blue-500/20 text-blue-500 border-blue-500/30';
 
         // Category mapping
         $categoryMap = [

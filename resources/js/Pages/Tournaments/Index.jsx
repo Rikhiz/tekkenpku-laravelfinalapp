@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from "react";
 import AppLayout from "@/Layouts/AppLayout";
+import Modal from "@/Components/Modal";
+import logosss from "@/images/logosss.png"
 import {
     Trophy,
     Calendar,
@@ -8,13 +10,17 @@ import {
     Youtube,
     ExternalLink,
     Filter,
+    ShieldAlert,
+    ShieldBan,
+    Clock,
 } from "lucide-react";
 import { router } from "@inertiajs/react";
 import herobg from "@/images/hero-background.jpg";
 
-const TournamentsIndex = ({ tournaments = [] }) => {
+const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
     const [filterCategory, setFilterCategory] = useState("all");
     const [filterStatus, setFilterStatus] = useState("all");
+    const [showBanListModal, setShowBanListModal] = useState(false);
 
     const formatCurrency = (amount) => {
         if (!amount) return "TBA";
@@ -38,11 +44,22 @@ const TournamentsIndex = ({ tournaments = [] }) => {
         });
     };
 
+    const formatDateTime = (dateString) => {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleString("id-ID", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+
     const handleTournamentClick = (tournamentId) => {
         router.visit(`/tournaments/${tournamentId}`);
     };
 
-    // Memoize filtered tournaments untuk performa
     const filteredTournaments = useMemo(() => {
         return tournaments.filter((tournament) => {
             const categoryMatch =
@@ -54,49 +71,73 @@ const TournamentsIndex = ({ tournaments = [] }) => {
         });
     }, [tournaments, filterCategory, filterStatus]);
 
+    const getBanBadge = (status) => {
+        return status === "Yes" ? (
+            <span className="inline-flex items-center gap-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full px-2 py-0.5 text-xs font-semibold">
+                <ShieldBan className="w-3 h-3" />
+                Banned
+            </span>
+        ) : (
+            <span className="inline-flex items-center gap-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full px-2 py-0.5 text-xs font-semibold">
+                ✓ Active
+            </span>
+        );
+    };
+
     return (
         <AppLayout>
             <div className="min-h-screen bg-gradient-to-b from-[#0D0C0C] via-[#0D0C0C] to-[#1a1a1a]">
-                {/* Hero Header - Simplified for Mobile */}
-                <div className="relative py-16 md:py-24 lg:py-32 text-center overflow-hidden">
-                    {/* Background Image */}
+                {/* Hero Header */}
+                <div className="relative py-12 sm:py-16 md:py-24 lg:py-32 text-center overflow-hidden">
                     <img
                         src={herobg}
                         alt="Hero Background"
                         className="absolute inset-0 w-full h-full object-cover blur-sm"
                         loading="eager"
                     />
-                    {/* Overlay Gradient */}
                     <div className="absolute inset-0 bg-gradient-to-r from-[#0D0C0C]/80 via-[#0D0C0C]/70 to-[#0D0C0C]/80"></div>
 
-                    {/* Content */}
-                    <div className="relative max-w-7xl mx-auto px-4 md:px-8">
-                        <div className="inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-[#FF2146]/20 to-[#F2AF29]/20 backdrop-blur-sm border border-[#FF2146]/30 rounded-full px-4 md:px-6 py-1.5 md:py-2 mb-4 md:mb-6">
-                            <Trophy className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29]" />
-                            <span className="text-[#F2F2F2] font-semibold text-sm md:text-base">
-                                Official Tournaments
+                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col items-center">
+                        <img
+                            src={logosss}
+                            alt="Tournament Logo"
+                            className="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 object-contain mb-4 md:mb-6 drop-shadow-xl"
+                        />
+
+                        <div className="inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-[#FF2146]/20 to-[#F2AF29]/20 backdrop-blur-sm border border-[#FF2146]/30 rounded-full px-3 sm:px-4 md:px-6 py-1.5 md:py-2 mb-3 md:mb-4">
+                            <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                            <span className="text-[#F2F2F2] font-semibold text-xs sm:text-sm md:text-base">
+                                Super Smash Society Season 2
                             </span>
                         </div>
 
-                        <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-white mb-4 md:mb-6">
+                        <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-black text-white mb-3 md:mb-4 lg:mb-6 px-4">
                             <span className="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
                                 Tournaments
                             </span>
                         </h1>
 
-                        <p className="text-sm md:text-lg text-gray-200 max-w-2xl mx-auto px-4">
+                        <p className="text-xs sm:text-sm md:text-lg text-gray-200 max-w-2xl mx-auto px-4 mb-4 md:mb-6">
                             Join competitive tournaments, showcase your skills,
                             and win amazing prizes
                         </p>
+
+                        <button
+                            onClick={() => setShowBanListModal(true)}
+                            className="inline-flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 active:scale-95 text-white font-semibold px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg transition-all duration-300 hover:scale-105 shadow-lg text-sm md:text-base"
+                        >
+                            <ShieldAlert className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
+                            <span>Ban List ({banList.length})</span>
+                        </button>
                     </div>
                 </div>
 
-                {/* Filters - Simplified for Mobile */}
-                <div className="max-w-7xl mx-auto px-4 md:px-8 mb-6 md:mb-8">
+                {/* Filters */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-6 md:mb-8">
                     <div className="bg-gradient-to-r from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
                         <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
-                            <Filter className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29]" />
-                            <h3 className="text-white font-bold text-base md:text-lg">
+                            <Filter className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                            <h3 className="text-white font-bold text-sm md:text-base lg:text-lg">
                                 Filter Tournaments
                             </h3>
                         </div>
@@ -108,9 +149,7 @@ const TournamentsIndex = ({ tournaments = [] }) => {
                                 </label>
                                 <select
                                     value={filterCategory}
-                                    onChange={(e) =>
-                                        setFilterCategory(e.target.value)
-                                    }
+                                    onChange={(e) => setFilterCategory(e.target.value)}
                                     className="w-full bg-[#0D0C0C] border border-[#69747C]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#FF2146] focus:outline-none"
                                 >
                                     <option value="all">All Categories</option>
@@ -126,15 +165,11 @@ const TournamentsIndex = ({ tournaments = [] }) => {
                                 </label>
                                 <select
                                     value={filterStatus}
-                                    onChange={(e) =>
-                                        setFilterStatus(e.target.value)
-                                    }
+                                    onChange={(e) => setFilterStatus(e.target.value)}
                                     className="w-full bg-[#0D0C0C] border border-[#69747C]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#FF2146] focus:outline-none"
                                 >
                                     <option value="all">All Status</option>
-                                    <option value="Pendaftaran Dibuka">
-                                        Pendaftaran Dibuka
-                                    </option>
+                                    <option value="Pendaftaran Dibuka">Pendaftaran Dibuka</option>
                                     <option value="Selesai">Selesai</option>
                                 </select>
                             </div>
@@ -142,136 +177,119 @@ const TournamentsIndex = ({ tournaments = [] }) => {
                     </div>
                 </div>
 
-                {/* Tournaments Grid - Optimized for Mobile */}
-                <div className="max-w-7xl mx-auto px-4 md:px-8 pb-12 md:pb-20">
+                {/* Tournaments Grid - Static Card Layout */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pb-12 md:pb-20">
                     {filteredTournaments.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                             {filteredTournaments.map((tournament) => (
                                 <div
                                     key={tournament.id}
-                                    onClick={() =>
-                                        handleTournamentClick(tournament.id)
-                                    }
-                                    className="group relative overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-300 hover:border-[#FF2146]/50 active:scale-95 md:hover:scale-[1.02] cursor-pointer"
+                                    onClick={() => handleTournamentClick(tournament.id)}
+                                    className="group relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-300 hover:border-[#FF2146]/50 active:scale-95 md:hover:scale-[1.02] cursor-pointer h-[520px] sm:h-[540px]"
                                 >
-                                    {/* Gambar */}
-                                    <div className="relative h-40 md:h-48 overflow-hidden">
+                                    {/* Image Section - Fixed Height */}
+                                    <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden flex-shrink-0">
                                         <img
-                                            src={
-                                                tournament.image_url ||
-                                                "https://via.placeholder.com/400x300?text=Tournament"
-                                            }
+                                            src={tournament.image_url || "https://via.placeholder.com/400x300?text=Tournament"}
                                             alt={tournament.name}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            className="opacity-60 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                             loading="lazy"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-[#0D0C0C] to-transparent"></div>
 
-                                        {/* Category Badge */}
-                                        <div
-                                            className={`absolute top-3 left-3 ${tournament.category_bg} border border-current backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}
-                                        >
-                                            <span
-                                                className={`${tournament.category_color} text-xs font-bold`}
-                                            >
+                                        <div className={`absolute top-2 sm:top-3 left-2 sm:left-3 ${tournament.category_bg} border border-current backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}>
+                                            <span className={`${tournament.category_color} text-xs font-bold`}>
                                                 {tournament.category_name}
                                             </span>
                                         </div>
 
-                                        {/* Status Badge */}
-                                        <div
-                                            className={`absolute top-3 right-3 ${tournament.status_color} border backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}
-                                        >
+                                        <div className={`absolute top-2 sm:top-3 right-2 sm:right-3 ${tournament.status_color} border backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}>
                                             <span className="text-xs font-semibold">
                                                 {tournament.status}
                                             </span>
                                         </div>
                                     </div>
 
-                                    {/* Konten */}
-                                    <div className="p-4 md:p-6">
-                                        <h3 className="text-[#F2F2F2] font-bold text-base md:text-xl mb-2 md:mb-3 group-hover:text-[#FF2146] transition-colors line-clamp-2">
-                                            {tournament.name}
-                                        </h3>
-                                        <p className="text-[#69747C] text-xs md:text-sm mb-3 md:mb-4 line-clamp-2">
-                                            {tournament.description ||
-                                                "Join this tournament and compete!"}
-                                        </p>
+                                    {/* Content Section - Flex Grow */}
+                                    <div className="flex flex-col flex-grow p-4 md:p-5">
+                                        {/* Title - Fixed Height */}
+                                        <div className="h-12 sm:h-14 mb-2 md:mb-3">
+                                            <h3 className="text-[#F2F2F2] font-bold text-sm sm:text-base md:text-lg leading-tight group-hover:text-[#FF2146] transition-colors line-clamp-2">
+                                                {tournament.name}
+                                            </h3>
+                                        </div>
 
-                                        <div className="space-y-2 md:space-y-3 mb-3 md:mb-4">
-                                            <div className="flex items-center gap-2 text-xs md:text-sm">
+                                        {/* Description - Fixed Height */}
+                                        <div className="h-10 mb-3 md:mb-4">
+                                            <p className="text-[#69747C] text-xs md:text-sm leading-relaxed line-clamp-2">
+                                                {tournament.description || "Join this tournament and compete!"}
+                                            </p>
+                                        </div>
+
+                                        {/* Stats Section - Fixed Height */}
+                                        <div className="space-y-2 mb-3 md:mb-4">
+                                            <div className="flex items-center gap-2 text-xs md:text-sm h-5">
                                                 <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#F2AF29] flex-shrink-0" />
-                                                <span className="text-[#69747C]">
-                                                    Prize:
-                                                </span>
+                                                <span className="text-[#69747C] flex-shrink-0">Prize:</span>
                                                 <span className="text-[#F2F2F2] font-semibold truncate">
-                                                    {formatCurrency(
-                                                        tournament.prize_pool
-                                                    )}
+                                                    {formatCurrency(tournament.prize_pool)}
                                                 </span>
                                             </div>
 
-                                            <div className="flex items-center gap-2 text-xs md:text-sm">
+                                            <div className="flex items-center gap-2 text-xs md:text-sm h-5">
                                                 <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF2146] flex-shrink-0" />
-                                                <span className="text-[#69747C]">
-                                                    Participants:
-                                                </span>
+                                                <span className="text-[#69747C] flex-shrink-0">Participants:</span>
                                                 <span className="text-[#F2F2F2] font-semibold">
-                                                    {tournament.participants}/
-                                                    {tournament.max_participants ||
-                                                        "∞"}
+                                                    {tournament.participants}/{tournament.max_participants || "∞"}
                                                 </span>
                                             </div>
 
-                                            <div className="flex items-center gap-2 text-xs md:text-sm">
+                                            <div className="flex items-center gap-2 text-xs md:text-sm h-5">
                                                 <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] flex-shrink-0" />
-                                                <span className="text-[#69747C] truncate">
-                                                    {formatDate(
-                                                        tournament.start_date
-                                                    )}
+                                                <span className="text-[#69747C] text-xs md:text-sm truncate">
+                                                    {formatDate(tournament.start_date)}
                                                 </span>
                                             </div>
                                         </div>
 
-                                        {(tournament.url_yt ||
-                                            tournament.url_startgg) && (
-                                            <div className="flex gap-2 mb-3 md:mb-4">
-                                                {tournament.url_yt && (
-                                                    <a
-                                                        href={tournament.url_yt}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        onClick={(e) =>
-                                                            e.stopPropagation()
-                                                        }
-                                                        className="flex items-center gap-1 text-xs text-[#FF2146] hover:text-[#FF2146]/80 transition-colors"
-                                                    >
-                                                        <Youtube className="w-3.5 h-3.5" />
-                                                        Watch
-                                                    </a>
-                                                )}
-                                                {tournament.url_startgg && (
-                                                    <a
-                                                        href={
-                                                            tournament.url_startgg
-                                                        }
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        onClick={(e) =>
-                                                            e.stopPropagation()
-                                                        }
-                                                        className="flex items-center gap-1 text-xs text-[#F2AF29] hover:text-[#F2AF29]/80 transition-colors"
-                                                    >
-                                                        <ExternalLink className="w-3.5 h-3.5" />
-                                                        Start.gg
-                                                    </a>
-                                                )}
-                                            </div>
-                                        )}
+                                        {/* Links Section - Fixed Height */}
+                                        <div className="h-6 mb-3 md:mb-4">
+                                            {(tournament.url_yt || tournament.url_startgg) && (
+                                                <div className="flex gap-3">
+                                                    {tournament.url_yt && (
+                                                        <a
+                                                            href={tournament.url_yt}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="flex items-center gap-1 text-xs text-[#FF2146] hover:text-[#FF2146]/80 transition-colors"
+                                                        >
+                                                            <Youtube className="w-3.5 h-3.5 flex-shrink-0" />
+                                                            <span>Watch</span>
+                                                        </a>
+                                                    )}
+                                                    {tournament.url_startgg && (
+                                                        <a
+                                                            href={`https://www.start.gg/tournament/${tournament.url_startgg}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="flex items-center gap-1 text-xs text-[#F2AF29] hover:text-[#F2AF29]/80 transition-colors"
+                                                        >
+                                                            <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                                                            <span>Start.gg</span>
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
 
-                                        <button className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 active:scale-95 md:group-hover:scale-105">
-                                            View Details
-                                        </button>
+                                        {/* Button - Fixed at Bottom */}
+                                        <div className="mt-auto">
+                                            <button className="w-full px-3 md:px-4 py-2 md:py-2.5 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-xs sm:text-sm md:text-base rounded-lg transition-all duration-300 active:scale-95 md:group-hover:scale-105">
+                                                View Details
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -283,15 +301,109 @@ const TournamentsIndex = ({ tournaments = [] }) => {
                                 No Tournaments Found
                             </h3>
                             <p className="text-[#69747C] text-sm md:text-base px-4">
-                                Try adjusting your filters or check back later
-                                for new tournaments
+                                Try adjusting your filters or check back later for new tournaments
                             </p>
                         </div>
                     )}
                 </div>
+
+                {/* Ban List Modal */}
+                <Modal
+                    title="Tournament Ban List"
+                    show={showBanListModal}
+                    onClose={() => setShowBanListModal(false)}
+                    width="w-full max-w-4xl"
+                >
+                    <div className="space-y-4">
+                        {banList.length > 0 ? (
+                            <div className="overflow-x-auto -mx-4 sm:mx-0">
+                                <div className="inline-block min-w-full align-middle px-4 sm:px-0">
+                                    <table className="min-w-full">
+                                        <thead>
+                                            <tr className="border-b border-[#69747C]/30">
+                                                <th className="text-left py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                    Player
+                                                </th>
+                                                <th className="hidden sm:table-cell text-left py-3 px-4 text-[#F2AF29] font-semibold text-sm">
+                                                    Email
+                                                </th>
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                    Major
+                                                </th>
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                    Minor
+                                                </th>
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                    Mini
+                                                </th>
+                                                <th className="hidden md:table-cell text-left py-3 px-4 text-[#F2AF29] font-semibold text-sm">
+                                                    Banned Since
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {banList.map((ban) => (
+                                                <tr
+                                                    key={ban.id}
+                                                    className="border-b border-[#69747C]/20 hover:bg-[#69747C]/10 transition-colors"
+                                                >
+                                                    <td className="py-3 px-2 sm:px-4">
+                                                        <div className="text-white font-medium text-xs sm:text-sm">
+                                                            {ban.user_name}
+                                                        </div>
+                                                        <div className="sm:hidden text-[#69747C] text-xs mt-0.5">
+                                                            {ban.user_email}
+                                                        </div>
+                                                    </td>
+                                                    <td className="hidden sm:table-cell py-3 px-4 text-[#69747C] text-sm">
+                                                        {ban.user_email}
+                                                    </td>
+                                                    <td className="py-3 px-2 sm:px-4 text-center">
+                                                        {getBanBadge(ban.major)}
+                                                    </td>
+                                                    <td className="py-3 px-2 sm:px-4 text-center">
+                                                        {getBanBadge(ban.minor)}
+                                                    </td>
+                                                    <td className="py-3 px-2 sm:px-4 text-center">
+                                                        {getBanBadge(ban.mini)}
+                                                    </td>
+                                                    <td className="hidden md:table-cell py-3 px-4 text-[#69747C] text-sm">
+                                                        <div className="flex items-center gap-1">
+                                                            <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+                                                            <span>{formatDateTime(ban.created_at)}</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="text-center py-12">
+                                <ShieldAlert className="w-16 h-16 text-[#69747C] mx-auto mb-4" />
+                                <h3 className="text-white text-lg font-bold mb-2">
+                                    No Banned Players
+                                </h3>
+                                <p className="text-[#69747C] text-sm">
+                                    Currently there are no players on the ban list
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="pt-4 border-t border-[#69747C]/30">
+                            <div className="flex items-start gap-2 text-xs text-[#69747C]">
+                                <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                <p>
+                                    Players on this list are restricted from participating in tournaments based on their ban category (Major, Minor, or Mini events).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
             </div>
         </AppLayout>
     );
 };
 
-export default TournamentsIndex;    
+export default TournamentsIndex;

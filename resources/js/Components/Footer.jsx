@@ -55,10 +55,8 @@ const Footer = () => {
                             TPC HUB
                         </h3>
                         <p className="text-[#9CA3AF] leading-relaxed max-w-2xl">
-                            The ultimate destination for competitive gaming.
-                            Join tournaments, connect with players, and dominate
-                            the leaderboards. Whether you’re a casual fighter or
-                            a pro,
+                            Routine offline meetup, event and tournament.
+                                    Play, Grow and Connect with us here
                             <span className="font-semibold text-[#F2AF29]">
                                 {" "}
                                 TPC HUB{" "}
@@ -117,7 +115,7 @@ const Footer = () => {
                 <div className="border-t border-[#69747C]/30 pt-8">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div className="text-[#69747C] text-sm">
-                            © 2024 Tekken Pekanbaru Community. All rights
+                            © 2025 Tekken Pekanbaru Community. All rights
                             reserved.
                         </div>
                         <div className="flex space-x-6 text-sm">

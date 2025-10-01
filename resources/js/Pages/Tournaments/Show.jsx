@@ -247,7 +247,7 @@ const TournamentShow = ({ tournament }) => {
                                     
                                     {tournament.url_startgg && (
                                         <a
-                                            href={tournament.url_startgg}
+                                            href={`https://www.start.gg/tournament/${tournament.url_startgg}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg bg-[#F2AF29]/10 border border-[#F2AF29]/30 hover:bg-[#F2AF29]/20 active:scale-95 transition-all duration-300 group"
