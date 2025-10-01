@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import AppLayout from "@/Layouts/AppLayout";
 import Modal from "@/Components/Modal";
-import logosss from "@/images/logosss.png"
+import logosss from "@/images/logosss.png";
 import {
     Trophy,
     Calendar,
@@ -17,7 +17,11 @@ import {
 import { router } from "@inertiajs/react";
 import herobg from "@/images/hero-background.jpg";
 
-const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
+const TournamentsIndex = ({
+    tournaments = [],
+    banList = [],
+    loading = false,
+}) => {
     const [filterCategory, setFilterCategory] = useState("all");
     const [filterStatus, setFilterStatus] = useState("all");
     const [showBanListModal, setShowBanListModal] = useState(false);
@@ -64,7 +68,7 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
         return tournaments.filter((tournament) => {
             const categoryMatch =
                 filterCategory === "all" ||
-                tournament.category === parseInt(filterCategory);
+                tournament.category == filterCategory;
             const statusMatch =
                 filterStatus === "all" || tournament.status === filterStatus;
             return categoryMatch && statusMatch;
@@ -72,7 +76,7 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
     }, [tournaments, filterCategory, filterStatus]);
 
     const getBanBadge = (status) => {
-        return status === "Yes" ? (
+        return status === "Yes" || status === true ? (
             <span className="inline-flex items-center gap-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full px-2 py-0.5 text-xs font-semibold">
                 <ShieldBan className="w-3 h-3" />
                 Banned
@@ -149,7 +153,9 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
                                 </label>
                                 <select
                                     value={filterCategory}
-                                    onChange={(e) => setFilterCategory(e.target.value)}
+                                    onChange={(e) =>
+                                        setFilterCategory(e.target.value)
+                                    }
                                     className="w-full bg-[#0D0C0C] border border-[#69747C]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#FF2146] focus:outline-none"
                                 >
                                     <option value="all">All Categories</option>
@@ -165,11 +171,15 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
                                 </label>
                                 <select
                                     value={filterStatus}
-                                    onChange={(e) => setFilterStatus(e.target.value)}
+                                    onChange={(e) =>
+                                        setFilterStatus(e.target.value)
+                                    }
                                     className="w-full bg-[#0D0C0C] border border-[#69747C]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#FF2146] focus:outline-none"
                                 >
                                     <option value="all">All Status</option>
-                                    <option value="Pendaftaran Dibuka">Pendaftaran Dibuka</option>
+                                    <option value="Pendaftaran Dibuka">
+                                        Pendaftaran Dibuka
+                                    </option>
                                     <option value="Selesai">Selesai</option>
                                 </select>
                             </div>
@@ -177,91 +187,133 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
                     </div>
                 </div>
 
-                {/* Tournaments Grid - Static Card Layout */}
+                {/* Tournaments Grid */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pb-12 md:pb-20">
-                    {filteredTournaments.length > 0 ? (
+                    {loading ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                            {[...Array(6)].map((_, i) => (
+                                <div
+                                    key={i}
+                                    className="animate-pulse bg-[#1a1a1a] rounded-xl h-[520px] sm:h-[540px]"
+                                ></div>
+                            ))}
+                        </div>
+                    ) : filteredTournaments.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                             {filteredTournaments.map((tournament) => (
                                 <div
                                     key={tournament.id}
-                                    onClick={() => handleTournamentClick(tournament.id)}
+                                    onClick={() =>
+                                        handleTournamentClick(tournament.id)
+                                    }
                                     className="group relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-300 hover:border-[#FF2146]/50 active:scale-95 md:hover:scale-[1.02] cursor-pointer h-[520px] sm:h-[540px]"
                                 >
-                                    {/* Image Section - Fixed Height */}
+                                    {/* Image Section */}
                                     <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden flex-shrink-0">
                                         <img
-                                            src={tournament.image_url || "https://via.placeholder.com/400x300?text=Tournament"}
+                                            src={
+                                                tournament.image_url ||
+                                                "https://via.placeholder.com/400x300?text=Tournament"
+                                            }
                                             alt={tournament.name}
                                             className="opacity-60 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                             loading="lazy"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-[#0D0C0C] to-transparent"></div>
 
-                                        <div className={`absolute top-2 sm:top-3 left-2 sm:left-3 ${tournament.category_bg} border border-current backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}>
-                                            <span className={`${tournament.category_color} text-xs font-bold`}>
-                                                {tournament.category_name}
+                                        <div
+                                            className={`absolute top-2 sm:top-3 left-2 sm:left-3 ${
+                                                tournament.category_bg ||
+                                                "bg-gray-700"
+                                            } border border-current backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}
+                                        >
+                                            <span
+                                                className={`${
+                                                    tournament.category_color ||
+                                                    "text-white"
+                                                } text-xs font-bold`}
+                                            >
+                                                {tournament.category_name ||
+                                                    "Unknown"}
                                             </span>
                                         </div>
 
-                                        <div className={`absolute top-2 sm:top-3 right-2 sm:right-3 ${tournament.status_color} border backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}>
+                                        <div
+                                            className={`absolute top-2 sm:top-3 right-2 sm:right-3 ${
+                                                tournament.status_color ||
+                                                "bg-gray-600"
+                                            } border backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}
+                                        >
                                             <span className="text-xs font-semibold">
-                                                {tournament.status}
+                                                {tournament.status || "TBA"}
                                             </span>
                                         </div>
                                     </div>
 
-                                    {/* Content Section - Flex Grow */}
+                                    {/* Content Section */}
                                     <div className="flex flex-col flex-grow p-4 md:p-5">
-                                        {/* Title - Fixed Height */}
                                         <div className="h-12 sm:h-14 mb-2 md:mb-3">
                                             <h3 className="text-[#F2F2F2] font-bold text-sm sm:text-base md:text-lg leading-tight group-hover:text-[#FF2146] transition-colors line-clamp-2">
                                                 {tournament.name}
                                             </h3>
                                         </div>
 
-                                        {/* Description - Fixed Height */}
                                         <div className="h-10 mb-3 md:mb-4">
                                             <p className="text-[#69747C] text-xs md:text-sm leading-relaxed line-clamp-2">
-                                                {tournament.description || "Join this tournament and compete!"}
+                                                {tournament.description ||
+                                                    "Join this tournament and compete!"}
                                             </p>
                                         </div>
 
-                                        {/* Stats Section - Fixed Height */}
                                         <div className="space-y-2 mb-3 md:mb-4">
                                             <div className="flex items-center gap-2 text-xs md:text-sm h-5">
                                                 <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#F2AF29] flex-shrink-0" />
-                                                <span className="text-[#69747C] flex-shrink-0">Prize:</span>
+                                                <span className="text-[#69747C] flex-shrink-0">
+                                                    Prize:
+                                                </span>
                                                 <span className="text-[#F2F2F2] font-semibold truncate">
-                                                    {formatCurrency(tournament.prize_pool)}
+                                                    {formatCurrency(
+                                                        tournament.prize_pool
+                                                    )}
                                                 </span>
                                             </div>
 
                                             <div className="flex items-center gap-2 text-xs md:text-sm h-5">
                                                 <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF2146] flex-shrink-0" />
-                                                <span className="text-[#69747C] flex-shrink-0">Participants:</span>
+                                                <span className="text-[#69747C] flex-shrink-0">
+                                                    Participants:
+                                                </span>
                                                 <span className="text-[#F2F2F2] font-semibold">
-                                                    {tournament.participants}/{tournament.max_participants || "∞"}
+                                                    {tournament.participants}/
+                                                    {tournament.max_participants ||
+                                                        "∞"}
                                                 </span>
                                             </div>
 
                                             <div className="flex items-center gap-2 text-xs md:text-sm h-5">
                                                 <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] flex-shrink-0" />
                                                 <span className="text-[#69747C] text-xs md:text-sm truncate">
-                                                    {formatDate(tournament.start_date)}
+                                                    {formatDate(
+                                                        tournament.start_date
+                                                    )}
                                                 </span>
                                             </div>
                                         </div>
 
-                                        {/* Links Section - Fixed Height */}
                                         <div className="h-6 mb-3 md:mb-4">
-                                            {(tournament.url_yt || tournament.url_startgg) && (
+                                            {(tournament.url_yt ||
+                                                tournament.url_startgg) && (
                                                 <div className="flex gap-3">
                                                     {tournament.url_yt && (
                                                         <a
-                                                            href={tournament.url_yt}
+                                                            href={
+                                                                tournament.url_yt
+                                                            }
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            onClick={(e) => e.stopPropagation()}
+                                                            onClick={(e) =>
+                                                                e.stopPropagation()
+                                                            }
                                                             className="flex items-center gap-1 text-xs text-[#FF2146] hover:text-[#FF2146]/80 transition-colors"
                                                         >
                                                             <Youtube className="w-3.5 h-3.5 flex-shrink-0" />
@@ -273,18 +325,21 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
                                                             href={`https://www.start.gg/tournament/${tournament.url_startgg}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            onClick={(e) => e.stopPropagation()}
+                                                            onClick={(e) =>
+                                                                e.stopPropagation()
+                                                            }
                                                             className="flex items-center gap-1 text-xs text-[#F2AF29] hover:text-[#F2AF29]/80 transition-colors"
                                                         >
                                                             <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
-                                                            <span>Start.gg</span>
+                                                            <span>
+                                                                Start.gg
+                                                            </span>
                                                         </a>
                                                     )}
                                                 </div>
                                             )}
                                         </div>
 
-                                        {/* Button - Fixed at Bottom */}
                                         <div className="mt-auto">
                                             <button className="w-full px-3 md:px-4 py-2 md:py-2.5 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-xs sm:text-sm md:text-base rounded-lg transition-all duration-300 active:scale-95 md:group-hover:scale-105">
                                                 View Details
@@ -301,7 +356,8 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
                                 No Tournaments Found
                             </h3>
                             <p className="text-[#69747C] text-sm md:text-base px-4">
-                                Try adjusting your filters or check back later for new tournaments
+                                Try adjusting your filters or check back later
+                                for new tournaments
                             </p>
                         </div>
                     )}
@@ -370,7 +426,11 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
                                                     <td className="hidden md:table-cell py-3 px-4 text-[#69747C] text-sm">
                                                         <div className="flex items-center gap-1">
                                                             <Clock className="w-3.5 h-3.5 flex-shrink-0" />
-                                                            <span>{formatDateTime(ban.created_at)}</span>
+                                                            <span>
+                                                                {formatDateTime(
+                                                                    ban.created_at
+                                                                )}
+                                                            </span>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -386,7 +446,8 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
                                     No Banned Players
                                 </h3>
                                 <p className="text-[#69747C] text-sm">
-                                    Currently there are no players on the ban list
+                                    Currently there are no players on the ban
+                                    list
                                 </p>
                             </div>
                         )}
@@ -395,7 +456,9 @@ const TournamentsIndex = ({ tournaments = [], banList = [] }) => {
                             <div className="flex items-start gap-2 text-xs text-[#69747C]">
                                 <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5" />
                                 <p>
-                                    Players on this list are restricted from participating in tournaments based on their ban category (Major, Minor, or Mini events).
+                                    Players on this list are restricted from
+                                    participating in tournaments based on their
+                                    ban category (Major, Minor, or Mini events).
                                 </p>
                             </div>
                         </div>

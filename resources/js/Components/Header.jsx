@@ -39,7 +39,7 @@ const Header = () => {
                         setIsScrolled(false);
                     }
                     // Area 80-100 adalah "dead zone" untuk mencegah flickering
-                    
+
                     ticking = false;
                 });
 
@@ -119,10 +119,7 @@ const Header = () => {
                     </div>
 
                     {/* Desktop Sign In */}
-                    <TooltipWrapper
-                        text="ADMIN ONLY"
-                        position="bottom"
-                    >
+                    <TooltipWrapper text="ADMIN ONLY" position="bottom">
                         <button
                             onClick={() => setShowLoginModal(true)}
                             className={`

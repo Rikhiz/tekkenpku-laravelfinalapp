@@ -86,20 +86,7 @@ const LoginModal = ({ show, onClose }) => {
           {errors.password && <InputError message={errors.password} className="text-red-400 text-sm" />}
         </div>
 
-        {/* Remember Me */}
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="remember"
-            name="remember"
-            checked={data.remember}
-            onChange={(e) => setData("remember", e.target.checked)}
-            className="w-4 h-4 text-[#FF2146] bg-[#0D0C0C]/50 border-[#69747C] rounded focus:ring-[#F2AF29] focus:ring-2"
-          />
-          <label htmlFor="remember" className="text-[#F2F2F2] text-sm">
-            Remember me
-          </label>
-        </div>
+        
 
         {/* General Error */}
         {(errors.email || errors.password) && (
@@ -122,8 +109,8 @@ const LoginModal = ({ show, onClose }) => {
       <div className="mt-6 p-4 bg-[#0D0C0C]/50 border border-[#69747C]/30 rounded-md">
         <p className="text-[#69747C] text-sm mb-2">Login Information:</p>
         <div className="text-[#F2F2F2] text-xs space-y-1">
-          <p>Use your registered account credentials</p>
-          <p>Contact admin if you forgot your password</p>
+          <p>Hanya Untuk Sang Admin. User Role Menyusul</p>
+          
         </div>
       </div>
     </Modal>
