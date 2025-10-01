@@ -28,20 +28,20 @@ class AdminTournamentsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'created_by'  => 'required|exists:users,id',
-            'category'    => 'required|integer',
-            'total'       => 'nullable|integer',
-            'start_date'  => 'nullable|date',
-            'end_date'    => 'nullable|date',
-            'image_url'   => 'nullable|string|max:255',
-            'desc'        => 'nullable|string|max:255',
-            'prizepool'   => 'nullable|string|max:255',
-            'max_pemain'  => 'nullable|integer',
-            'url_yt'      => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'created_by' => 'required|exists:users,id',
+            'category' => 'required|integer',
+            'total' => 'nullable|integer',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'image_url' => 'nullable|string|max:255',
+            'desc' => 'nullable|string|max:255',
+            'prizepool' => 'nullable|integer',
+            'max_pemain' => 'nullable|integer',
+            'url_yt' => 'nullable|string|max:255',
             'url_startgg' => 'nullable|string|max:255',
-            'status'      => 'required|in:Selesai,Pendaftaran Dibuka',
-            'sggid'       => 'nullable|integer',
+            'status' => 'required|in:Selesai,Pendaftaran Dibuka',
+            'sggid' => 'nullable|integer',
         ]);
 
         // 🎯 ubah link StartGG -> slug
@@ -100,34 +100,44 @@ class AdminTournamentsController extends Controller
     public function update(Request $request, Tournament $tournament)
     {
         $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'created_by'  => 'required|exists:users,id',
-            'category'    => 'required|integer',
-            'total'       => 'nullable|integer',
-            'start_date'  => 'nullable|date',
-            'end_date'    => 'nullable|date',
-            'image_url'   => 'nullable|string|max:255',
-            'desc'        => 'nullable|string|max:255',
-            'prizepool'   => 'nullable|integer',
-            'max_pemain'  => 'nullable|integer',
-            'url_yt'      => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'created_by' => 'required|exists:users,id',
+            'category' => 'required|integer',
+            'total' => 'nullable|integer',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'image_url' => 'nullable|string|max:255',
+            'desc' => 'nullable|string|max:255',
+            'prizepool' => 'nullable|integer',
+            'max_pemain' => 'nullable|integer',
+            'url_yt' => 'nullable|string|max:255',
             'url_startgg' => 'nullable|string|max:255',
-            'status'      => 'required|in:Selesai,Pendaftaran Dibuka',
-            'sggid'       => 'nullable|integer',
+            'status' => 'required|in:Selesai,Pendaftaran Dibuka',
+            'sggid' => 'nullable|integer',
         ]);
 
-        // ✅ Hanya update image_url kalau ada isinya
-        if ($request->filled('image_url')) {
-            // Cek apakah ini link Google Drive
-            if (str_contains($request->image_url, 'drive.google.com')) {
-                $validated['image_url'] = $this->handleGoogleDriveImage($request->image_url);
-            } else {
-                // Biarkan URL lama apa adanya (tidak diproses ulang)
-                $validated['image_url'] = $request->image_url;
-            }
-        } else {
-            unset($validated['image_url']); // kalau kosong, jangan overwrite
+       // ✅ Hapus file lama kalau ada image baru DAN berbeda dari yang lama
+if ($request->filled('image_url') && $request->image_url !== $tournament->image_url) {
+    if ($tournament->image_url) {
+        // ambil relative path dari URL lama
+        $oldPath = str_replace(Storage::disk('public')->url(''), '', $tournament->image_url);
+
+        if (Storage::disk('public')->exists($oldPath)) {
+            Storage::disk('public')->delete($oldPath);
         }
+    }
+
+    // Jika link baru dari Google Drive → proses download
+    if (str_contains($request->image_url, 'drive.google.com')) {
+        $validated['image_url'] = $this->handleGoogleDriveImage($request->image_url);
+    } else {
+        $validated['image_url'] = $request->image_url;
+    }
+} else {
+    unset($validated['image_url']); // kalau kosong atau sama → jangan overwrite
+}
+
+
 
         // 🎯 ubah link StartGG -> slug
         if (!empty($validated['url_startgg'])) {
@@ -166,8 +176,15 @@ class AdminTournamentsController extends Controller
     }
 
     public function destroy(Tournament $tournament)
-    {
-        $tournament->delete();
-        return redirect()->back()->with('success', 'Tournament berhasil dihapus.');
+{
+    if ($tournament->image_url) {
+        $oldPath = str_replace(Storage::disk('public')->url(''), '', $tournament->image_url);
+        if (Storage::disk('public')->exists($oldPath)) {
+            Storage::disk('public')->delete($oldPath);
+        }
     }
+
+    $tournament->delete();
+    return redirect()->back()->with('success', 'Tournament berhasil dihapus.');
+}
 }
