@@ -5,6 +5,7 @@ import { Trophy, Medal, Award, ChevronLeft, ChevronRight } from "lucide-react";
 
 const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
     const [hoveredPlayer, setHoveredPlayer] = useState(null);
+    const [expandedPlayer, setExpandedPlayer] = useState(null);
 
     const getRankColor = (rank) => {
         if (rank === 1) return "from-yellow-400 to-yellow-600";
@@ -24,6 +25,14 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
         if (url) {
             router.visit(url);
         }
+    };
+
+    const handlePlayerClick = (playerId) => {
+        setExpandedPlayer(expandedPlayer === playerId ? null : playerId);
+    };
+
+    const isPlayerExpanded = (playerId) => {
+        return expandedPlayer === playerId || hoveredPlayer === playerId;
     };
 
     return (
@@ -68,7 +77,7 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
                     <div className="space-y-4">
                         {leaderboards.data.map((player) => {
                             const percentage = (player.total_points / maxPoints) * 100;
-                            const isHovered = hoveredPlayer === player.id;
+                            const isExpanded = isPlayerExpanded(player.id);
                             const isTopThree = player.rank <= 3;
                             const barHeight = isTopThree ? 'h-28' : 'h-20';
 
@@ -78,9 +87,10 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
                                     className="relative"
                                 >
                                     <div
-                                        className={`relative bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl transition-all duration-300 hover:border-[#FF2146]/50 hover:shadow-lg hover:shadow-[#FF2146]/20 ${barHeight} ${isHovered ? 'mb-2' : 'mb-0'}`}
+                                        className={`relative bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl transition-all duration-300 hover:border-[#FF2146]/50 hover:shadow-lg hover:shadow-[#FF2146]/20 ${barHeight} ${isExpanded ? 'mb-2' : 'mb-0'} cursor-pointer md:cursor-default`}
                                         onMouseEnter={() => setHoveredPlayer(player.id)}
                                         onMouseLeave={() => setHoveredPlayer(null)}
+                                        onClick={() => handlePlayerClick(player.id)}
                                     >
                                         {/* Background Bar */}
                                         <div
@@ -124,9 +134,9 @@ const LeaderboardIndex = ({ leaderboards, maxPoints }) => {
                                         </div>
                                     </div>
 
-                                    {/* Hover Details - Dropdown from Bar */}
-                                    {isHovered && (
-                                        <div className="hidden md:block bg-gradient-to-br from-[#0D0C0C] to-[#1a1a1a] rounded-b-xl border-x-2 border-b-2 border-[#FF2146] shadow-2xl overflow-hidden animate-slideDown">
+                                    {/* Hover/Click Details - Dropdown from Bar */}
+                                    {isExpanded && (
+                                        <div className="bg-gradient-to-br from-[#0D0C0C] to-[#1a1a1a] rounded-b-xl border-x-2 border-b-2 border-[#FF2146] shadow-2xl overflow-hidden animate-slideDown">
                                             <div className="flex divide-x divide-[#69747C]/30">
                                                 {/* Major */}
                                                 <div className="flex-1 text-center py-3 px-2">

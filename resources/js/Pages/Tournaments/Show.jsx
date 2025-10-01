@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import AppLayout from "@/Layouts/AppLayout";
 import { Trophy, Calendar, Users, Award, DollarSign, Youtube, ExternalLink, ArrowLeft, Medal } from "lucide-react";
 import { router } from "@inertiajs/react";
@@ -41,42 +41,60 @@ const TournamentShow = ({ tournament }) => {
         return "bg-[#69747C]/10 border-[#69747C]/30";
     };
 
+    const getPlacementLabel = (placement) => {
+        if (placement === 1) return '🥇 1st';
+        if (placement === 2) return '🥈 2nd';
+        if (placement === 3) return '🥉 3rd';
+        return `#${placement}`;
+    };
+
+    // Memoize participants untuk performa
+    const sortedParticipants = useMemo(() => {
+        if (!tournament.participants) return [];
+        return [...tournament.participants].sort((a, b) => {
+            if (!a.placement) return 1;
+            if (!b.placement) return -1;
+            return a.placement - b.placement;
+        });
+    }, [tournament.participants]);
+
     return (
         <AppLayout>
             <div className="min-h-screen bg-gradient-to-b from-[#0D0C0C] via-[#0D0C0C] to-[#1a1a1a]">
-                {/* Hero Section with Background Image */}
-                <div className="relative h-[60vh] overflow-hidden">
+                {/* Hero Section - Optimized for Mobile */}
+                <div className="relative h-[40vh] md:h-[60vh] overflow-hidden">
                     {/* Background Image */}
                     <div className="absolute inset-0">
                         <img
                             src={tournament.image_url || 'https://via.placeholder.com/1920x1080?text=Tournament'}
                             alt={tournament.name}
                             className="w-full h-full object-cover"
+                            loading="eager"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0D0C0C] via-[#0D0C0C]/80 to-[#0D0C0C]/60"></div>
                     </div>
 
                     {/* Content */}
-                    <div className="relative h-full max-w-7xl mx-auto px-4 md:px-8 flex flex-col justify-end pb-12">
+                    <div className="relative h-full max-w-7xl mx-auto px-4 md:px-8 flex flex-col justify-end pb-6 md:pb-12">
                         {/* Back Button */}
                         <button
                             onClick={() => router.visit('/tournaments')}
-                            className="absolute top-8 left-4 md:left-8 flex items-center gap-2 text-[#F2F2F2] hover:text-[#FF2146] transition-colors bg-[#0D0C0C]/50 backdrop-blur-sm px-4 py-2 rounded-lg border border-[#69747C]/30 hover:border-[#FF2146]/50"
+                            className="absolute top-4 md:top-8 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-[#F2F2F2] hover:text-[#FF2146] transition-colors bg-[#0D0C0C]/50 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 rounded-lg border border-[#69747C]/30 hover:border-[#FF2146]/50 text-sm md:text-base"
                         >
-                            <ArrowLeft className="w-5 h-5" />
+                            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
                             <span className="font-semibold">Back</span>
                         </button>
 
                         {/* Tournament Info */}
-                        <div className="space-y-4">
+                        <div className="space-y-3 md:space-y-4">
                             {/* Badges */}
-                            <div className="flex flex-wrap gap-3">
-                                <div className={`${tournament.category_bg} border border-current backdrop-blur-sm rounded-full px-4 py-2`}>
+                            <div className="flex flex-wrap gap-2 md:gap-3">
+                                <div className={`${tournament.category_bg} border border-current backdrop-blur-sm rounded-full px-3 md:px-4 py-1 md:py-2 text-xs md:text-base`}>
                                     <span className={`${tournament.category_color} font-bold`}>
                                         {tournament.category_name} Event
                                     </span>
                                 </div>
-                                <div className={`${tournament.status_color} border backdrop-blur-sm rounded-full px-4 py-2`}>
+                                <div className={`${tournament.status_color} border backdrop-blur-sm rounded-full px-3 md:px-4 py-1 md:py-2 text-xs md:text-base`}>
                                     <span className="font-semibold">
                                         {tournament.status}
                                     </span>
@@ -84,23 +102,23 @@ const TournamentShow = ({ tournament }) => {
                             </div>
 
                             {/* Title */}
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
+                            <h1 className="text-2xl md:text-4xl lg:text-6xl font-black text-white leading-tight">
                                 {tournament.name}
                             </h1>
 
                             {/* Quick Info */}
-                            <div className="flex flex-wrap gap-6 text-[#F2F2F2]">
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="w-5 h-5 text-[#F2AF29]" />
-                                    <span>{formatDate(tournament.start_date)}</span>
+                            <div className="flex flex-wrap gap-3 md:gap-6 text-[#F2F2F2] text-xs md:text-base">
+                                <div className="flex items-center gap-1.5 md:gap-2">
+                                    <Calendar className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                                    <span className="truncate">{formatDate(tournament.start_date)}</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Users className="w-5 h-5 text-[#FF2146]" />
+                                <div className="flex items-center gap-1.5 md:gap-2">
+                                    <Users className="w-4 h-4 md:w-5 md:h-5 text-[#FF2146] flex-shrink-0" />
                                     <span>{tournament.participants_count} Participants</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <DollarSign className="w-5 h-5 text-[#F2AF29]" />
-                                    <span>{formatCurrency(tournament.prize_pool)}</span>
+                                <div className="flex items-center gap-1.5 md:gap-2">
+                                    <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                                    <span className="truncate">{formatCurrency(tournament.prize_pool)}</span>
                                 </div>
                             </div>
                         </div>
@@ -108,56 +126,53 @@ const TournamentShow = ({ tournament }) => {
                 </div>
 
                 {/* Main Content */}
-                <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
                         {/* Left Column - Main Info */}
-                        <div className="lg:col-span-2 space-y-8">
+                        <div className="lg:col-span-2 space-y-4 md:space-y-8">
                             {/* Description */}
-                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6">
-                                <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                                    <Trophy className="w-6 h-6 text-[#F2AF29]" />
+                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
+                                <h2 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 flex items-center gap-2">
+                                    <Trophy className="w-5 h-5 md:w-6 md:h-6 text-[#F2AF29]" />
                                     About Tournament
                                 </h2>
-                                <p className="text-[#F2F2F2] leading-relaxed">
+                                <p className="text-[#F2F2F2] text-sm md:text-base leading-relaxed">
                                     {tournament.description || 'No description available for this tournament.'}
                                 </p>
                             </div>
 
                             {/* Participants List */}
-                            {tournament.participants && tournament.participants.length > 0 && (
-                                <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6">
-                                    <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                                        <Users className="w-6 h-6 text-[#FF2146]" />
+                            {sortedParticipants.length > 0 && (
+                                <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
+                                    <h2 className="text-lg md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
+                                        <Users className="w-5 h-5 md:w-6 md:h-6 text-[#FF2146]" />
                                         Participants & Results
                                     </h2>
                                     
-                                    <div className="space-y-3">
-                                        {tournament.participants.map((participant, index) => (
+                                    <div className="space-y-2 md:space-y-3">
+                                        {sortedParticipants.map((participant, index) => (
                                             <div
                                                 key={participant.id}
-                                                className={`flex items-center justify-between p-4 rounded-lg border ${getMedalBg(participant.placement)} transition-all duration-300 hover:scale-[1.02]`}
+                                                className={`flex items-center justify-between p-3 md:p-4 rounded-lg border ${getMedalBg(participant.placement)} transition-all duration-300 active:scale-95 md:hover:scale-[1.02]`}
                                             >
-                                                <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
                                                     {participant.placement && participant.placement <= 3 ? (
-                                                        <Medal className={`w-6 h-6 ${getMedalColor(participant.placement)}`} />
+                                                        <Medal className={`w-5 h-5 md:w-6 md:h-6 flex-shrink-0 ${getMedalColor(participant.placement)}`} />
                                                     ) : (
-                                                        <div className="w-6 h-6 flex items-center justify-center">
-                                                            <span className="text-[#69747C] font-bold text-sm">
+                                                        <div className="w-5 h-5 md:w-6 md:h-6 flex items-center justify-center flex-shrink-0">
+                                                            <span className="text-[#69747C] font-bold text-xs md:text-sm">
                                                                 #{participant.placement || index + 1}
                                                             </span>
                                                         </div>
                                                     )}
-                                                    <span className="text-[#F2F2F2] font-semibold">
+                                                    <span className="text-[#F2F2F2] font-semibold text-sm md:text-base truncate">
                                                         {participant.name}
                                                     </span>
                                                 </div>
                                                 {participant.placement && (
-                                                    <div className={`px-3 py-1 rounded-full ${getMedalBg(participant.placement)}`}>
-                                                        <span className={`font-bold text-sm ${getMedalColor(participant.placement)}`}>
-                                                            {participant.placement === 1 ? '🥇 1st' : 
-                                                             participant.placement === 2 ? '🥈 2nd' : 
-                                                             participant.placement === 3 ? '🥉 3rd' : 
-                                                             `#${participant.placement}`}
+                                                    <div className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full ${getMedalBg(participant.placement)} flex-shrink-0`}>
+                                                        <span className={`font-bold text-xs md:text-sm ${getMedalColor(participant.placement)}`}>
+                                                            {getPlacementLabel(participant.placement)}
                                                         </span>
                                                     </div>
                                                 )}
@@ -169,43 +184,43 @@ const TournamentShow = ({ tournament }) => {
                         </div>
 
                         {/* Right Column - Sidebar */}
-                        <div className="space-y-6">
+                        <div className="space-y-4 md:space-y-6">
                             {/* Tournament Stats */}
-                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6">
-                                <h3 className="text-xl font-bold text-white mb-4">Tournament Info</h3>
+                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
+                                <h3 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4">Tournament Info</h3>
                                 
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center pb-3 border-b border-[#69747C]/30">
-                                        <span className="text-[#69747C]">Prize Pool</span>
-                                        <span className="text-[#F2AF29] font-bold">
+                                <div className="space-y-3 md:space-y-4">
+                                    <div className="flex justify-between items-center pb-2 md:pb-3 border-b border-[#69747C]/30">
+                                        <span className="text-[#69747C] text-sm md:text-base">Prize Pool</span>
+                                        <span className="text-[#F2AF29] font-bold text-sm md:text-base truncate ml-2">
                                             {formatCurrency(tournament.prize_pool)}
                                         </span>
                                     </div>
                                     
-                                    <div className="flex justify-between items-center pb-3 border-b border-[#69747C]/30">
-                                        <span className="text-[#69747C]">Participants</span>
-                                        <span className="text-[#F2F2F2] font-bold">
+                                    <div className="flex justify-between items-center pb-2 md:pb-3 border-b border-[#69747C]/30">
+                                        <span className="text-[#69747C] text-sm md:text-base">Participants</span>
+                                        <span className="text-[#F2F2F2] font-bold text-sm md:text-base">
                                             {tournament.participants_count}/{tournament.max_participants || '∞'}
                                         </span>
                                     </div>
                                     
-                                    <div className="flex justify-between items-center pb-3 border-b border-[#69747C]/30">
-                                        <span className="text-[#69747C]">Category</span>
-                                        <span className={`${tournament.category_color} font-bold`}>
+                                    <div className="flex justify-between items-center pb-2 md:pb-3 border-b border-[#69747C]/30">
+                                        <span className="text-[#69747C] text-sm md:text-base">Category</span>
+                                        <span className={`${tournament.category_color} font-bold text-sm md:text-base`}>
                                             {tournament.category_name}
                                         </span>
                                     </div>
                                     
-                                    <div className="flex justify-between items-center pb-3 border-b border-[#69747C]/30">
-                                        <span className="text-[#69747C]">Status</span>
-                                        <span className={`font-bold ${tournament.status === 'Pendaftaran Dibuka' ? 'text-[#F2AF29]' : 'text-[#69747C]'}`}>
+                                    <div className="flex justify-between items-center pb-2 md:pb-3 border-b border-[#69747C]/30">
+                                        <span className="text-[#69747C] text-sm md:text-base">Status</span>
+                                        <span className={`font-bold text-sm md:text-base ${tournament.status === 'Pendaftaran Dibuka' ? 'text-[#F2AF29]' : 'text-[#69747C]'}`}>
                                             {tournament.status}
                                         </span>
                                     </div>
                                     
                                     <div className="flex justify-between items-center">
-                                        <span className="text-[#69747C]">Organizer</span>
-                                        <span className="text-[#F2F2F2] font-semibold">
+                                        <span className="text-[#69747C] text-sm md:text-base">Organizer</span>
+                                        <span className="text-[#F2F2F2] font-semibold text-sm md:text-base truncate ml-2">
                                             {tournament.created_by}
                                         </span>
                                     </div>
@@ -213,20 +228,20 @@ const TournamentShow = ({ tournament }) => {
                             </div>
 
                             {/* External Links */}
-                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6">
-                                <h3 className="text-xl font-bold text-white mb-4">Links</h3>
+                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
+                                <h3 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4">Links</h3>
                                 
-                                <div className="space-y-3">
+                                <div className="space-y-2 md:space-y-3">
                                     {tournament.url_yt && (
                                         <a
                                             href={tournament.url_yt}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-3 p-3 rounded-lg bg-[#FF2146]/10 border border-[#FF2146]/30 hover:bg-[#FF2146]/20 transition-all duration-300 group"
+                                            className="flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg bg-[#FF2146]/10 border border-[#FF2146]/30 hover:bg-[#FF2146]/20 active:scale-95 transition-all duration-300 group"
                                         >
-                                            <Youtube className="w-5 h-5 text-[#FF2146]" />
-                                            <span className="text-[#F2F2F2] font-semibold flex-1">Watch on YouTube</span>
-                                            <ExternalLink className="w-4 h-4 text-[#69747C] group-hover:text-[#FF2146] transition-colors" />
+                                            <Youtube className="w-4 h-4 md:w-5 md:h-5 text-[#FF2146] flex-shrink-0" />
+                                            <span className="text-[#F2F2F2] font-semibold flex-1 text-sm md:text-base">Watch on YouTube</span>
+                                            <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] group-hover:text-[#FF2146] transition-colors flex-shrink-0" />
                                         </a>
                                     )}
                                     
@@ -235,11 +250,11 @@ const TournamentShow = ({ tournament }) => {
                                             href={tournament.url_startgg}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-3 p-3 rounded-lg bg-[#F2AF29]/10 border border-[#F2AF29]/30 hover:bg-[#F2AF29]/20 transition-all duration-300 group"
+                                            className="flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg bg-[#F2AF29]/10 border border-[#F2AF29]/30 hover:bg-[#F2AF29]/20 active:scale-95 transition-all duration-300 group"
                                         >
-                                            <Award className="w-5 h-5 text-[#F2AF29]" />
-                                            <span className="text-[#F2F2F2] font-semibold flex-1">View on Start.gg</span>
-                                            <ExternalLink className="w-4 h-4 text-[#69747C] group-hover:text-[#F2AF29] transition-colors" />
+                                            <Award className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                                            <span className="text-[#F2F2F2] font-semibold flex-1 text-sm md:text-base">View on Start.gg</span>
+                                            <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] group-hover:text-[#F2AF29] transition-colors flex-shrink-0" />
                                         </a>
                                     )}
                                 </div>
@@ -247,7 +262,7 @@ const TournamentShow = ({ tournament }) => {
 
                             {/* Action Button */}
                             {tournament.status === 'Pendaftaran Dibuka' && (
-                                <button className="w-full px-6 py-4 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#FF2146]/50">
+                                <button className="w-full px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-bold text-sm md:text-base rounded-xl transition-all duration-300 active:scale-95 md:hover:scale-105 shadow-lg hover:shadow-[#FF2146]/50">
                                     Register Now
                                 </button>
                             )}

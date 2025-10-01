@@ -5,6 +5,7 @@ import { Trophy, Gamepad2 } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 import tkchar from "@/images/tkchar.png";
 import herobg from "@/images/hero-background.jpg";
+import { Link } from "@inertiajs/react";
 
 const Welcome = ({
     videoTournaments = [],
@@ -14,8 +15,14 @@ const Welcome = ({
     const [isVisible, setIsVisible] = useState(false);
 
     // observer buat lazy render section
-    const [videoRef, videoInView] = useInView({ triggerOnce: true, rootMargin: "200px" });
-    const [tournamentRef, tournamentInView] = useInView({ triggerOnce: true, rootMargin: "200px" });
+    const [videoRef, videoInView] = useInView({
+        triggerOnce: true,
+        rootMargin: "200px",
+    });
+    const [tournamentRef, tournamentInView] = useInView({
+        triggerOnce: true,
+        rootMargin: "200px",
+    });
 
     useEffect(() => {
         setIsVisible(true);
@@ -138,16 +145,23 @@ const Welcome = ({
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                <button className="group relative px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-bold rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden">
+                                <Link
+                                    href={route("tournaments.index")}
+                                    className="group relative px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-bold rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden"
+                                >
                                     <Gamepad2 className="w-5 h-5 z-10" />
                                     <span className="z-10">
                                         Join Tournament
                                     </span>
                                     <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                </button>
+                                </Link>
+                                <Link
+                                    href={route("about")}
+                                >
                                 <button className="px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border-2 border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold rounded-xl transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29]">
                                     Learn More
                                 </button>
+                                </Link>
                             </div>
 
                             <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 pt-6 lg:pt-8">
@@ -210,7 +224,6 @@ const Welcome = ({
             {/* Main Content */}
             <div className="bg-gradient-to-b from-[#0D0C0C] to-[#0D0C0C]">
                 <div className="max-w-7xl mx-auto px-4 md:px-8 py-16 lg:py-20">
-
                     {/* Latest Video Tournament Section */}
                     <div ref={videoRef} className="mb-16 lg:mb-20">
                         {videoInView && (
@@ -233,7 +246,9 @@ const Welcome = ({
                                             >
                                                 <div className="relative aspect-video overflow-hidden rounded-t-2xl">
                                                     <img
-                                                        src={getThumbnail(video)}
+                                                        src={getThumbnail(
+                                                            video
+                                                        )}
                                                         alt={video.name}
                                                         loading="lazy"
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -281,8 +296,8 @@ const Welcome = ({
                                             No Video Content Available
                                         </h3>
                                         <p className="text-[#69747C]">
-                                            Tournament videos will be published here
-                                            soon. Stay tuned!
+                                            Tournament videos will be published
+                                            here soon. Stay tuned!
                                         </p>
                                     </div>
                                 )}
@@ -291,7 +306,10 @@ const Welcome = ({
                     </div>
 
                     {/* Latest Tournament Section */}
-                    <div ref={tournamentRef} className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6 lg:p-8 relative overflow-hidden">
+                    <div
+                        ref={tournamentRef}
+                        className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6 lg:p-8 relative overflow-hidden"
+                    >
                         {tournamentInView && (
                             <>
                                 <div className="absolute inset-0 bg-gradient-to-r from-[#FF2146]/5 to-[#F2AF29]/5"></div>
@@ -307,83 +325,90 @@ const Welcome = ({
 
                                     {latestTournaments.length > 0 ? (
                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-                                            {latestTournaments.map((tournament) => (
-                                                <div
-                                                    key={tournament.id}
-                                                    className="group relative overflow-hidden bg-gradient-to-r from-[#0D0C0C]/70 to-[#69747C]/20 rounded-xl border border-[#69747C]/20 hover:border-[#FF2146]/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
-                                                >
-                                                    <div className="p-6">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <span
-                                                                className={`px-3 py-1 text-xs font-medium rounded-full ${tournament.status_color}`}
-                                                            >
-                                                                {tournament.status}
-                                                            </span>
-                                                            <span className="text-[#69747C] text-sm">
-                                                                {formatDate(
-                                                                    tournament.start_date
-                                                                )}
-                                                            </span>
-                                                        </div>
-
-                                                        <h3 className="text-[#F2F2F2] font-bold text-xl mb-3 group-hover:text-[#FF2146] transition-colors line-clamp-2">
-                                                            {tournament.name}
-                                                        </h3>
-
-                                                        <p className="text-[#69747C] leading-relaxed text-sm mb-4 line-clamp-3">
-                                                            {tournament.description ||
-                                                                "Join this exciting tournament and compete with the best players!"}
-                                                        </p>
-
-                                                        <div className="grid grid-cols-2 gap-4 mb-4">
-                                                            <div className="text-center">
-                                                                <div className="text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                                                                    {formatCurrency(
-                                                                        tournament.prize_pool
-                                                                    )}
-                                                                </div>
-                                                                <div className="text-[#69747C] text-xs">
-                                                                    Prize Pool
-                                                                </div>
-                                                            </div>
-                                                            <div className="text-center">
-                                                                <div className="text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                                            {latestTournaments.map(
+                                                (tournament) => (
+                                                    <div
+                                                        key={tournament.id}
+                                                        className="group relative overflow-hidden bg-gradient-to-r from-[#0D0C0C]/70 to-[#69747C]/20 rounded-xl border border-[#69747C]/20 hover:border-[#FF2146]/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
+                                                    >
+                                                        <div className="p-6">
+                                                            <div className="flex items-center justify-between mb-4">
+                                                                <span
+                                                                    className={`px-3 py-1 text-xs font-medium rounded-full ${tournament.status_color}`}
+                                                                >
                                                                     {
-                                                                        tournament.participants
+                                                                        tournament.status
                                                                     }
-                                                                    /
-                                                                    {tournament.max_participants ||
-                                                                        "∞"}
+                                                                </span>
+                                                                <span className="text-[#69747C] text-sm">
+                                                                    {formatDate(
+                                                                        tournament.start_date
+                                                                    )}
+                                                                </span>
+                                                            </div>
+
+                                                            <h3 className="text-[#F2F2F2] font-bold text-xl mb-3 group-hover:text-[#FF2146] transition-colors line-clamp-2">
+                                                                {
+                                                                    tournament.name
+                                                                }
+                                                            </h3>
+
+                                                            <p className="text-[#69747C] leading-relaxed text-sm mb-4 line-clamp-3">
+                                                                {tournament.description ||
+                                                                    "Join this exciting tournament and compete with the best players!"}
+                                                            </p>
+
+                                                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                                                <div className="text-center">
+                                                                    <div className="text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                                                                        {formatCurrency(
+                                                                            tournament.prize_pool
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="text-[#69747C] text-xs">
+                                                                        Prize
+                                                                        Pool
+                                                                    </div>
                                                                 </div>
-                                                                <div className="text-[#69747C] text-xs">
-                                                                    Participants
+                                                                <div className="text-center">
+                                                                    <div className="text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                                                                        {
+                                                                            tournament.participants
+                                                                        }
+                                                                        /
+                                                                        {tournament.max_participants ||
+                                                                            "∞"}
+                                                                    </div>
+                                                                    <div className="text-[#69747C] text-xs">
+                                                                        Participants
+                                                                    </div>
                                                                 </div>
                                                             </div>
+
+                                                            {tournament.status ===
+                                                                "UPCOMING" && (
+                                                                <button className="w-full px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
+                                                                    Register Now
+                                                                </button>
+                                                            )}
+
+                                                            {tournament.status ===
+                                                                "LIVE NOW" && (
+                                                                <button className="w-full px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
+                                                                    Watch Live
+                                                                </button>
+                                                            )}
+
+                                                            {tournament.status ===
+                                                                "COMPLETED" && (
+                                                                <button className="w-full px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29]">
+                                                                    View Results
+                                                                </button>
+                                                            )}
                                                         </div>
-
-                                                        {tournament.status ===
-                                                            "UPCOMING" && (
-                                                            <button className="w-full px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
-                                                                Register Now
-                                                            </button>
-                                                        )}
-
-                                                        {tournament.status ===
-                                                            "LIVE NOW" && (
-                                                            <button className="w-full px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
-                                                                Watch Live
-                                                            </button>
-                                                        )}
-
-                                                        {tournament.status ===
-                                                            "COMPLETED" && (
-                                                            <button className="w-full px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold rounded-lg transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29]">
-                                                                View Results
-                                                            </button>
-                                                        )}
                                                     </div>
-                                                </div>
-                                            ))}
+                                                )
+                                            )}
                                         </div>
                                     ) : (
                                         <div className="text-center py-12">
@@ -392,7 +417,8 @@ const Welcome = ({
                                                 No Tournaments Available
                                             </h3>
                                             <p className="text-[#69747C]">
-                                                Check back soon for upcoming tournaments!
+                                                Check back soon for upcoming
+                                                tournaments!
                                             </p>
                                         </div>
                                     )}
