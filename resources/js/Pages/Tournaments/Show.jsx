@@ -61,7 +61,7 @@ const TournamentShow = ({ tournament }) => {
     return (
         <AppLayout>
             <div className="min-h-screen bg-gradient-to-b from-[#0D0C0C] via-[#0D0C0C] to-[#1a1a1a]">
-                {/* Hero Section - Optimized for Mobile */}
+                {/* Hero Section - Optimized for Mobile with Fixed Back Button */}
                 <div className="relative h-[40vh] md:h-[60vh] overflow-hidden">
                     {/* Background Image */}
                     <div className="absolute inset-0">
@@ -76,17 +76,17 @@ const TournamentShow = ({ tournament }) => {
 
                     {/* Content */}
                     <div className="relative h-full max-w-7xl mx-auto px-4 md:px-8 flex flex-col justify-end pb-6 md:pb-12">
-                        {/* Back Button */}
+                        {/* Back Button - Fixed Position Below Header */}
                         <button
                             onClick={() => router.visit('/tournaments')}
-                            className="absolute top-4 md:top-8 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-[#F2F2F2] hover:text-[#FF2146] transition-colors bg-[#0D0C0C]/50 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 rounded-lg border border-[#69747C]/30 hover:border-[#FF2146]/50 text-sm md:text-base"
+                            className="absolute top-20 md:top-24 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-[#F2F2F2] hover:text-[#FF2146] transition-colors bg-[#0D0C0C]/80 backdrop-blur-md px-3 md:px-4 py-2 md:py-2.5 rounded-lg border border-[#69747C]/30 hover:border-[#FF2146]/50 text-sm md:text-base z-30 shadow-lg"
                         >
                             <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
                             <span className="font-semibold">Back</span>
                         </button>
 
                         {/* Tournament Info */}
-                        <div className="space-y-3 md:space-y-4">
+                        <div className="space-y-3 md:space-y-4 mt-16 md:mt-0">
                             {/* Badges */}
                             <div className="flex flex-wrap gap-2 md:gap-3">
                                 <div className={`${tournament.category_bg} border border-current backdrop-blur-sm rounded-full px-3 md:px-4 py-1 md:py-2 text-xs md:text-base`}>
@@ -140,6 +140,29 @@ const TournamentShow = ({ tournament }) => {
                                     {tournament.description || 'No description available for this tournament.'}
                                 </p>
                             </div>
+
+                            {/* Start.gg Registration Embed */}
+                            {tournament.url_startgg && tournament.status === 'Pendaftaran Dibuka' && (
+                                <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
+                                    <h2 className="text-lg md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
+                                        <Award className="w-5 h-5 md:w-6 md:h-6 text-[#F2AF29]" />
+                                        Tournament Registration
+                                    </h2>
+                                    <div className="relative w-full overflow-hidden rounded-lg border border-[#69747C]/30">
+                                        <iframe 
+                                            src={`https://www.start.gg/tournament/${tournament.url_startgg}/register/embed`}
+                                            frameBorder="0"
+                                            height="600"
+                                            width="100%"
+                                            className="w-full"
+                                            title="Tournament Registration"
+                                        />
+                                    </div>
+                                    <p className="text-[#69747C] text-xs md:text-sm mt-3">
+                                        Register directly through Start.gg to join this tournament
+                                    </p>
+                                </div>
+                            )}
 
                             {/* Participants List */}
                             {sortedParticipants.length > 0 && (
@@ -259,13 +282,6 @@ const TournamentShow = ({ tournament }) => {
                                     )}
                                 </div>
                             </div>
-
-                            {/* Action Button */}
-                            {tournament.status === 'Pendaftaran Dibuka' && (
-                                <button className="w-full px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-bold text-sm md:text-base rounded-xl transition-all duration-300 active:scale-95 md:hover:scale-105 shadow-lg hover:shadow-[#FF2146]/50">
-                                    Register Now
-                                </button>
-                            )}
                         </div>
                     </div>
                 </div>

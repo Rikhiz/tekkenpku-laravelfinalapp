@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('url_yt')->nullable();
             $table->string('url_startgg')->nullable(); // simpan original URL
             $table->enum('status', ['Selesai', 'Pendaftaran Dibuka'])->default('Pendaftaran Dibuka');
+            $table->enum('type', ['Sanctioned','Non-Sanction'])->nullable();
+            $table->enum('Dojo', ['Yes','No'])->nullable();
             $table->timestamps();
         });
     }

@@ -1,10 +1,10 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import AppLayout from "@/Layouts/AppLayout";
 import TypingEffect from "@/Components/TypingEffect";
 import { Trophy, Gamepad2 } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 import herobg from "@/images/hero-background.jpg";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 
 const Welcome = ({
     videoTournaments = [],
@@ -92,6 +92,10 @@ const Welcome = ({
         if (diffDays < 7) return `${diffDays} days ago`;
         if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
         return `${Math.floor(diffDays / 30)} months ago`;
+    };
+
+    const handleTournamentClick = (tournamentId) => {
+        router.visit(`/tournaments/${tournamentId}`);
     };
 
     return (
@@ -384,23 +388,20 @@ const Welcome = ({
                                                                 </div>
                                                             </div>
 
-                                                            {tournament.status ===
-                                                                "UPCOMING" && (
-                                                                <button className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95">
+                                                            {tournament.status === "Pendaftaran Dibuka" && (
+                                                                <button 
+                                                                    onClick={() => handleTournamentClick(tournament.id)}
+                                                                    className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
+                                                                >
                                                                     Register Now
                                                                 </button>
                                                             )}
 
-                                                            {tournament.status ===
-                                                                "LIVE NOW" && (
-                                                                <button className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95">
-                                                                    Watch Live
-                                                                </button>
-                                                            )}
-
-                                                            {tournament.status ===
-                                                                "COMPLETED" && (
-                                                                <button className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29] active:scale-95">
+                                                            {tournament.status === "Selesai" && (
+                                                                <button 
+                                                                    onClick={() => handleTournamentClick(tournament.id)}
+                                                                    className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29] active:scale-95"
+                                                                >
                                                                     View Results
                                                                 </button>
                                                             )}

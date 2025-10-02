@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\AdminStartGGController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Tournament;
 use App\Models\User;
+use App\Models\BanList;
 
 class AdminTournamentsController extends Controller
 {
@@ -64,10 +66,16 @@ class AdminTournamentsController extends Controller
             }
         }
 
-        Tournament::create($validated);
+        $tournament = Tournament::create($validated);
+
+        // 🔥 NEW: Reset ban list when tournament is completed
+        if ($validated['status'] === 'Selesai') {
+            $this->resetBanListForCategory($validated['category']);
+        }
 
         return redirect()->back()->with('success', 'Tournament berhasil ditambahkan.');
     }
+
     private function handleGoogleDriveImage(string $url): ?string
     {
         // Ambil fileId dari Google Drive link
@@ -116,28 +124,26 @@ class AdminTournamentsController extends Controller
             'sggid' => 'nullable|integer',
         ]);
 
-       // ✅ Hapus file lama kalau ada image baru DAN berbeda dari yang lama
-if ($request->filled('image_url') && $request->image_url !== $tournament->image_url) {
-    if ($tournament->image_url) {
-        // ambil relative path dari URL lama
-        $oldPath = str_replace(Storage::disk('public')->url(''), '', $tournament->image_url);
+        // ✅ Hapus file lama kalau ada image baru DAN berbeda dari yang lama
+        if ($request->filled('image_url') && $request->image_url !== $tournament->image_url) {
+            if ($tournament->image_url) {
+                // ambil relative path dari URL lama
+                $oldPath = str_replace(Storage::disk('public')->url(''), '', $tournament->image_url);
 
-        if (Storage::disk('public')->exists($oldPath)) {
-            Storage::disk('public')->delete($oldPath);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            // Jika link baru dari Google Drive → proses download
+            if (str_contains($request->image_url, 'drive.google.com')) {
+                $validated['image_url'] = $this->handleGoogleDriveImage($request->image_url);
+            } else {
+                $validated['image_url'] = $request->image_url;
+            }
+        } else {
+            unset($validated['image_url']); // kalau kosong atau sama → jangan overwrite
         }
-    }
-
-    // Jika link baru dari Google Drive → proses download
-    if (str_contains($request->image_url, 'drive.google.com')) {
-        $validated['image_url'] = $this->handleGoogleDriveImage($request->image_url);
-    } else {
-        $validated['image_url'] = $request->image_url;
-    }
-} else {
-    unset($validated['image_url']); // kalau kosong atau sama → jangan overwrite
-}
-
-
 
         // 🎯 ubah link StartGG -> slug
         if (!empty($validated['url_startgg'])) {
@@ -146,12 +152,11 @@ if ($request->filled('image_url') && $request->image_url !== $tournament->image_
             }
         }
 
+        // 🔥 NEW: Check if status changed to "Selesai"
+        $statusChangedToSelesai = $tournament->status !== 'Selesai' && $validated['status'] === 'Selesai';
+
         // 🎯 kalau status berubah jadi "Selesai"
-        if (
-            $tournament->status !== 'Selesai'
-            && $validated['status'] === 'Selesai'
-            && !empty($validated['url_startgg'])
-        ) {
+        if ($statusChangedToSelesai && !empty($validated['url_startgg'])) {
             $apiData = app(AdminStartGGController::class)->getTournamentData($validated['url_startgg']);
             if ($apiData) {
                 $validated = array_merge($validated, $apiData);
@@ -160,9 +165,34 @@ if ($request->filled('image_url') && $request->image_url !== $tournament->image_
 
         $tournament->update($validated);
 
+        // 🔥 NEW: Reset ban list when status changes to "Selesai"
+        if ($statusChangedToSelesai) {
+            $this->resetBanListForCategory($validated['category']);
+        }
+
         return redirect()->back()->with('success', 'Tournament berhasil diperbarui.');
     }
 
+    /**
+     * Reset ban status for specific category when tournament is completed
+     * Category 1 = Major, 2 = Minor, 3 = Mini
+     */
+    private function resetBanListForCategory(int $category)
+    {
+        $columnToReset = match($category) {
+            1 => 'major',
+            2 => 'minor',
+            3 => 'mini',
+            default => null
+        };
+
+        if ($columnToReset) {
+            DB::table('ban_lists')
+                ->update([$columnToReset => 'No']);
+
+            \Log::info("Reset ban list for category: {$columnToReset}");
+        }
+    }
 
     /**
      * Convert Google Drive link -> direct link
@@ -176,15 +206,15 @@ if ($request->filled('image_url') && $request->image_url !== $tournament->image_
     }
 
     public function destroy(Tournament $tournament)
-{
-    if ($tournament->image_url) {
-        $oldPath = str_replace(Storage::disk('public')->url(''), '', $tournament->image_url);
-        if (Storage::disk('public')->exists($oldPath)) {
-            Storage::disk('public')->delete($oldPath);
+    {
+        if ($tournament->image_url) {
+            $oldPath = str_replace(Storage::disk('public')->url(''), '', $tournament->image_url);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            }
         }
-    }
 
-    $tournament->delete();
-    return redirect()->back()->with('success', 'Tournament berhasil dihapus.');
-}
+        $tournament->delete();
+        return redirect()->back()->with('success', 'Tournament berhasil dihapus.');
+    }
 }

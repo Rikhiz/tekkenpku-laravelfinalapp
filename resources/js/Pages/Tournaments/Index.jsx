@@ -26,6 +26,48 @@ const TournamentsIndex = ({
     const [filterStatus, setFilterStatus] = useState("all");
     const [showBanListModal, setShowBanListModal] = useState(false);
 
+    // 🎨 Enhanced category configurations
+    const categoryConfig = {
+        1: {
+            name: "MAJOR",
+            bgColor: "bg-gradient-to-r from-red-600 to-red-500",
+            textColor: "text-white",
+            borderColor: "border-red-400",
+            glowColor: "shadow-red-500/50",
+        },
+        2: {
+            name: "MINOR",
+            bgColor: "bg-gradient-to-r from-yellow-500 to-amber-500",
+            textColor: "text-white",
+            borderColor: "border-yellow-400",
+            glowColor: "shadow-yellow-500/50",
+        },
+        3: {
+            name: "MINI",
+            bgColor: "bg-gradient-to-r from-green-600 to-emerald-500",
+            textColor: "text-white",
+            borderColor: "border-green-400",
+            glowColor: "shadow-green-500/50",
+        },
+    };
+
+    // 🎨 Enhanced status configurations
+    const statusConfig = {
+        "Selesai": {
+            bgColor: "bg-gradient-to-r from-gray-700 to-gray-600",
+            textColor: "text-gray-200",
+            borderColor: "border-gray-400",
+            icon: "✓",
+        },
+        "Pendaftaran Dibuka": {
+            bgColor: "bg-gradient-to-r from-emerald-600 to-green-500",
+            textColor: "text-white",
+            borderColor: "border-emerald-400",
+            icon: "🔥",
+            pulse: true,
+        },
+    };
+
     const formatCurrency = (amount) => {
         if (!amount) return "TBA";
         if (typeof amount === "string" && amount.includes("Rp")) {
@@ -200,154 +242,161 @@ const TournamentsIndex = ({
                         </div>
                     ) : filteredTournaments.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                            {filteredTournaments.map((tournament) => (
-                                <div
-                                    key={tournament.id}
-                                    onClick={() =>
-                                        handleTournamentClick(tournament.id)
-                                    }
-                                    className="group relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-300 hover:border-[#FF2146]/50 active:scale-95 md:hover:scale-[1.02] cursor-pointer h-[520px] sm:h-[540px]"
-                                >
-                                    {/* Image Section */}
-                                    <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden flex-shrink-0">
-                                        <img
-                                            src={
-                                                tournament.image_url ||
-                                                "https://via.placeholder.com/400x300?text=Tournament"
-                                            }
-                                            alt={tournament.name}
-                                            className="opacity-60 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                            loading="lazy"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#0D0C0C] to-transparent"></div>
+                            {filteredTournaments.map((tournament) => {
+                                const catConfig = categoryConfig[tournament.category] || categoryConfig[3];
+                                const statConfig = statusConfig[tournament.status] || statusConfig["Selesai"];
 
-                                        <div
-                                            className={`absolute top-2 sm:top-3 left-2 sm:left-3 ${
-                                                tournament.category_bg ||
-                                                "bg-gray-700"
-                                            } border border-current backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}
-                                        >
-                                            <span
-                                                className={`${
-                                                    tournament.category_color ||
-                                                    "text-white"
-                                                } text-xs font-bold`}
-                                            >
-                                                {tournament.category_name ||
-                                                    "Unknown"}
-                                            </span>
-                                        </div>
+                                return (
+                                    <div
+                                        key={tournament.id}
+                                        onClick={() =>
+                                            handleTournamentClick(tournament.id)
+                                        }
+                                        className="group relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-300 hover:border-[#FF2146]/50 active:scale-95 md:hover:scale-[1.02] cursor-pointer h-[520px] sm:h-[540px]"
+                                    >
+                                        {/* Image Section */}
+                                        <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden flex-shrink-0">
+                                            <img
+                                                src={
+                                                    tournament.image_url ||
+                                                    "https://via.placeholder.com/400x300?text=Tournament"
+                                                }
+                                                alt={tournament.name}
+                                                className="opacity-60 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                loading="lazy"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-[#0D0C0C] to-transparent"></div>
 
-                                        <div
-                                            className={`absolute top-2 sm:top-3 right-2 sm:right-3 ${
-                                                tournament.status_color ||
-                                                "bg-gray-600"
-                                            } border backdrop-blur-sm rounded-full px-2 md:px-3 py-0.5 md:py-1`}
-                                        >
-                                            <span className="text-xs font-semibold">
-                                                {tournament.status || "TBA"}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Content Section */}
-                                    <div className="flex flex-col flex-grow p-4 md:p-5">
-                                        <div className="h-12 sm:h-14 mb-2 md:mb-3">
-                                            <h3 className="text-[#F2F2F2] font-bold text-sm sm:text-base md:text-lg leading-tight group-hover:text-[#FF2146] transition-colors line-clamp-2">
-                                                {tournament.name}
-                                            </h3>
-                                        </div>
-
-                                        <div className="h-10 mb-3 md:mb-4">
-                                            <p className="text-[#69747C] text-xs md:text-sm leading-relaxed line-clamp-2">
-                                                {tournament.description ||
-                                                    "Join this tournament and compete!"}
-                                            </p>
-                                        </div>
-
-                                        <div className="space-y-2 mb-3 md:mb-4">
-                                            <div className="flex items-center gap-2 text-xs md:text-sm h-5">
-                                                <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#F2AF29] flex-shrink-0" />
-                                                <span className="text-[#69747C] flex-shrink-0">
-                                                    Prize:
-                                                </span>
-                                                <span className="text-[#F2F2F2] font-semibold truncate">
-                                                    {formatCurrency(
-                                                        tournament.prize_pool
-                                                    )}
+                                            {/* 🎨 Enhanced Category Badge */}
+                                            <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
+                                                <span
+                                                    className={`inline-flex items-center gap-1.5 ${catConfig.bgColor} ${catConfig.textColor} border ${catConfig.borderColor} backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${catConfig.glowColor}`}
+                                                >
+                                                    <Trophy className="w-3 h-3" />
+                                                    <span className="text-xs font-bold tracking-wider">
+                                                        {catConfig.name}
+                                                    </span>
                                                 </span>
                                             </div>
 
-                                            <div className="flex items-center gap-2 text-xs md:text-sm h-5">
-                                                <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF2146] flex-shrink-0" />
-                                                <span className="text-[#69747C] flex-shrink-0">
-                                                    Participants:
-                                                </span>
-                                                <span className="text-[#F2F2F2] font-semibold">
-                                                    {tournament.participants}/
-                                                    {tournament.max_participants ||
-                                                        "∞"}
-                                                </span>
-                                            </div>
-
-                                            <div className="flex items-center gap-2 text-xs md:text-sm h-5">
-                                                <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] flex-shrink-0" />
-                                                <span className="text-[#69747C] text-xs md:text-sm truncate">
-                                                    {formatDate(
-                                                        tournament.start_date
-                                                    )}
+                                            {/* 🎨 Enhanced Status Badge */}
+                                            <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
+                                                <span
+                                                    className={`inline-flex items-center gap-1.5 ${statConfig.bgColor} ${statConfig.textColor} border ${statConfig.borderColor} backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${statConfig.pulse ? 'animate-pulse' : ''}`}
+                                                >
+                                                    <span className="text-xs">{statConfig.icon}</span>
+                                                    <span className="text-xs font-semibold">
+                                                        {tournament.status}
+                                                    </span>
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <div className="h-6 mb-3 md:mb-4">
-                                            {(tournament.url_yt ||
-                                                tournament.url_startgg) && (
-                                                <div className="flex gap-3">
-                                                    {tournament.url_yt && (
-                                                        <a
-                                                            href={
-                                                                tournament.url_yt
-                                                            }
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            onClick={(e) =>
-                                                                e.stopPropagation()
-                                                            }
-                                                            className="flex items-center gap-1 text-xs text-[#FF2146] hover:text-[#FF2146]/80 transition-colors"
-                                                        >
-                                                            <Youtube className="w-3.5 h-3.5 flex-shrink-0" />
-                                                            <span>Watch</span>
-                                                        </a>
-                                                    )}
-                                                    {tournament.url_startgg && (
-                                                        <a
-                                                            href={`https://www.start.gg/tournament/${tournament.url_startgg}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            onClick={(e) =>
-                                                                e.stopPropagation()
-                                                            }
-                                                            className="flex items-center gap-1 text-xs text-[#F2AF29] hover:text-[#F2AF29]/80 transition-colors"
-                                                        >
-                                                            <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
-                                                            <span>
-                                                                Start.gg
-                                                            </span>
-                                                        </a>
-                                                    )}
+                                        {/* Content Section */}
+                                        <div className="flex flex-col flex-grow p-4 md:p-5">
+                                            <div className="h-12 sm:h-14 mb-2 md:mb-3">
+                                                <h3 className="text-[#F2F2F2] font-bold text-sm sm:text-base md:text-lg leading-tight group-hover:text-[#FF2146] transition-colors line-clamp-2">
+                                                    {tournament.name}
+                                                </h3>
+                                            </div>
+
+                                            <div className="h-10 mb-3 md:mb-4">
+                                                <p className="text-[#69747C] text-xs md:text-sm leading-relaxed line-clamp-2">
+                                                    {tournament.desc ||
+                                                        "Join this tournament and compete!"}
+                                                </p>
+                                            </div>
+
+                                            <div className="space-y-2 mb-3 md:mb-4">
+                                                <div className="flex items-center gap-2 text-xs md:text-sm h-5">
+                                                    <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#F2AF29] flex-shrink-0" />
+                                                    <span className="text-[#69747C] flex-shrink-0">
+                                                        Prize:
+                                                    </span>
+                                                    <span className="text-[#F2F2F2] font-semibold truncate">
+                                                        {formatCurrency(
+                                                            tournament.prizepool
+                                                        )}
+                                                    </span>
                                                 </div>
-                                            )}
-                                        </div>
 
-                                        <div className="mt-auto">
-                                            <button className="w-full px-3 md:px-4 py-2 md:py-2.5 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-xs sm:text-sm md:text-base rounded-lg transition-all duration-300 active:scale-95 md:group-hover:scale-105">
-                                                View Details
-                                            </button>
+                                                <div className="flex items-center gap-2 text-xs md:text-sm h-5">
+                                                    <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF2146] flex-shrink-0" />
+                                                    <span className="text-[#69747C] flex-shrink-0">
+                                                        Participants:
+                                                    </span>
+                                                    <span className="text-[#F2F2F2] font-semibold">
+                                                        {tournament.total || 0}/
+                                                        {tournament.max_pemain ||
+                                                            "∞"}
+                                                    </span>
+                                                </div>
+
+                                                <div className="flex items-center gap-2 text-xs md:text-sm h-5">
+                                                    <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] flex-shrink-0" />
+                                                    <span className="text-[#69747C] text-xs md:text-sm truncate">
+                                                        {formatDate(
+                                                            tournament.start_date
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="h-6 mb-3 md:mb-4">
+                                                {(tournament.url_yt ||
+                                                    tournament.url_startgg) && (
+                                                    <div className="flex gap-3">
+                                                        {tournament.url_yt && (
+                                                            <a
+                                                                href={
+                                                                    tournament.url_yt
+                                                                }
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onClick={(e) =>
+                                                                    e.stopPropagation()
+                                                                }
+                                                                className="flex items-center gap-1 text-xs text-[#FF2146] hover:text-[#FF2146]/80 transition-colors"
+                                                            >
+                                                                <Youtube className="w-3.5 h-3.5 flex-shrink-0" />
+                                                                <span>Watch</span>
+                                                            </a>
+                                                        )}
+                                                        {tournament.url_startgg && (
+                                                            <a
+                                                                href={`https://www.start.gg/tournament/${tournament.url_startgg}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onClick={(e) =>
+                                                                    e.stopPropagation()
+                                                                }
+                                                                className="flex items-center gap-1 text-xs text-[#F2AF29] hover:text-[#F2AF29]/80 transition-colors"
+                                                            >
+                                                                <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                                                                <span>
+                                                                    Start.gg
+                                                                </span>
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="mt-auto">
+                                                <button 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleTournamentClick(tournament.id);
+                                                    }}
+                                                    className="w-full px-3 md:px-4 py-2 md:py-2.5 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-xs sm:text-sm md:text-base rounded-lg transition-all duration-300 active:scale-95 md:group-hover:scale-105"
+                                                >
+                                                    {tournament.status === "Pendaftaran Dibuka" ? "Register Now" : "View Details"}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     ) : (
                         <div className="text-center py-12 md:py-20">

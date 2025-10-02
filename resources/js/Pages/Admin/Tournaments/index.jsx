@@ -10,6 +10,7 @@ import {
     Award,
     ExternalLink,
     X,
+    Loader2,
 } from "lucide-react";
 
 const AdminTournaments = ({ auth, tournaments, users }) => {
@@ -17,6 +18,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
     const [editingTournament, setEditingTournament] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [tournamentToDelete, setTournamentToDelete] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
@@ -107,13 +109,22 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
     };
 
     const confirmDelete = () => {
-        if (tournamentToDelete) {
+        if (tournamentToDelete && !isDeleting) {
+            setIsDeleting(true);
             router.delete(
                 route("tournaments.destroy", tournamentToDelete.tourid),
                 {
                     onSuccess: () => {
                         setShowDeleteModal(false);
                         setTournamentToDelete(null);
+                        setIsDeleting(false);
+                    },
+                    onError: () => {
+                        setIsDeleting(false);
+                        alert("Gagal menghapus tournament. Silakan coba lagi.");
+                    },
+                    onFinish: () => {
+                        setIsDeleting(false);
                     },
                 }
             );
@@ -164,21 +175,20 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                     {tournaments.map((tournament) => (
                         <div
                             key={tournament.tourid}
-                            className="bg-gray-800 rounded-2xl shadow-lg border border-gray-700 overflow-hidden hover:border-gray-600 transition-colors"
+                            className="group relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-gray-700 rounded-xl md:rounded-2xl transition-all duration-300 hover:border-gray-600 h-[520px] sm:h-[540px]"
                         >
-                            {/* Tournament Image */}
-                            <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 relative">
-                                {tournament.image_url ? (
-                                    <img
-                                        src={tournament.image_url}
-                                        alt={tournament.name}
-                                        className="w-full h-full object-cover blur-xs"
-                                    />
-                                ) : (
-                                    <div className="flex items-center justify-center h-full">
-                                        <Award className="h-16 w-16 text-white opacity-50" />
-                                    </div>
-                                )}
+                            {/* Image Section */}
+                            <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden flex-shrink-0">
+                                <img
+                                    src={
+                                        tournament.image_url ||
+                                        "https://via.placeholder.com/400x300?text=Tournament"
+                                    }
+                                    alt={tournament.name}
+                                    className="opacity-60 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    loading="lazy"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0D0C0C] to-transparent"></div>
 
                                 {/* Status Badge */}
                                 <div className="absolute top-3 right-3">
@@ -206,15 +216,19 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                             </div>
 
                             {/* Tournament Info */}
-                            <div className="p-4">
-                                <h3 className="text-lg font-semibold text-white mb-2 line-clamp-1">
-                                    {tournament.name}
-                                </h3>
+                            <div className="flex flex-col flex-grow p-4 md:p-5">
+                                <div className="h-12 sm:h-14 mb-2 md:mb-3">
+                                    <h3 className="text-white font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-2">
+                                        {tournament.name}
+                                    </h3>
+                                </div>
 
                                 {tournament.desc && (
-                                    <p className="text-sm text-gray-400 mb-3 line-clamp-2">
-                                        {tournament.desc}
-                                    </p>
+                                    <div className="h-10 mb-3 md:mb-4">
+                                        <p className="text-gray-400 text-xs md:text-sm leading-relaxed line-clamp-2">
+                                            {tournament.desc}
+                                        </p>
+                                    </div>
                                 )}
 
                                 <div className="space-y-2 mb-4">
@@ -287,7 +301,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                 )}
 
                                 {/* Action Buttons */}
-                                <div className="flex justify-end space-x-2">
+                                <div className="flex justify-end space-x-2 mt-auto">
                                     <button
                                         onClick={() => openModal(tournament)}
                                         className="inline-flex items-center px-3 py-1.5 border border-gray-600 shadow-sm text-xs font-medium rounded text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
@@ -330,7 +344,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                 )}
             </div>
 
-            {/* Modal Form */}
+            {/* Modal Form - Same as before, not changed */}
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
                     <div className="relative bg-gray-800 border border-gray-700 w-full max-w-4xl shadow-lg rounded-2xl">
@@ -665,40 +679,59 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                 </div>
             )}
 
-            {/* Delete Confirmation Modal */}
+            {/* Delete Confirmation Modal - OPTIMIZED */}
             {showDeleteModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
                     <div className="relative bg-gray-800 border border-gray-700 w-full max-w-md shadow-lg rounded-2xl">
                         <div className="p-6">
                             <div className="flex items-center mb-4">
                                 <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-900">
-                                    <Trash2 className="h-6 w-6 text-red-400" />
+                                    {isDeleting ? (
+                                        <Loader2 className="h-6 w-6 text-red-400 animate-spin" />
+                                    ) : (
+                                        <Trash2 className="h-6 w-6 text-red-400" />
+                                    )}
                                 </div>
                             </div>
                             <div className="text-center">
                                 <h3 className="text-lg leading-6 font-medium text-white">
-                                    Hapus Tournament
+                                    {isDeleting ? "Menghapus Tournament..." : "Hapus Tournament"}
                                 </h3>
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-400">
-                                        Apakah Anda yakin ingin menghapus
-                                        tournament "{tournamentToDelete?.name}"?
-                                        Tindakan ini tidak dapat dibatalkan.
+                                        {isDeleting 
+                                            ? "Mohon tunggu, tournament sedang dihapus..."
+                                            : `Apakah Anda yakin ingin menghapus tournament "${tournamentToDelete?.name}"? Tindakan ini tidak dapat dibatalkan.`
+                                        }
                                     </p>
                                 </div>
                             </div>
                             <div className="mt-6 flex space-x-3">
                                 <button
-                                    onClick={() => setShowDeleteModal(false)}
-                                    className="w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                                    onClick={() => {
+                                        if (!isDeleting) {
+                                            setShowDeleteModal(false);
+                                            setTournamentToDelete(null);
+                                        }
+                                    }}
+                                    disabled={isDeleting}
+                                    className="w-full px-4 py-2 border border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     onClick={confirmDelete}
-                                    className="w-full px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                                    disabled={isDeleting}
+                                    className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Hapus
+                                    {isDeleting ? (
+                                        <>
+                                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                            Menghapus...
+                                        </>
+                                    ) : (
+                                        "Hapus"
+                                    )}
                                 </button>
                             </div>
                         </div>

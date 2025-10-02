@@ -29,6 +29,8 @@ class Tournament extends Model
     'tourid',
     'event_id',
     'sggid', // <- ini
+    'type',
+    'dojo',
 ];
 
 
