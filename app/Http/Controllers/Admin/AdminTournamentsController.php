@@ -44,6 +44,8 @@ class AdminTournamentsController extends Controller
             'url_startgg' => 'nullable|string|max:255',
             'status' => 'required|in:Selesai,Pendaftaran Dibuka',
             'sggid' => 'nullable|integer',
+            
+            'dojo' => 'nullable|in:Yes,No',
         ]);
 
         // 🎯 ubah link StartGG -> slug
@@ -122,6 +124,7 @@ class AdminTournamentsController extends Controller
             'url_startgg' => 'nullable|string|max:255',
             'status' => 'required|in:Selesai,Pendaftaran Dibuka',
             'sggid' => 'nullable|integer',
+            'dojo' => 'nullable|in:Yes,No',
         ]);
 
         // ✅ Hapus file lama kalau ada image baru DAN berbeda dari yang lama

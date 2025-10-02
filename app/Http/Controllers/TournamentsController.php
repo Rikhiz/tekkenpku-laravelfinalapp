@@ -18,8 +18,8 @@ class TournamentsController extends Controller
             ->get()
             ->map(function ($tournament) {
                 // Status mapping
-                $statusColor = $tournament->status === 'Pendaftaran Dibuka' 
-                    ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30' 
+                $statusColor = $tournament->status === 'Pendaftaran Dibuka'
+                    ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30'
                     : 'bg-blue-500/20 text-blue-500 border-blue-500/30';
 
                 // Category mapping
@@ -33,6 +33,26 @@ class TournamentsController extends Controller
 
                 // Count participants
                 $participantCount = $tournament->relasi()->count();
+                $dojoFormat = null;
+                if ($tournament->dojo === 'Yes') {
+                    $dojoLevels = [16, 32, 48, 64, 96];
+                    $foundLevel = null;
+
+                    foreach ($dojoLevels as $level) {
+                        if ($participantCount <= $level) {
+                            $foundLevel = $level;
+                            break;
+                        }
+                    }
+
+                    if ($foundLevel) {
+                        $dojoFormat = "Dojo {$foundLevel}";
+                    } else {
+                        $dojoFormat = "Dojo 96+";
+                    }
+                }
+
+
                 $maxParticipants = $tournament->max_pemain ?? 0;
 
                 return [
@@ -55,6 +75,10 @@ class TournamentsController extends Controller
                     'url_startgg' => $tournament->url_startgg,
                     'created_by' => $tournament->creator->name ?? 'Unknown',
                     'created_at' => $tournament->created_at,
+
+                    'dojo' => $tournament->dojo,
+                    'dojo' => $dojoFormat,
+
                 ];
             });
 
@@ -88,8 +112,8 @@ class TournamentsController extends Controller
             ->firstOrFail();
 
         // Status mapping
-        $statusColor = $tournament->status === 'Pendaftaran Dibuka' 
-            ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30' 
+        $statusColor = $tournament->status === 'Pendaftaran Dibuka'
+            ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30'
             : 'bg-blue-500/20 text-blue-500 border-blue-500/30';
 
         // Category mapping
@@ -110,6 +134,26 @@ class TournamentsController extends Controller
                 'placement' => $relasi->placement,
             ];
         })->sortBy('placement')->values();
+        $participantCount = $tournament->relasi()->count();
+
+        $dojoFormat = null;
+        if ($tournament->dojo === 'Yes') {
+            $dojoLevels = [16, 32, 48, 64, 96];
+            $foundLevel = null;
+
+            foreach ($dojoLevels as $level) {
+                if ($participantCount <= $level) {
+                    $foundLevel = $level;
+                    break;
+                }
+            }
+
+            if ($foundLevel) {
+                $dojoFormat = "Dojo {$foundLevel}";
+            } else {
+                $dojoFormat = "Dojo 96+";
+            }
+        }
 
         $tournamentData = [
             'id' => $tournament->tourid,
@@ -132,6 +176,8 @@ class TournamentsController extends Controller
             'created_by' => $tournament->creator->name ?? 'Unknown',
             'created_at' => $tournament->created_at,
             'participants' => $participants,
+            'dojo' => $tournament->dojo,
+            'dojo' => $dojoFormat,
         ];
 
         return Inertia::render('Tournaments/Show', [

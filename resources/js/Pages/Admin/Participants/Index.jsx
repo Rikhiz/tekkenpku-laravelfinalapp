@@ -26,14 +26,7 @@ const ParticipantsIndex = ({
     flash,
     selectedTournament = null,
 }) => {
-    console.log("✅ ParticipantsIndex Props:", {
-        participantsAll,
-        authUser,
-        users,
-        tournaments,
-        flash,
-        selectedTournament,
-    });
+    
 
     const [currentView, setCurrentView] = useState(
         selectedTournament ? "participants" : "tournaments"

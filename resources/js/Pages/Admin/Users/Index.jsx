@@ -8,10 +8,10 @@ import {
     Users,
     RefreshCw,
     X,
-    UserPlus,
     Mail,
     Shield,
     Hash,
+    Loader2,
 } from "lucide-react";
 
 const UsersIndex = ({ usersall, authUser, flash }) => {
@@ -20,7 +20,7 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
     const [syncing, setSyncing] = useState(false);
-    const [roleFilter, setRoleFilter] = useState("all"); // NEW
+    const [roleFilter, setRoleFilter] = useState("all");
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
@@ -149,33 +149,33 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                     </div>
                 </div>
 
-{/* Filter Dropdown */}
-<div className="bg-gray-800 rounded-2xl p-4 border border-gray-700 mb-4 flex flex-wrap items-center justify-between">
-  <h2 className="text-lg font-semibold text-white mb-3 sm:mb-0">
-    Filter Users
-  </h2>
-  <div className="flex space-x-2">
-    {["all", "admin", "player"].map((role) => (
-      <button
-        key={role}
-        onClick={() => setRoleFilter(role)}
-        className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-          roleFilter === role
-            ? role === "admin"
-              ? "bg-red-600 text-white"
-              : role === "player"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-600 text-white"
-            : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-        }`}
-      >
-        {role === "all"
-          ? "All Users"
-          : role.charAt(0).toUpperCase() + role.slice(1)}
-      </button>
-    ))}
-  </div>
-</div>
+                {/* Filter Dropdown */}
+                <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700 mb-4 flex flex-wrap items-center justify-between">
+                    <h2 className="text-lg font-semibold text-white mb-3 sm:mb-0">
+                        Filter Users
+                    </h2>
+                    <div className="flex space-x-2">
+                        {["all", "admin", "player"].map((role) => (
+                            <button
+                                key={role}
+                                onClick={() => setRoleFilter(role)}
+                                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                                    roleFilter === role
+                                        ? role === "admin"
+                                            ? "bg-red-600 text-white"
+                                            : role === "player"
+                                            ? "bg-blue-600 text-white"
+                                            : "bg-gray-600 text-white"
+                                        : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                                }`}
+                            >
+                                {role === "all"
+                                    ? "All Users"
+                                    : role.charAt(0).toUpperCase() + role.slice(1)}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
                 {/* Users Table */}
                 <div className="bg-gray-800 rounded-2xl shadow-lg border border-gray-700 overflow-hidden">
@@ -297,7 +297,204 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                 </div>
             </div>
 
-            {/* ... (modal form & delete modal tetap sama) ... */}
+            {/* Modal Form - Smaller */}
+            {showModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+                    <div className="relative bg-gray-800 border border-gray-700 w-full max-w-md max-h-[85vh] shadow-lg rounded-xl flex flex-col">
+                        <div className="flex items-center justify-between p-4 border-b border-gray-700 flex-shrink-0">
+                            <h3 className="text-base font-medium text-white">
+                                {editingUser ? "Edit User" : "Tambah User Baru"}
+                            </h3>
+                            <button
+                                onClick={closeModal}
+                                className="text-gray-400 hover:text-white transition-colors"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+                            <div className="flex-1 overflow-y-auto p-4">
+                                <div className="space-y-3">
+                                    {/* Name */}
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                                            Nama *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={data.name}
+                                            onChange={(e) =>
+                                                setData("name", e.target.value)
+                                            }
+                                            className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
+                                            required
+                                        />
+                                        {errors.name && (
+                                            <p className="mt-1 text-xs text-red-400">
+                                                {errors.name}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Email */}
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            value={data.email}
+                                            onChange={(e) =>
+                                                setData("email", e.target.value)
+                                            }
+                                            className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
+                                        />
+                                        {errors.email && (
+                                            <p className="mt-1 text-xs text-red-400">
+                                                {errors.email}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* SGG User ID */}
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                                            SGG User ID
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={data.sgguserid}
+                                            onChange={(e) =>
+                                                setData("sgguserid", e.target.value)
+                                            }
+                                            className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
+                                        />
+                                        {errors.sgguserid && (
+                                            <p className="mt-1 text-xs text-red-400">
+                                                {errors.sgguserid}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Password */}
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                                            Password {!editingUser && "*"}
+                                        </label>
+                                        <input
+                                            type="password"
+                                            value={data.password}
+                                            onChange={(e) =>
+                                                setData("password", e.target.value)
+                                            }
+                                            className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
+                                            required={!editingUser}
+                                        />
+                                        {editingUser && (
+                                            <p className="mt-1 text-xs text-gray-400">
+                                                Kosongkan jika tidak ingin mengubah password
+                                            </p>
+                                        )}
+                                        {errors.password && (
+                                            <p className="mt-1 text-xs text-red-400">
+                                                {errors.password}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Role */}
+                                    <div>
+                                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                                            Role *
+                                        </label>
+                                        <select
+                                            value={data.role}
+                                            onChange={(e) =>
+                                                setData("role", e.target.value)
+                                            }
+                                            className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
+                                            required
+                                        >
+                                            <option value="player">Player</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                        {errors.role && (
+                                            <p className="mt-1 text-xs text-red-400">
+                                                {errors.role}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Submit Buttons */}
+                            <div className="flex justify-end space-x-2 p-4 border-t border-gray-700 flex-shrink-0">
+                                <button
+                                    type="button"
+                                    onClick={closeModal}
+                                    className="px-3 py-1.5 border border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="px-3 py-1.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
+                                >
+                                    {processing
+                                        ? "Menyimpan..."
+                                        : editingUser
+                                        ? "Update"
+                                        : "Simpan"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal - Smaller */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+                    <div className="relative bg-gray-800 border border-gray-700 w-full max-w-md shadow-lg rounded-xl">
+                        <div className="p-5">
+                            <div className="flex items-center mb-4">
+                                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-red-900">
+                                    <Trash2 className="h-5 w-5 text-red-400" />
+                                </div>
+                            </div>
+                            <div className="text-center">
+                                <h3 className="text-base leading-6 font-medium text-white">
+                                    Hapus User
+                                </h3>
+                                <div className="mt-2">
+                                    <p className="text-sm text-gray-400">
+                                        Apakah Anda yakin ingin menghapus user "{userToDelete?.name}"? Tindakan ini tidak dapat dibatalkan.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="mt-5 flex space-x-3">
+                                <button
+                                    onClick={() => {
+                                        setShowDeleteModal(false);
+                                        setUserToDelete(null);
+                                    }}
+                                    className="w-full px-3 py-1.5 border border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    onClick={confirmDelete}
+                                    className="w-full inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                                >
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AdminLayout>
     );
 };

@@ -59,7 +59,7 @@ const Header = () => {
           fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out
           ${
               isScrolled
-                  ? "bg-[#0D0C0C]/95 backdrop-blur-md shadow-lg border-b border-[#FF2146]/20"
+                  ? "bg-[#0D0C0C]/95 backdrop-blur-md hadow-lg border-b border-[#FF2146]/20"
                   : "bg-transparent"
           }
         `}
@@ -80,7 +80,7 @@ const Header = () => {
                                 alt="Logo"
                                 className={`
         transition-all duration-500 hover:brightness-110
-        ${isScrolled ? "size-14" : "size-24"}
+        ${isScrolled ? "size-12" : "size-20"}
       `}
                             />
                         </button>
@@ -136,7 +136,15 @@ const Header = () => {
                 </div>
 
                 {isMobileMenuOpen && (
-                    <div className="md:hidden bg-[#0D0C0C]/98 backdrop-blur-md border-t border-[#FF2146]/20">
+                    <div
+                        className={`md:hidden border-t border-[#FF2146]/20 
+      ${
+          isScrolled
+              ? "bg-black backdrop-blur-md"
+              : "bg-white/20 backdrop-blur-sm"
+      }
+    `}
+                    >
                         <div className="px-4 py-4 space-y-1">
                             {navLinks.map((link) => (
                                 <button

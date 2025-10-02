@@ -6,6 +6,7 @@ use App\Models\Tournament;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use Inertia\Inertia;
+use App\Models\RelasiTour;
 
 class WelcomeController extends Controller
 {
@@ -15,7 +16,7 @@ class WelcomeController extends Controller
         $activePlayers = \App\Models\User::count(); // total player
         $totalTournaments = Tournament::count();    // total turnamen
         $totalPrizePool = Tournament::sum('prizepool'); // total hadiah
-
+        $firstPlaceCount = RelasiTour::where('placement', 1)->count();
         $stats = [
             [
                 'value' => $activePlayers,
@@ -28,6 +29,10 @@ class WelcomeController extends Controller
             [
                 'value' => $totalPrizePool,
                 'label' => 'Total Prize Pool'
+            ],
+            [
+                'value' => $firstPlaceCount,
+                'label' => '1st Place Finishes'
             ],
         ];
 

@@ -28,13 +28,21 @@ const Welcome = ({
     }, []);
 
     const formatStatValue = (value, label) => {
+        const formatCompact = (num) => {
+            if (num >= 1_000_000_000) {
+                return `Rp${(num / 1_000_000_000).toFixed(1)}M`; // Miliar
+            } else if (num >= 1_000_000) {
+                return `Rp${(num / 1_000_000).toFixed(1)}JT`; // Juta
+            } else if (num >= 1_000) {
+                return `Rp${(num / 1_000).toFixed(1)}Rb`; // Ribu
+            }
+            return `Rp${num}`;
+        };
+
         if (label === "Total Prize Pool") {
-            return new Intl.NumberFormat("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                minimumFractionDigits: 0,
-            }).format(value);
+            return formatCompact(value);
         }
+
         return value.toLocaleString("id-ID");
     };
 
@@ -110,7 +118,8 @@ const Welcome = ({
                         loading="lazy"
                         className="relative w-full h-full object-cover "
                     />
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#0D0C0C]/80 via-[#0D0C0C]/60 to-[#0D0C0C]/90"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#0D0C0C]/10 via-[#0D0C0C]/20 to-[#0D0C0C]/50"></div>
+                    <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#0D0C0C] pointer-events-none"></div>
                 </div>
 
                 {/* Animated Blobs */}
@@ -172,7 +181,7 @@ const Welcome = ({
                             </div>
 
                             {/* Stats - Desktop */}
-                            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 pt-4 lg:pt-8">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 pt-4 lg:pt-8">
                                 {stats.map((stat, index) => (
                                     <div
                                         key={index}
@@ -388,18 +397,28 @@ const Welcome = ({
                                                                 </div>
                                                             </div>
 
-                                                            {tournament.status === "Pendaftaran Dibuka" && (
-                                                                <button 
-                                                                    onClick={() => handleTournamentClick(tournament.id)}
+                                                            {tournament.status ===
+                                                                "Pendaftaran Dibuka" && (
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleTournamentClick(
+                                                                            tournament.id
+                                                                        )
+                                                                    }
                                                                     className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
                                                                 >
                                                                     Register Now
                                                                 </button>
                                                             )}
 
-                                                            {tournament.status === "Selesai" && (
-                                                                <button 
-                                                                    onClick={() => handleTournamentClick(tournament.id)}
+                                                            {tournament.status ===
+                                                                "Selesai" && (
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleTournamentClick(
+                                                                            tournament.id
+                                                                        )
+                                                                    }
                                                                     className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29] active:scale-95"
                                                                 >
                                                                     View Results
