@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminActivityController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminGalleriesController;
 use App\Http\Controllers\Admin\AdminLeaderboardController;
@@ -70,6 +71,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\Adm
     Route::resource('startgg', AdminStartGGController::class);
     Route::resource('leaderboard', AdminLeaderboardController::class);
     Route::resource('participant', AdminParticipantController::class);
+    Route::resource('activity', AdminActivityController::class);
     Route::resource('banlist', AdminBanListController::class);
 
 });

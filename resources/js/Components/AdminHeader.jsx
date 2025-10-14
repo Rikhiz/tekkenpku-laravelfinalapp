@@ -3,7 +3,7 @@ import {
     LogOut,
     User,
     ChevronRight,
-    Settings,
+    BoomBox,
     BarChart3,
     Trophy,
     Image,
@@ -55,6 +55,12 @@ const AdminHeader = ({ user }) => {
             label: "Ban List",
             icon: Shield, // misalnya pakai icon Shield
             matchPaths: ["/admin/banlist"],
+        },
+        {
+            path: "/admin/activity",
+            label: "Activity",
+            icon: BoomBox,
+            matchPaths: ["/admin/activity"],
         },
         {
             path: "/admin/gallery",

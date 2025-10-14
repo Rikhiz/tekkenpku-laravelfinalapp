@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
-import logo from "../images/test.png";
+import logo from "../images/tpcputih.png";
 import { router } from "@inertiajs/react";
 import LoginModal from "@/Components/LoginModal";
 import TooltipWrapper from "@/Components/TooltipWrapper";
@@ -13,6 +13,7 @@ const Header = () => {
     const navLinks = [
         { label: "LEADERBOARD", href: "/leaderboards" },
         { label: "TOURNAMENTS", href: "/tournaments" },
+        { label: "ACTIVITY", href: "/Activity" },
         { label: "GALLERY", href: "/gallery" },
         { label: "ABOUT", href: "/about" },
     ];

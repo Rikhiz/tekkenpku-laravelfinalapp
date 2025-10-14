@@ -20,11 +20,16 @@ const TournamentShow = ({ tournament }) => {
         if (typeof amount === "string" && amount.includes("Rp")) {
             return amount;
         }
-        return new Intl.NumberFormat("id-ID", {
+
+        // Format pakai Intl.NumberFormat dulu
+        let formatted = new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
             minimumFractionDigits: 0,
         }).format(amount);
+
+        // Hapus spasi (termasuk non-breaking space)
+        return formatted.replace(/\s/g, "");
     };
 
     const formatDate = (dateString) => {
@@ -90,8 +95,6 @@ const TournamentShow = ({ tournament }) => {
 
                     {/* Content */}
                     <div className="relative h-full max-w-7xl mx-auto px-4 md:px-8 flex flex-col justify-end pb-6 md:pb-12">
-                        
-
                         {/* Tournament Info */}
                         <div className="space-y-3 md:space-y-4 mt-16 md:mt-0">
                             {/* Badges */}
@@ -119,13 +122,13 @@ const TournamentShow = ({ tournament }) => {
                                 {tournament.name}
                             </h1>
                             {/* Back Button - Fixed Position Below Header */}
-                        <button
-                            onClick={() => router.visit("/tournaments")}
-                            className="absolute top-20 md:top-32 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-[#F2F2F2] hover:text-[#FF2146] transition-colors bg-[#0D0C0C]/80 backdrop-blur-md px-3 md:px-4 py-2 md:py-2.5 rounded-lg border border-[#69747C]/30 hover:border-[#FF2146]/50 text-sm md:text-base z-30 shadow-lg"
-                        >
-                            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
-                            <span className="font-semibold">Back</span>
-                        </button>
+                            <button
+                                onClick={() => router.visit("/tournaments")}
+                                className="absolute top-20 md:top-32 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-[#F2F2F2] hover:text-[#FF2146] transition-colors bg-[#0D0C0C]/80 backdrop-blur-md px-3 md:px-4 py-2 md:py-2.5 rounded-lg border border-[#69747C]/30 hover:border-[#FF2146]/50 text-sm md:text-base z-30 shadow-lg"
+                            >
+                                <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+                                <span className="font-semibold">Back</span>
+                            </button>
 
                             {/* Quick Info */}
                             <div className="flex flex-wrap gap-3 md:gap-6 text-[#F2F2F2] text-xs md:text-base">
@@ -148,14 +151,15 @@ const TournamentShow = ({ tournament }) => {
                                         {formatCurrency(tournament.prize_pool)}
                                     </span>
                                 </div>
-                                {tournament.dojo && tournament.dojo !== "Yes" && (
-                                <div className="flex items-center gap-1.5 md:gap-2">
-                                    <Shield className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
-                                    <span className="truncate">
-                                        {tournament.dojo}
-                                    </span>
-                                </div>
-                                )}
+                                {tournament.dojo &&
+                                    tournament.dojo !== "Yes" && (
+                                        <div className="flex items-center gap-1.5 md:gap-2">
+                                            <Shield className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                                            <span className="truncate">
+                                                {tournament.dojo}
+                                            </span>
+                                        </div>
+                                    )}
                             </div>
                         </div>
                     </div>

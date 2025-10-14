@@ -71,11 +71,16 @@ const Welcome = ({
         if (typeof amount === "string" && amount.includes("Rp")) {
             return amount;
         }
-        return new Intl.NumberFormat("id-ID", {
+
+        // Format pakai Intl.NumberFormat dulu
+        let formatted = new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
             minimumFractionDigits: 0,
         }).format(amount);
+
+        // Hapus spasi (termasuk non-breaking space)
+        return formatted.replace(/\s/g, "");
     };
 
     const formatDate = (dateString) => {
@@ -209,26 +214,6 @@ const Welcome = ({
                                     : "translate-x-10 opacity-0"
                             }`}
                         ></div>
-
-                        {/* Stats - Mobile */}
-                        <div className="md:hidden grid grid-cols-2 gap-3 w-full pt-2 px-2">
-                            {stats.map((stat, index) => (
-                                <div
-                                    key={index}
-                                    className="text-center space-y-1 bg-gradient-to-br from-[#0D0C0C]/50 to-[#69747C]/10 backdrop-blur-sm border border-[#69747C]/20 rounded-lg p-3"
-                                >
-                                    <div className="text-lg sm:text-xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent break-words">
-                                        {formatStatValue(
-                                            stat.value,
-                                            stat.label
-                                        )}
-                                    </div>
-                                    <div className="text-[#69747C] text-xs leading-tight">
-                                        {stat.label}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
                     </div>
                 </div>
             </div>

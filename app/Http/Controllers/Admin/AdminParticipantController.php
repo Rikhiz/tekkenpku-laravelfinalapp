@@ -329,7 +329,7 @@ class AdminParticipantController extends Controller
     }
 
     /**
-     * Get tournament statistics
+     * Get tournament statistics (untuk Inertia)
      */
     public function getTournamentStats(Request $request)
     {
@@ -353,7 +353,10 @@ class AdminParticipantController extends Controller
             ];
         }
 
-        return response()->json($stats);
+        return Inertia::render('Admin/Participants/Stats', [
+            'stats' => $stats,
+            'authUser' => auth()->user(),
+        ]);
     }
 
     /**
@@ -415,6 +418,8 @@ class AdminParticipantController extends Controller
                              ->get();
 
         if ($format === 'json') {
+            // Untuk JSON export, tetap gunakan response()->json()
+            // karena ini adalah download file, bukan render halaman
             return response()->json($participants);
         }
 

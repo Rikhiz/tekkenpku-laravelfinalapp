@@ -82,16 +82,22 @@ const TournamentsIndex = ({
     };
 
     const formatCurrency = (amount) => {
-        if (!amount) return "TBA";
-        if (typeof amount === "string" && amount.includes("Rp")) {
-            return amount;
-        }
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-        }).format(amount);
-    };
+    if (!amount) return "TBA";
+    if (typeof amount === "string" && amount.includes("Rp")) {
+        return amount;
+    }
+
+    // Format pakai Intl.NumberFormat dulu
+    let formatted = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+    }).format(amount);
+
+    // Hapus spasi (termasuk non-breaking space)
+    return formatted.replace(/\s/g, "");
+};
+
 
     const formatDate = (dateString) => {
         if (!dateString) return "TBA";

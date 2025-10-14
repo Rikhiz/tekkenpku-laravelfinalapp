@@ -5,6 +5,8 @@ import { useForm } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
 import InputError from "@/Components/InputError";
 import logo from "../images/test.png";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 const LoginModal = ({ show, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,13 +25,41 @@ const LoginModal = ({ show, onClose }) => {
       onSuccess: () => {
         onClose();
         reset("password");
+        Swal.fire({
+          title: "Login Berhasil!",
+          text: "Selamat datang kembali, Admin.",
+          icon: "success",
+          background: "#0D0C0C",
+          color: "#F2F2F2",
+          confirmButtonColor: "#FF2146",
+          confirmButtonText: "Lanjutkan",
+          customClass: {
+            popup: "rounded-xl shadow-lg border border-[#FF2146]/30",
+            confirmButton: "text-[#F2F2F2] font-semibold px-4 py-2",
+          },
+        });
       },
-      onError: () => {
-        console.log("Login failed:", errors);
-      },
-      onFinish: () => {
+      onError: (err) => {
+        onClose();
         reset("password");
+
+        Swal.fire({
+          title: "Login Gagal",
+          text: "Email atau password salah. Silakan coba lagi.",
+          icon: "error",
+          background: "#0D0C0C", // Sesuai warna modal kamu
+          color: "#F2F2F2",
+          iconColor: "#FF2146", // Warna merah khas
+          confirmButtonColor: "#F2AF29", // Warna kuning gradasi kamu
+          confirmButtonText: "Tutup",
+          customClass: {
+            popup: "rounded-xl shadow-lg border border-[#FF2146]/30",
+            title: "text-[#FF2146] font-semibold",
+            confirmButton: "text-[#0D0C0C] font-semibold px-4 py-2 rounded-md",
+          },
+        });
       },
+      onFinish: () => reset("password"),
     });
   };
 
@@ -37,13 +67,20 @@ const LoginModal = ({ show, onClose }) => {
     <Modal title="Login" show={show} onClose={() => { reset(); onClose(); }}>
       {/* Logo */}
       <div className="flex justify-center mb-6">
-        <img src={logo} alt="Admin Logo" className="w-25 h-auto" style={{ width: "100px", height: "auto" }} />
+        <img
+          src={logo}
+          alt="Admin Logo"
+          className="w-25 h-auto"
+          style={{ width: "100px", height: "auto" }}
+        />
       </div>
 
       <form onSubmit={handleLogin} className="flex flex-col gap-5">
         {/* Email */}
         <div className="flex flex-col gap-2">
-          <label className="text-[#F2F2F2] text-sm font-medium">Email or Username</label>
+          <label className="text-[#F2F2F2] text-sm font-medium">
+            Email or Username
+          </label>
           <input
             type="text"
             name="login"
@@ -56,7 +93,6 @@ const LoginModal = ({ show, onClose }) => {
             autoComplete="username"
             required
           />
-          {errors.email && <InputError message={errors.email} className="text-red-400 text-sm" />}
         </div>
 
         {/* Password */}
@@ -83,17 +119,7 @@ const LoginModal = ({ show, onClose }) => {
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
-          {errors.password && <InputError message={errors.password} className="text-red-400 text-sm" />}
         </div>
-
-        
-
-        {/* General Error */}
-        {(errors.email || errors.password) && (
-          <div className="text-red-400 text-sm text-center bg-red-500/10 border border-red-500/50 rounded-md p-2">
-            Please check your credentials and try again.
-          </div>
-        )}
 
         {/* Submit */}
         <button
@@ -110,7 +136,6 @@ const LoginModal = ({ show, onClose }) => {
         <p className="text-[#69747C] text-sm mb-2">Login Information:</p>
         <div className="text-[#F2F2F2] text-xs space-y-1">
           <p>Hanya Untuk Sang Admin. User Role Menyusul</p>
-          
         </div>
       </div>
     </Modal>
