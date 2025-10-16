@@ -24,6 +24,7 @@ class Tournament extends Model
         'prizepool',
         'max_pemain',
         'url_yt',
+        'url_ig',
         'url_startgg',
         'status',
         'tourid',

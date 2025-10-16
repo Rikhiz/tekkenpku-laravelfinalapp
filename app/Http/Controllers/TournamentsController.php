@@ -112,13 +112,13 @@ class TournamentsController extends Controller
         // Status mapping
         $statusColor = $tournament->status === 'Pendaftaran Dibuka'
             ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30'
-            : 'bg-blue-500/20 text-blue-500 border-blue-500/30';
+            : 'bg-blue-500/20 text-green-400 border-green-500/30';
 
         // Category mapping
         $categoryMap = [
-            1 => ['name' => 'Major', 'color' => 'text-yellow-400', 'bg' => 'bg-yellow-400/10'],
+            1 => ['name' => 'Major', 'color' => 'text-red-400', 'bg' => 'bg-blue-400/10'],
             2 => ['name' => 'Minor', 'color' => 'text-blue-400', 'bg' => 'bg-blue-400/10'],
-            3 => ['name' => 'Mini', 'color' => 'text-green-400', 'bg' => 'bg-green-400/10'],
+            3 => ['name' => 'Mini', 'color' => 'text-green-400', 'bg' => 'bg-green-500/30'],
         ];
 
         $category = $categoryMap[$tournament->category] ?? ['name' => 'Unknown', 'color' => 'text-gray-400', 'bg' => 'bg-gray-400/10'];
@@ -170,6 +170,7 @@ class TournamentsController extends Controller
             'category_color' => $category['color'],
             'category_bg' => $category['bg'],
             'url_yt' => $tournament->url_yt,
+            'url_ig' => $tournament->url_ig,
             'url_startgg' => $tournament->url_startgg,
             'created_by' => $tournament->creator->name ?? 'Unknown',
             'created_at' => $tournament->created_at,

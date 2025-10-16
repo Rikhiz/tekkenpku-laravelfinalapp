@@ -44,10 +44,10 @@ const TournamentsIndex = ({
         },
         2: {
             name: "MINOR",
-            bgColor: "bg-gradient-to-r from-yellow-500 to-amber-500",
+            bgColor: "bg-gradient-to-r from-cyan-500 to-blue-500",
             textColor: "text-white",
-            borderColor: "border-yellow-400",
-            glowColor: "shadow-yellow-500/50",
+            borderColor: "border-cyan-400",
+            glowColor: "shadow-cyan-500/50",
         },
         3: {
             name: "MINI",
@@ -67,15 +67,15 @@ const TournamentsIndex = ({
 
     const statusConfig = {
         Selesai: {
-            bgColor: "bg-gradient-to-r from-gray-700 to-gray-600",
+            bgColor: "bg-gradient-to-r from-emerald-700 to-green-600",
             textColor: "text-gray-200",
             borderColor: "border-gray-400",
             icon: "✓",
         },
         "Pendaftaran Dibuka": {
-            bgColor: "bg-gradient-to-r from-emerald-600 to-green-500",
+            bgColor: "bg-gradient-to-r from-yellow-600 to-amber-500",
             textColor: "text-white",
-            borderColor: "border-emerald-400",
+            borderColor: "border-yellow-400",
             icon: "🔥",
             pulse: true,
         },

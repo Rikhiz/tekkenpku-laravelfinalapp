@@ -23,6 +23,7 @@ const AdminActivities = ({ auth, activities, users }) => {
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
         image_url: "",
+        url_ig: "",
         created_by: "",
         alamat: "",
         desc: "",
@@ -41,6 +42,7 @@ const AdminActivities = ({ auth, activities, users }) => {
             setData({
                 name: activity.name,
                 image_url: activity.image_url || "",
+                url_ig: activity.url_ig || "",
                 created_by: activity.created_by,
                 alamat: activity.alamat,
                 desc: activity.desc || "",
@@ -316,7 +318,29 @@ const AdminActivities = ({ auth, activities, users }) => {
                                         </p>
                                     )}
                                 </div>
-
+                                <div>
+                                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                                        Instagram Post URL
+                                    </label>
+                                    <input
+                                        type="url"
+                                        value={data.url_ig}
+                                        onChange={(e) =>
+                                            setData("url_ig", e.target.value)
+                                        }
+                                        className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
+                                        placeholder="https://www.instagram.com/p/xxx/"
+                                    />
+                                    {errors.url_ig && (
+                                        <p className="mt-1 text-xs text-red-400">
+                                            {errors.url_ig}
+                                        </p>
+                                    )}
+                                    <p className="mt-1 text-xs text-gray-400">
+                                        Copy Instagram post URL (e.g.,
+                                        https://www.instagram.com/p/DOXgSwKkpgp/)
+                                    </p>
+                                </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-300 mb-1">
                                         Alamat *

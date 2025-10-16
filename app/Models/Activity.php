@@ -14,6 +14,7 @@ class Activity extends Model
         'name',
         'slug',
         'image_url',
+        'url_ig',
         'created_by',
         'alamat',
         'desc',

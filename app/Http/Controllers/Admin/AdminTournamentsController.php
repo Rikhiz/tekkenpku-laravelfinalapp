@@ -41,10 +41,11 @@ class AdminTournamentsController extends Controller
             'prizepool' => 'nullable|integer',
             'max_pemain' => 'nullable|integer',
             'url_yt' => 'nullable|string|max:255',
+            'url_ig' => 'nullable|string|max:255',
             'url_startgg' => 'nullable|string|max:255',
             'status' => 'required|in:Selesai,Pendaftaran Dibuka',
             'sggid' => 'nullable|integer',
-            
+
             'dojo' => 'nullable|in:Yes,No',
         ]);
 
@@ -121,6 +122,7 @@ class AdminTournamentsController extends Controller
             'prizepool' => 'nullable|integer',
             'max_pemain' => 'nullable|integer',
             'url_yt' => 'nullable|string|max:255',
+            'url_ig' => 'nullable|string|max:255',
             'url_startgg' => 'nullable|string|max:255',
             'status' => 'required|in:Selesai,Pendaftaran Dibuka',
             'sggid' => 'nullable|integer',
@@ -182,7 +184,7 @@ class AdminTournamentsController extends Controller
      */
     private function resetBanListForCategory(int $category)
     {
-        $columnToReset = match($category) {
+        $columnToReset = match ($category) {
             1 => 'major',
             2 => 'minor',
             3 => 'mini',

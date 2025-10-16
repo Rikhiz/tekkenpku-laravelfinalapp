@@ -34,7 +34,7 @@ class AdminActivityController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            
+            'url_ig' => 'nullable|string|max:255',
             'image_url' => 'nullable|string|max:255',
             'created_by' => 'required|exists:users,id',
             'alamat' => 'required|string|max:255',
@@ -61,6 +61,7 @@ class AdminActivityController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'image_url' => 'nullable|string|max:255',
+            'url_ig' => 'nullable|string|max:255',
             'created_by' => 'required|exists:users,id',
             'alamat' => 'required|string|max:255',
             'desc' => 'nullable|string',
