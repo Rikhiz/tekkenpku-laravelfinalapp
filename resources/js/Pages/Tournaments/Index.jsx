@@ -82,22 +82,21 @@ const TournamentsIndex = ({
     };
 
     const formatCurrency = (amount) => {
-    if (!amount) return "TBA";
-    if (typeof amount === "string" && amount.includes("Rp")) {
-        return amount;
-    }
+        if (!amount) return "TBA";
+        if (typeof amount === "string" && amount.includes("Rp")) {
+            return amount;
+        }
 
-    // Format pakai Intl.NumberFormat dulu
-    let formatted = new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-    }).format(amount);
+        // Format pakai Intl.NumberFormat dulu
+        let formatted = new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+        }).format(amount);
 
-    // Hapus spasi (termasuk non-breaking space)
-    return formatted.replace(/\s/g, "");
-};
-
+        // Hapus spasi (termasuk non-breaking space)
+        return formatted.replace(/\s/g, "");
+    };
 
     const formatDate = (dateString) => {
         if (!dateString) return "TBA";
@@ -153,7 +152,7 @@ const TournamentsIndex = ({
         <AppLayout>
             <div className="min-h-screen bg-gradient-to-b from-[#0D0C0C] via-[#0D0C0C] to-[#1a1a1a]">
                 {/* Hero Header */}
-                <div className="relative py-12 sm:py-16 md:py-24 lg:py-32 text-center overflow-hidden">
+                <div className="relative py-12 sm:py-16 md:py-24 lg:py-48 text-center overflow-hidden">
                     <img
                         src={herobg}
                         alt="Hero Background"
@@ -161,17 +160,19 @@ const TournamentsIndex = ({
                         loading="eager"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-[#0D0C0C]/80 via-[#0D0C0C]/70 to-[#0D0C0C]/80"></div>
-                    
+
                     <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#0D0C0C] pointer-events-none"></div>
                     <br />
                     <br />
                     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col items-center">
                         {/* Title */}
-                        <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-black text-white mb-3 md:mb-4 lg:mb-6 px-2">
+                        <h1 className="flex items-center justify-center gap-3 sm:gap-4 text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-black text-white mb-3 md:mb-4 lg:mb-6 px-2">
+                            <Trophy className="w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 text-[#FF2146] drop-shadow-2xl" />
                             <span className="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                                Tournaments
+                                TOURNAMENTS
                             </span>
                         </h1>
+
                         {/* Flex container bawah tombol */}
                         <div className="flex items-center justify-center gap-4 mt-2">
                             {/* Contoh item 1: Logo lebih kecil */}
@@ -190,7 +191,7 @@ const TournamentsIndex = ({
                                 alt="Tournament Logo"
                                 className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain mb-4 md:mb-6 drop-shadow-xl"
                             />
-                             <img
+                            <img
                                 src={twtasia2}
                                 alt="Tournament Logo"
                                 className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain mb-4 md:mb-6 drop-shadow-xl"
@@ -205,8 +206,6 @@ const TournamentsIndex = ({
                                 alt="Tournament Logo"
                                 className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain mb-4 md:mb-6 drop-shadow-xl"
                             />
-
-                            
                         </div>
 
                         {/* Subtext */}
@@ -305,7 +304,9 @@ const TournamentsIndex = ({
                                     <div
                                         key={tournament.id}
                                         onClick={() =>
-                                            handleTournamentClick(tournament.id)
+                                            handleTournamentClick(
+                                                tournament.url_startgg
+                                            )
                                         }
                                         className="group relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-300 hover:border-[#FF2146]/50 active:scale-95 md:hover:scale-[1.02] cursor-pointer h-[560px] sm:h-[580px]"
                                     >
@@ -467,7 +468,7 @@ const TournamentsIndex = ({
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handleTournamentClick(
-                                                            tournament.id
+                                                            tournament.url_startgg
                                                         );
                                                     }}
                                                     className="w-full px-3 md:px-4 py-2 md:py-2.5 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-xs sm:text-sm md:text-base rounded-lg transition-all duration-300 active:scale-95 md:group-hover:scale-105"

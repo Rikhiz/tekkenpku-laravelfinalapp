@@ -92,7 +92,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (editingTournament) {
-            put(route("tournaments.update", editingTournament.tourid), {
+            put(route("tournaments.update", editingTournament.url_startgg), {
                 onSuccess: () => closeModal(),
             });
         } else {
@@ -110,7 +110,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
     const confirmDelete = () => {
         if (tournamentToDelete && !isDeleting) {
             setIsDeleting(true);
-            router.delete(route("tournaments.destroy", tournamentToDelete.tourid), {
+            router.delete(route("tournaments.destroy", tournamentToDelete.url_startgg), {
                 onSuccess: () => {
                     setShowDeleteModal(false);
                     setTournamentToDelete(null);

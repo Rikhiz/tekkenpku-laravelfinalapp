@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use App\Models\Activity;
 use App\Models\User;
@@ -19,7 +22,7 @@ class AdminActivityController extends Controller
 
         return Inertia::render('Admin/Activities/Index', [
             'activities' => $activities,
-            'users' => User::select('id', 'name')->get(),
+            'users' => User::where('role', 'admin')->select('id', 'name')->get(),
             'authUser' => auth()->user(),
         ]);
     }
@@ -29,8 +32,9 @@ class AdminActivityController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
+            
             'image_url' => 'nullable|string|max:255',
             'created_by' => 'required|exists:users,id',
             'alamat' => 'required|string|max:255',
@@ -39,7 +43,12 @@ class AdminActivityController extends Controller
             'tanggal_kegiatan' => 'nullable|date',
         ]);
 
-        Activity::create($request->all());
+        // 🎯 ubah link Google Drive -> direct link dan simpan ke storage
+        if (!empty($validated['image_url'])) {
+            $validated['image_url'] = $this->handleGoogleDriveImage($validated['image_url']);
+        }
+
+        Activity::create($validated);
 
         return redirect()->back()->with('success', 'Activity berhasil ditambahkan.');
     }
@@ -49,7 +58,7 @@ class AdminActivityController extends Controller
      */
     public function update(Request $request, Activity $activity)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'image_url' => 'nullable|string|max:255',
             'created_by' => 'required|exists:users,id',
@@ -59,7 +68,28 @@ class AdminActivityController extends Controller
             'tanggal_kegiatan' => 'nullable|date',
         ]);
 
-        $activity->update($request->all());
+        // ✅ Hapus file lama kalau ada image baru DAN berbeda dari yang lama
+        if ($request->filled('image_url') && $request->image_url !== $activity->image_url) {
+            if ($activity->image_url) {
+                // ambil relative path dari URL lama
+                $oldPath = str_replace(Storage::disk('public')->url(''), '', $activity->image_url);
+
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            // Jika link baru dari Google Drive → proses download
+            if (str_contains($request->image_url, 'drive.google.com')) {
+                $validated['image_url'] = $this->handleGoogleDriveImage($request->image_url);
+            } else {
+                $validated['image_url'] = $request->image_url;
+            }
+        } else {
+            unset($validated['image_url']); // kalau kosong atau sama → jangan overwrite
+        }
+
+        $activity->update($validated);
 
         return redirect()->back()->with('success', 'Activity berhasil diperbarui.');
     }
@@ -69,8 +99,48 @@ class AdminActivityController extends Controller
      */
     public function destroy(Activity $activity)
     {
+        // Hapus file image jika ada
+        if ($activity->image_url) {
+            $oldPath = str_replace(Storage::disk('public')->url(''), '', $activity->image_url);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            }
+        }
+
         $activity->delete();
 
         return redirect()->back()->with('success', 'Activity berhasil dihapus.');
+    }
+
+    /**
+     * Handle Google Drive image download and storage
+     */
+    private function handleGoogleDriveImage(string $url): ?string
+    {
+        // Ambil fileId dari Google Drive link
+        if (preg_match('/file\/d\/([^\/]+)/', $url, $matches)) {
+            $fileId = $matches[1];
+            $downloadUrl = "https://drive.google.com/uc?export=download&id=" . $fileId;
+
+            try {
+                // Download file dari Drive
+                $response = Http::get($downloadUrl);
+
+                if ($response->successful()) {
+                    $fileContent = $response->body();
+                    $filename = 'activities/' . Str::random(40) . '.jpg';
+
+                    // Upload ke storage default (misalnya S3 / local)
+                    Storage::disk('public')->put($filename, $fileContent);
+
+                    // Return URL publik
+                    return Storage::disk('public')->url($filename);
+                }
+            } catch (\Exception $e) {
+                \Log::error("Failed to download Google Drive image: " . $e->getMessage());
+            }
+        }
+
+        return null;
     }
 }

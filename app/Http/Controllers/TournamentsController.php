@@ -105,11 +105,9 @@ class TournamentsController extends Controller
     /**
      * Display the specified tournament
      */
-    public function show($id)
+    public function show(Tournament $tournament)
     {
-        $tournament = Tournament::with(['creator', 'relasi.user'])
-            ->where('tourid', $id)
-            ->firstOrFail();
+        
 
         // Status mapping
         $statusColor = $tournament->status === 'Pendaftaran Dibuka'

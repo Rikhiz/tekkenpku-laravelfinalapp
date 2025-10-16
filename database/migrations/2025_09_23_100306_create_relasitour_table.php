@@ -15,11 +15,12 @@ return new class extends Migration
         Schema::create('relasitour', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('tourid'); // hanya simpan ID event dari Start.gg
+            $table->unsignedBigInteger('tourid'); 
             $table->integer('placement');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('tourid')->references('tourid')->on('tournaments')->onDelete('cascade');
 
             $table->index(['user_id', 'tourid']);
             $table->index(['tourid', 'placement']);

@@ -150,11 +150,11 @@ const Welcome = ({
                             <br />
                             <div className="space-y-3 md:space-y-4 lg:space-y-6">
                                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight text-white px-2">
-                                    Selamat Datang di
                                     <br />
                                     <TypingEffect
-                                        text={` <span class="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">Tekken Pekanbaru Community Hub</span>`}
-                                        speed={80}
+                                        text={`Welcome to <br/> <span class="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">Tekken Pekanbaru Community Hub</span>`}
+                                        speed={50}
+                                        className="text-white"
                                     />
                                 </h1>
                                 <p className="text-[#F2F2F2] text-sm sm:text-base md:text-lg lg:text-xl max-w-2xl leading-relaxed mx-auto lg:mx-0 px-2">
@@ -186,23 +186,27 @@ const Welcome = ({
                             </div>
 
                             {/* Stats - Desktop */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 pt-4 lg:pt-8">
-                                {stats.map((stat, index) => (
-                                    <div
-                                        key={index}
-                                        className="text-center lg:text-left space-y-1"
-                                    >
-                                        <div className="text-xl lg:text-2xl xl:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent break-words">
-                                            {formatStatValue(
-                                                stat.value,
-                                                stat.label
-                                            )}
+                            <div className="w-full pt-4 lg:pt-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-8">
+                                    {stats.map((stat, index) => (
+                                        <div
+                                            key={index}
+                                            className="text-center lg:text-left space-y-1"
+                                        >
+                                            <div className="text-xl lg:text-2xl xl:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent whitespace-nowrap overflow-visible overflow-x-auto no-scrollbar">
+                                                <span className="inline-block">
+                                                    {formatStatValue(
+                                                        stat.value,
+                                                        stat.label
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="text-[#69747C] text-xs lg:text-sm">
+                                                {stat.label}
+                                            </div>
                                         </div>
-                                        <div className="text-[#69747C] text-xs lg:text-sm">
-                                            {stat.label}
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -401,7 +405,7 @@ const Welcome = ({
                                                                 <button
                                                                     onClick={() =>
                                                                         handleTournamentClick(
-                                                                            tournament.id
+                                                                            tournament.url_startgg
                                                                         )
                                                                     }
                                                                     className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29] active:scale-95"

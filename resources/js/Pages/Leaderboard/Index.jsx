@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AppLayout from "@/Layouts/AppLayout";
 import { router } from "@inertiajs/react";
-import { Trophy, Medal, Award, ChevronLeft, ChevronRight } from "lucide-react";
+import { Trophy, Medal, Award, ChevronLeft, ChevronRight, CircleStar } from "lucide-react";
 
 const LeaderboardIndex = ({
     leaderboards,
@@ -23,7 +23,7 @@ const LeaderboardIndex = ({
     const getRankIcon = (rank) => {
         if (rank === 1) return <Trophy className="text-yellow-400" size={32} />;
         if (rank === 2) return <Medal className="text-gray-400" size={28} />;
-        if (rank === 3) return <Award className="text-orange-400" size={28} />;
+        if (rank === 3) return <CircleStar className="text-orange-400" size={28} />;
         return null;
     };
 
@@ -51,7 +51,8 @@ const LeaderboardIndex = ({
                 <br /> <br />
                 <div className="max-w-7xl mx-auto mb-12">
                     <div className="text-center space-y-4">
-                        <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                        <h1 className="flex items-center justify-center gap-3 md:gap-4 text-5xl md:text-6xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                            <Award className="w-12 h-12 md:w-16 md:h-16 text-[#FF2146] drop-shadow-2xl" />
                             LEADERBOARD
                         </h1>
                         <p className="text-[#69747C] text-lg">

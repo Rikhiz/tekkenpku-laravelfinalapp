@@ -118,7 +118,7 @@ const TournamentShow = ({ tournament }) => {
                             </div>
 
                             {/* Title */}
-                            <h1 className="text-2xl md:text-4xl lg:text-6xl font-black text-white leading-tight">
+                            <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-white leading-tight">
                                 {tournament.name}
                             </h1>
                             {/* Back Button - Fixed Position Below Header */}

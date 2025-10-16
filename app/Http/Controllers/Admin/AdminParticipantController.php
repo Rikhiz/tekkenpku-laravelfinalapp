@@ -14,24 +14,24 @@ class AdminParticipantController extends Controller
     /**
      * Display tournament list and participants overview.
      */
-   public function index(Request $request)
-{
-    $participantsAll = RelasiTour::with(['user', 'tournament'])->latest()->get();
-    $tournaments = Tournament::select('tourid', 'name', 'category')->orderBy('name')->get();
+    public function index(Request $request)
+    {
+        $participantsAll = RelasiTour::with(['user', 'tournament'])->latest()->get();
+        $tournaments = Tournament::select('tourid', 'name', 'category')->orderBy('name')->get();
 
-    $selectedTournament = null;
-    if ($request->has('tournament')) {
-        $selectedTournament = Tournament::where('tourid', $request->get('tournament'))->first();
+        $selectedTournament = null;
+        if ($request->has('tournament')) {
+            $selectedTournament = Tournament::where('tourid', $request->get('tournament'))->first();
+        }
+
+        return Inertia::render('Admin/Participants/Index', [
+            'participantsAll' => $participantsAll,
+            'authUser' => auth()->user(),
+            'users' => User::select('id', 'name', 'sgguserid')->orderBy('name')->get(),
+            'tournaments' => $tournaments,
+            'selectedTournament' => $selectedTournament,
+        ]);
     }
-
-    return Inertia::render('Admin/Participants/Index', [
-        'participantsAll'     => $participantsAll,
-        'authUser'            => auth()->user(),
-        'users'               => User::select('id', 'name', 'sgguserid')->orderBy('name')->get(),
-        'tournaments'         => $tournaments,
-        'selectedTournament'  => $selectedTournament,
-    ]);
-}
 
 
 
@@ -41,14 +41,14 @@ class AdminParticipantController extends Controller
     public function showTournament(Tournament $tournament)
     {
         $participantsAll = RelasiTour::with(['user', 'tournament'])->latest()->get();
-        
+
         return Inertia::render('Admin/Participants/Index', [
             'participantsAll' => $participantsAll,
             'authUser' => auth()->user(),
             'users' => User::select('id', 'name', 'sgguserid')->orderBy('name')->get(),
             'tournaments' => Tournament::select('tourid', 'name', 'category')
-                                      ->orderBy('name')
-                                      ->get(),
+                ->orderBy('name')
+                ->get(),
             'selectedTournament' => $tournament,
         ]);
     }
@@ -60,14 +60,14 @@ class AdminParticipantController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'tourid'  => 'required|exists:tournaments,tourid',
+            'tourid' => 'required|exists:tournaments,tourid',
             'placement' => 'nullable|integer|min:1',
         ]);
 
         // Check if participant already exists
         $existing = RelasiTour::where('user_id', $request->user_id)
-                              ->where('tourid', $request->tourid)
-                              ->first();
+            ->where('tourid', $request->tourid)
+            ->first();
 
         if ($existing) {
             return back()->withErrors([
@@ -79,7 +79,7 @@ class AdminParticipantController extends Controller
 
         $tournament = Tournament::where('tourid', $request->tourid)->first();
         $message = 'Participant berhasil ditambahkan';
-        
+
         if ($tournament) {
             $message .= ' ke tournament "' . $tournament->name . '"';
         }
@@ -95,15 +95,15 @@ class AdminParticipantController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'tourid'  => 'required|exists:tournaments,tourid',
+            'tourid' => 'required|exists:tournaments,tourid',
             'placement' => 'nullable|integer|min:1',
         ]);
 
         // Check if participant already exists (exclude current record)
         $existing = RelasiTour::where('user_id', $request->user_id)
-                              ->where('tourid', $request->tourid)
-                              ->where('id', '!=', $participant->id)
-                              ->first();
+            ->where('tourid', $request->tourid)
+            ->where('id', '!=', $participant->id)
+            ->first();
 
         if ($existing) {
             return back()->withErrors([
@@ -123,7 +123,7 @@ class AdminParticipantController extends Controller
     {
         $participantName = $participant->user ? $participant->user->name : 'Unknown';
         $tournamentName = $participant->tournament ? $participant->tournament->name : 'Unknown';
-        
+
         $participant->delete();
 
         return back()->with('success', "Participant \"{$participantName}\" berhasil dihapus dari tournament \"{$tournamentName}\".");
@@ -135,9 +135,9 @@ class AdminParticipantController extends Controller
     public function syncParticipants()
     {
         $tournaments = Tournament::whereNotNull('url_startgg')
-                                ->whereNotNull('sggid')
-                                ->get();
-        
+            ->whereNotNull('sggid')
+            ->get();
+
         $syncedCount = 0;
         $errorCount = 0;
         $updatedCount = 0;
@@ -147,13 +147,16 @@ class AdminParticipantController extends Controller
             return back()->with('error', 'Start.gg API key tidak ditemukan di environment.');
         }
 
+        // 🧹 Hapus semua data participants sebelum sync ulang
+        RelasiTour::truncate();
+
         foreach ($tournaments as $tournament) {
             try {
                 $result = $this->syncTournamentParticipantsData($tournament, $apiKey);
                 $syncedCount += $result['synced'];
                 $updatedCount += $result['updated'];
-                
-                // Sleep untuk menghindari rate limit
+
+                // Hindari rate limit
                 usleep(500000); // 0.5 detik
 
             } catch (\Exception $e) {
@@ -163,22 +166,18 @@ class AdminParticipantController extends Controller
             }
         }
 
-        $message = "Sinkronisasi participants selesai. {$syncedCount} participant baru berhasil ditambahkan";
+        $message = "Sinkronisasi selesai. {$syncedCount} participant baru berhasil ditambahkan";
         if ($updatedCount > 0) {
-            $message .= ", {$updatedCount} placement berhasil diperbarui";
+            $message .= ", {$updatedCount} placement diperbarui";
         }
         $message .= ".";
-        
+
         if ($errorCount > 0) {
             $message .= " {$errorCount} tournament gagal diproses.";
         }
 
         return back()->with('success', $message);
     }
-
-    /**
-     * Sync participants for a specific tournament
-     */
     public function syncTournamentParticipants(Tournament $tournament)
     {
         if (!$tournament->url_startgg) {
@@ -192,6 +191,9 @@ class AdminParticipantController extends Controller
         }
 
         try {
+            // 🧹 Hapus dulu data peserta untuk tournament ini
+            RelasiTour::where('tourid', $tournament->tourid)->delete();
+
             $result = $this->syncTournamentParticipantsData($tournament, $apiKey);
 
             $message = "Sinkronisasi selesai untuk tournament '{$tournament->name}'. {$result['synced']} participant baru ditambahkan";
@@ -207,6 +209,7 @@ class AdminParticipantController extends Controller
             return back()->with('error', 'Terjadi error saat sinkronisasi: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Private method to sync tournament participants data
@@ -257,16 +260,16 @@ class AdminParticipantController extends Controller
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $apiKey,
-            'Content-Type'  => 'application/json',
+            'Content-Type' => 'application/json',
         ])->timeout(30)->post('https://api.start.gg/gql/alpha', [
-            'query' => $query,
-            'variables' => [
-                'tourneySlug' => $tournament->url_startgg,
-                'videogameId' => [(int) $videogameId],
-                'page' => 1,
-                'perPage' => 500,
-            ],
-        ]);
+                    'query' => $query,
+                    'variables' => [
+                        'tourneySlug' => $tournament->url_startgg,
+                        'videogameId' => [(int) $videogameId],
+                        'page' => 1,
+                        'perPage' => 500,
+                    ],
+                ]);
 
         if ($response->failed()) {
             throw new \Exception('Failed to fetch data from Start.gg API');
@@ -291,15 +294,15 @@ class AdminParticipantController extends Controller
                 foreach ($participants as $participant) {
                     if (isset($participant['player']['id'])) {
                         $playerId = $participant['player']['id'];
-                        
+
                         // Cari user berdasarkan sgguserid (player ID)
                         $user = User::where('sgguserid', $playerId)->first();
 
                         if ($user) {
                             // Cek apakah relasi sudah ada
                             $existingRelation = RelasiTour::where('user_id', $user->id)
-                                                         ->where('tourid', $tournament->tourid)
-                                                         ->first();
+                                ->where('tourid', $tournament->tourid)
+                                ->first();
 
                             if (!$existingRelation) {
                                 // Buat relasi baru
@@ -334,16 +337,16 @@ class AdminParticipantController extends Controller
     public function getTournamentStats(Request $request)
     {
         $tournaments = Tournament::select('tourid', 'name', 'category')
-                                ->orderBy('name')
-                                ->get();
+            ->orderBy('name')
+            ->get();
 
         $stats = [];
-        
+
         foreach ($tournaments as $tournament) {
             $participants = RelasiTour::where('tourid', $tournament->tourid)
-                                     ->with('user')
-                                     ->get();
-                                     
+                ->with('user')
+                ->get();
+
             $stats[] = [
                 'tournament' => $tournament,
                 'total_participants' => $participants->count(),
@@ -372,7 +375,7 @@ class AdminParticipantController extends Controller
         ]);
 
         $participants = RelasiTour::whereIn('id', $request->participant_ids)->get();
-        
+
         if ($participants->isEmpty()) {
             return back()->with('error', 'Tidak ada participant yang dipilih.');
         }
@@ -387,10 +390,10 @@ class AdminParticipantController extends Controller
                 if (!$request->has('placement')) {
                     return back()->with('error', 'Placement diperlukan untuk update placement.');
                 }
-                
+
                 RelasiTour::whereIn('id', $request->participant_ids)
-                          ->update(['placement' => $request->placement]);
-                          
+                    ->update(['placement' => $request->placement]);
+
                 $count = $participants->count();
                 return back()->with('success', "{$count} participant berhasil diupdate placement-nya ke #{$request->placement}.");
 
@@ -406,16 +409,16 @@ class AdminParticipantController extends Controller
     {
         $format = $request->get('format', 'csv');
         $tournamentId = $request->get('tournament_id');
-        
+
         $query = RelasiTour::with(['user', 'tournament']);
-        
+
         if ($tournamentId) {
             $query->where('tourid', $tournamentId);
         }
-        
+
         $participants = $query->orderBy('placement', 'asc')
-                             ->orderBy('created_at', 'desc')
-                             ->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         if ($format === 'json') {
             // Untuk JSON export, tetap gunakan response()->json()
@@ -425,15 +428,15 @@ class AdminParticipantController extends Controller
 
         // CSV Export
         $filename = 'participants_' . date('Y-m-d_H-i-s') . '.csv';
-        
+
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ];
 
-        $callback = function() use ($participants) {
+        $callback = function () use ($participants) {
             $file = fopen('php://output', 'w');
-            
+
             // CSV Headers
             fputcsv($file, [
                 'ID',
@@ -472,10 +475,14 @@ class AdminParticipantController extends Controller
     private function getCategoryName($category)
     {
         switch ($category) {
-            case 1: return 'Major';
-            case 2: return 'Minor';
-            case 3: return 'Mini';
-            default: return 'Unknown';
+            case 1:
+                return 'Major';
+            case 2:
+                return 'Minor';
+            case 3:
+                return 'Mini';
+            default:
+                return 'Unknown';
         }
     }
 }

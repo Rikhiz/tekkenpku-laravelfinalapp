@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Activity extends Model
 {
@@ -11,6 +12,7 @@ class Activity extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'image_url',
         'created_by',
         'alamat',
@@ -18,6 +20,21 @@ class Activity extends Model
         'status',
         'tanggal_kegiatan',
     ];
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+    protected static function booted()
+    {
+        static::creating(function ($activity) {
+            $activity->slug = Str::slug($activity->name);
+        });
+        static::updating(function ($activity) {
+            $activity->slug = Str::slug($activity->name);
+        });
+
+    }
+
 
     /**
      * Relasi ke user pembuat activity
@@ -26,4 +43,5 @@ class Activity extends Model
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
+
 }

@@ -13,7 +13,7 @@ const Header = () => {
     const navLinks = [
         { label: "LEADERBOARD", href: "/leaderboards" },
         { label: "TOURNAMENTS", href: "/tournaments" },
-        { label: "ACTIVITY", href: "/Activity" },
+        { label: "ACTIVITY", href: "/activity" },
         { label: "GALLERY", href: "/gallery" },
         { label: "ABOUT", href: "/about" },
     ];

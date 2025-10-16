@@ -13,25 +13,30 @@ class Tournament extends Model
     protected $primaryKey = 'tourid';
 
     protected $fillable = [
-    'name',
-    'created_by',
-    'category',
-    'total',
-    'start_date',
-    'end_date',
-    'image_url',
-    'desc',
-    'prizepool',
-    'max_pemain',
-    'url_yt',
-    'url_startgg',
-    'status',
-    'tourid',
-    'event_id',
-    'sggid', // <- ini
-    'type',
-    'dojo',
-];
+        'name',
+        'created_by',
+        'category',
+        'total',
+        'start_date',
+        'end_date',
+        'image_url',
+        'desc',
+        'prizepool',
+        'max_pemain',
+        'url_yt',
+        'url_startgg',
+        'status',
+        'tourid',
+        'event_id',
+        'sggid', // <- ini
+        'type',
+        'dojo',
+    ];
+
+    public function getRouteKeyName()
+    {
+        return 'url_startgg';
+    }
 
 
     public function creator()

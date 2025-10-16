@@ -16,7 +16,7 @@ class WelcomeController extends Controller
         $activePlayers = \App\Models\User::count(); // total player
         $totalTournaments = Tournament::count();    // total turnamen
         $totalPrizePool = Tournament::sum('prizepool'); // total hadiah
-        $firstPlaceCount = RelasiTour::where('placement', 1)->count();
+        
         $stats = [
             [
                 'value' => $activePlayers,
@@ -30,10 +30,7 @@ class WelcomeController extends Controller
                 'value' => $totalPrizePool,
                 'label' => 'Total Prize Pool'
             ],
-            [
-                'value' => $firstPlaceCount,
-                'label' => '1st Place Finishes'
-            ],
+            
         ];
 
         // yang sudah ada → video & latest tournament
@@ -45,6 +42,7 @@ class WelcomeController extends Controller
             ->map(function ($tournament) {
                 return [
                     'id' => $tournament->tourid,
+                    'url_startgg' => $tournament->url_startgg,
                     'name' => $tournament->name,
                     'description' => $tournament->desc,
                     'url_yt' => $tournament->url_yt,
@@ -69,6 +67,7 @@ class WelcomeController extends Controller
                 return [
                     'id' => $tournament->tourid,
                     'name' => $tournament->name,
+                    'url_startgg' => $tournament->url_startgg,
                     'description' => $tournament->desc,
                     'start_date' => $tournament->start_date,
                     'end_date' => $tournament->end_date,

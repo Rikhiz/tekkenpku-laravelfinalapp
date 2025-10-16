@@ -29,7 +29,7 @@ const About = ({ community }) => {
             <section className="relative min-h-screen bg-gradient-to-b from-[#0D0C0C] via-[#0D0C0C] to-[#1A1A1A]">
                 {/* Hero Header */}
                 <div
-                    className="relative py-24 sm:py-32 text-center overflow-hidden bg-fixed bg-center bg-cover"
+                    className="relative py-24 sm:py-52 text-center overflow-hidden bg-fixed bg-center bg-cover"
                     style={{ backgroundImage: `url(${herobg})` }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-[#0D0C0C]/10 via-[#0D0C0C]/20 to-[#0D0C0C]/50"></div>
