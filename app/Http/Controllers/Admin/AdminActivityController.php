@@ -117,31 +117,30 @@ class AdminActivityController extends Controller
      * Handle Google Drive image download and storage
      */
     private function handleGoogleDriveImage(string $url): ?string
-    {
-        // Ambil fileId dari Google Drive link
-        if (preg_match('/file\/d\/([^\/]+)/', $url, $matches)) {
-            $fileId = $matches[1];
-            $downloadUrl = "https://drive.google.com/uc?export=download&id=" . $fileId;
+{
+    if (preg_match('/file\/d\/([^\/]+)/', $url, $matches)) {
+        $fileId = $matches[1];
+        $downloadUrl = "https://drive.google.com/uc?export=download&id=" . $fileId;
 
-            try {
-                // Download file dari Drive
-                $response = Http::get($downloadUrl);
+        try {
+            $response = Http::get($downloadUrl);
 
-                if ($response->successful()) {
-                    $fileContent = $response->body();
-                    $filename = 'activities/' . Str::random(40) . '.jpg';
+            if ($response->successful()) {
+                $fileContent = $response->body();
+                $filename = 'activities/' . Str::random(40) . '.jpg';
 
-                    // Upload ke storage default (misalnya S3 / local)
-                    Storage::disk('public')->put($filename, $fileContent);
+                // ✅ Simpan file tetap di storage/app/public/tournaments/
+                Storage::disk('public')->put($filename, $fileContent);
 
-                    // Return URL publik
-                    return Storage::disk('public')->url($filename);
-                }
-            } catch (\Exception $e) {
-                \Log::error("Failed to download Google Drive image: " . $e->getMessage());
+                // ✅ URL untuk database (tambahkan app/public di tengah)
+                return url('storage/app/public/' . $filename);
             }
+        } catch (\Exception $e) {
+            \Log::error("Failed to download Google Drive image (Tournament): " . $e->getMessage());
         }
-
-        return null;
     }
+
+    return null;
+}
+
 }
