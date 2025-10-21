@@ -7,7 +7,7 @@ const LoadingScreen = () => {
     return (
         <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0D0C0C]">
             <img
-                src={tpcputih} // sesuaikan path logo
+                src={tpcputih}
                 alt="Loading..."
                 className="w-24 h-24 animate-bounce"
             />
@@ -22,9 +22,40 @@ const AppLayout = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // delay 1.2 detik biar smooth
-        const timer = setTimeout(() => setLoading(false), 1200);
-        return () => clearTimeout(timer);
+        let pageLoaded = false;
+        let timerComplete = false;
+
+        // Cek apakah halaman sudah selesai load
+        const checkPageLoad = () => {
+            pageLoaded = true;
+            checkBothComplete();
+        };
+
+        // Cek apakah timer sudah selesai
+        const timer = setTimeout(() => {
+            timerComplete = true;
+            checkBothComplete();
+        }, 1200);
+
+        // Fungsi untuk cek apakah keduanya sudah selesai
+        const checkBothComplete = () => {
+            if (pageLoaded && timerComplete) {
+                setLoading(false);
+            }
+        };
+
+        // Tunggu halaman selesai load
+        if (document.readyState === 'complete') {
+            checkPageLoad();
+        } else {
+            window.addEventListener('load', checkPageLoad);
+        }
+
+        // Cleanup
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('load', checkPageLoad);
+        };
     }, []);
 
     return (
@@ -35,7 +66,6 @@ const AppLayout = ({ children }) => {
                 <div className="min-h-screen bg-gray-900 flex flex-col">
                     <Header />
                     
-
                     <main className="flex-1">{children}</main>
 
                     <Footer />
@@ -45,4 +75,4 @@ const AppLayout = ({ children }) => {
     );
 };
 
-export default AppLayout;
+export default AppLayout;   

@@ -82,6 +82,44 @@ const AdminDashboard = ({ auth, stats }) => {
                         </div>
                     </div>
                 </div>
+                {/* Rules Card */}
+                <div className="bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-500 rounded-xl p-6 shadow-lg">
+                    <h3 className="text-blue-100 font-semibold mb-3 flex items-center gap-2 text-lg">
+                        ⚙️ Urutan Sinkronisasi Data
+                    </h3>
+
+                    <ol className="list-decimal list-inside text-blue-50 space-y-2 text-sm leading-relaxed">
+                        <li>
+                            <span className="font-semibold text-blue-200">
+                                Atur Tournament Data
+                            </span>{" "}
+                            — pastikan seluruh informasi turnamen (nama,
+                            kategori, tanggal, dan status) sudah benar sebelum
+                            lanjut.
+                        </li>
+                        <li>
+                            <span className="font-semibold text-blue-200">
+                                Sync User
+                            </span>{" "}
+                            — sinkronkan data pengguna agar akun yang
+                            berpartisipasi sudah terhubung dengan sistem.
+                        </li>
+                        <li>
+                            <span className="font-semibold text-blue-200">
+                                Sync Participant
+                            </span>{" "}
+                            — pastikan semua peserta sudah masuk dan sesuai
+                            dengan daftar pemain di Start.gg.
+                        </li>
+                        <li>
+                            <span className="font-semibold text-blue-200">
+                                Sync Leaderboard
+                            </span>{" "}
+                            — setelah data peserta lengkap, barulah update
+                            leaderboard untuk hasil akhir.
+                        </li>
+                    </ol>
+                </div>
 
                 {/* System Status */}
                 <div className="bg-gray-800 rounded-2xl p-6">

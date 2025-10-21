@@ -37,9 +37,12 @@ class AdminLeaderboardController extends Controller
             DB::beginTransaction();
 
             // Get all tournament results from relasitour with tournament data
+            // Exclude user with sgguserid 4747588 (TomBebyLand)
             $results = RelasiTour::with(['user', 'tournament'])
                 ->whereHas('tournament')
-                ->whereHas('user')
+                ->whereHas('user', function ($query) {
+                    $query->where('sgguserid', '!=', 4747588);
+                })
                 ->get();
 
             if ($results->isEmpty()) {
@@ -52,8 +55,13 @@ class AdminLeaderboardController extends Controller
             foreach ($results as $result) {
                 $user = $result->user;
                 $tournament = $result->tournament;
-                
-                if (!$user || !$tournament) continue;
+
+                if (!$user || !$tournament)
+                    continue;
+
+                // Double check: skip if sgguserid is 4747588
+                if ($user->sgguserid == 4747588)
+                    continue;
 
                 $userId = $user->id;
                 $playerName = $user->name;
@@ -132,7 +140,7 @@ class AdminLeaderboardController extends Controller
 
             // Clear existing leaderboard and insert new data
             Leaderboard::truncate();
-            
+
             foreach ($leaderboardData as $entry) {
                 Leaderboard::create($entry);
             }
@@ -155,16 +163,37 @@ class AdminLeaderboardController extends Controller
     {
         $pointTable = [
             1 => [ // Major Events
-                1 => 800, 2 => 560, 3 => 430, 4 => 220, 5 => 150,
-                7 => 120, 9 => 70, 13 => 50, 17 => 30
+                1 => 800,
+                2 => 560,
+                3 => 430,
+                4 => 220,
+                5 => 150,
+                7 => 120,
+                9 => 70,
+                13 => 50,
+                17 => 30
             ],
             2 => [ // Minor Events
-                1 => 400, 2 => 300, 3 => 220, 4 => 150, 5 => 70,
-                7 => 50, 9 => 30, 13 => 15, 17 => 10
+                1 => 400,
+                2 => 300,
+                3 => 220,
+                4 => 150,
+                5 => 70,
+                7 => 50,
+                9 => 30,
+                13 => 15,
+                17 => 10
             ],
             3 => [ // Mini Events
-                1 => 220, 2 => 150, 3 => 100, 4 => 70, 5 => 50,
-                7 => 30, 9 => 15, 13 => 10, 17 => 5
+                1 => 220,
+                2 => 150,
+                3 => 100,
+                4 => 70,
+                5 => 50,
+                7 => 30,
+                9 => 15,
+                13 => 10,
+                17 => 5
             ]
         ];
 
@@ -175,15 +204,24 @@ class AdminLeaderboardController extends Controller
         $categoryPoints = $pointTable[$category];
 
         // Determine point value based on placement ranges
-        if ($placement === 1) return $categoryPoints[1];
-        if ($placement === 2) return $categoryPoints[2];
-        if ($placement === 3) return $categoryPoints[3];
-        if ($placement === 4) return $categoryPoints[4];
-        if ($placement >= 5 && $placement <= 6) return $categoryPoints[5];
-        if ($placement >= 7 && $placement <= 8) return $categoryPoints[7];
-        if ($placement >= 9 && $placement <= 12) return $categoryPoints[9];
-        if ($placement >= 13 && $placement <= 16) return $categoryPoints[13];
-        if ($placement >= 17) return $categoryPoints[17];
+        if ($placement === 1)
+            return $categoryPoints[1];
+        if ($placement === 2)
+            return $categoryPoints[2];
+        if ($placement === 3)
+            return $categoryPoints[3];
+        if ($placement === 4)
+            return $categoryPoints[4];
+        if ($placement >= 5 && $placement <= 6)
+            return $categoryPoints[5];
+        if ($placement >= 7 && $placement <= 8)
+            return $categoryPoints[7];
+        if ($placement >= 9 && $placement <= 12)
+            return $categoryPoints[9];
+        if ($placement >= 13 && $placement <= 16)
+            return $categoryPoints[13];
+        if ($placement >= 17)
+            return $categoryPoints[17];
 
         return 0;
     }
@@ -221,7 +259,7 @@ class AdminLeaderboardController extends Controller
         Leaderboard::create($request->all());
 
         return redirect()->route('admin.leaderboard.index')
-                         ->with('success', 'Leaderboard entry created successfully.');
+            ->with('success', 'Leaderboard entry created successfully.');
     }
 
     /**
@@ -268,7 +306,7 @@ class AdminLeaderboardController extends Controller
         $leaderboard->update($request->all());
 
         return redirect()->route('admin.leaderboard.index')
-                         ->with('success', 'Leaderboard entry updated successfully.');
+            ->with('success', 'Leaderboard entry updated successfully.');
     }
 
     /**
@@ -279,6 +317,6 @@ class AdminLeaderboardController extends Controller
         $leaderboard->delete();
 
         return redirect()->route('admin.leaderboard.index')
-                         ->with('success', 'Leaderboard entry deleted successfully.');
+            ->with('success', 'Leaderboard entry deleted successfully.');
     }
 }

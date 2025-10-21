@@ -391,7 +391,7 @@ const Welcome = ({
                                                                 <button
                                                                     onClick={() =>
                                                                         handleTournamentClick(
-                                                                            tournament.id
+                                                                            tournament.url_startgg
                                                                         )
                                                                     }
                                                                     className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95"

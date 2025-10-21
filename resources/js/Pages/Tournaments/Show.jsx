@@ -274,8 +274,8 @@ const TournamentShow = ({ tournament }) => {
                                             Tournament Registration
                                         </h2>
                                         <h1 className="text-lg md:text-m font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
-                                            Jika tidak bisa silahkan melalui
-                                            link nya disamping atau dibawah 'mobile'
+                                            Jika tidak bisa, silahkan melalui
+                                            link View On Start GG  atau dibawah 'mobile'
                                         </h1>
                                         <div className="relative w-full overflow-hidden rounded-lg border border-[#69747C]/30">
                                             <iframe

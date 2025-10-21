@@ -28,6 +28,8 @@ class LeaderboardController extends Controller
         $mostOverPlacement4 = RelasiTour::mostOverPlacement(1,4)->first();
         // Get max points for chart scaling
         $maxPoints = Leaderboard::max('total_points') ?? 100;
+
+        
         
         return Inertia::render('Leaderboard/Index', [
             'leaderboards' => $leaderboards,

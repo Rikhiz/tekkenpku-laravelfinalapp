@@ -171,7 +171,8 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                             >
                                 {role === "all"
                                     ? "All Users"
-                                    : role.charAt(0).toUpperCase() + role.slice(1)}
+                                    : role.charAt(0).toUpperCase() +
+                                      role.slice(1)}
                             </button>
                         ))}
                     </div>
@@ -183,12 +184,6 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                         <table className="min-w-full divide-y divide-gray-700">
                             <thead className="bg-gray-900">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        <div className="flex items-center">
-                                            <Hash className="h-4 w-4 mr-1" />
-                                            ID
-                                        </div>
-                                    </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         <div className="flex items-center">
                                             <Users className="h-4 w-4 mr-1" />
@@ -224,9 +219,6 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                                         key={user.id}
                                         className="hover:bg-gray-700 transition-colors"
                                     >
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                                            {user.id}
-                                        </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm font-medium text-white">
                                                 {user.name}
@@ -313,7 +305,10 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+                        <form
+                            onSubmit={handleSubmit}
+                            className="flex flex-col flex-1 min-h-0"
+                        >
                             <div className="flex-1 overflow-y-auto p-4">
                                 <div className="space-y-3">
                                     {/* Name */}
@@ -366,7 +361,10 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                                             type="number"
                                             value={data.sgguserid}
                                             onChange={(e) =>
-                                                setData("sgguserid", e.target.value)
+                                                setData(
+                                                    "sgguserid",
+                                                    e.target.value
+                                                )
                                             }
                                             className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
                                         />
@@ -386,14 +384,18 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                                             type="password"
                                             value={data.password}
                                             onChange={(e) =>
-                                                setData("password", e.target.value)
+                                                setData(
+                                                    "password",
+                                                    e.target.value
+                                                )
                                             }
                                             className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
                                             required={!editingUser}
                                         />
                                         {editingUser && (
                                             <p className="mt-1 text-xs text-gray-400">
-                                                Kosongkan jika tidak ingin mengubah password
+                                                Kosongkan jika tidak ingin
+                                                mengubah password
                                             </p>
                                         )}
                                         {errors.password && (
@@ -416,7 +418,9 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                                             className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
                                             required
                                         >
-                                            <option value="player">Player</option>
+                                            <option value="player">
+                                                Player
+                                            </option>
                                             <option value="admin">Admin</option>
                                         </select>
                                         {errors.role && (
@@ -470,7 +474,9 @@ const UsersIndex = ({ usersall, authUser, flash }) => {
                                 </h3>
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-400">
-                                        Apakah Anda yakin ingin menghapus user "{userToDelete?.name}"? Tindakan ini tidak dapat dibatalkan.
+                                        Apakah Anda yakin ingin menghapus user "
+                                        {userToDelete?.name}"? Tindakan ini
+                                        tidak dapat dibatalkan.
                                     </p>
                                 </div>
                             </div>
