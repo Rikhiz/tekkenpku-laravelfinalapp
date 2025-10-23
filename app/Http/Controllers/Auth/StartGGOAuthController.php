@@ -304,10 +304,7 @@ class StartGGOAuthController extends Controller
         try {
             if (!empty($updateData)) {
                 $user->update($updateData);
-                Log::info('User data updated from start.gg', [
-                    'user_id' => $user->id,
-                    'updated_fields' => array_keys($updateData),
-                ]);
+                
             } else {
                 Log::info('No fields updated for user', ['user_id' => $user->id]);
             }

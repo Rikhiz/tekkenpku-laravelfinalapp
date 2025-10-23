@@ -12,6 +12,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AdminBanListController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ActivityController;
 use Illuminate\Support\Facades\Route;
@@ -92,13 +93,14 @@ Route::prefix('oauth')->name('oauth.')->group(function () {
     Route::get('/redirect', [App\Http\Controllers\Auth\StartGGOAuthController::class, 'redirect'])->name('redirect');
     Route::get('/callback', [App\Http\Controllers\Auth\StartGGOAuthController::class, 'callback'])->name('callback');
 });
-Route::get('/profile', function () {
-    return Inertia::render('Profile', [
-        'auth' => [
-            'user' => Auth::user(),
-        ],
-    ]);
-})->middleware(['auth'])->name('profile');
+// Authenticated Routes
+Route::middleware(['auth'])->group(function () {
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 Route::fallback(function () {
     return Inertia::render('Errors/NotFound', [
