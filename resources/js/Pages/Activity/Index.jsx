@@ -11,7 +11,7 @@ import {
     Sparkles,
 } from "lucide-react";
 import { router } from "@inertiajs/react";
-import herobg from "@/images/activity.jpg";
+import herobg from "@/images/comm-background.png";
 
 const ActivityIndex = ({
     activities = [],
@@ -78,9 +78,16 @@ const ActivityIndex = ({
                         className="absolute inset-0 w-full h-full object-cover blur-sm"
                         loading="eager"
                     />
+              
+                    {/* Overlay Gradient */}
                     <div className="absolute inset-0 bg-gradient-to-r from-[#0D0C0C]/80 via-[#0D0C0C]/70 to-[#0D0C0C]/80"></div>
+                   
+                  
+                    {/* Efek gradasi bawah */}
+                    <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#0D0C0C]/80 pointer-events-none"></div>
 
-                    <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#0D0C0C] pointer-events-none"></div>
+                    {/* Efek gradasi bawah */}
+                    <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#0D0C0C]/80 pointer-events-none"></div>
 
                     <br />
                     <br />

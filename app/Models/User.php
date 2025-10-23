@@ -15,12 +15,13 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
 
     protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role',
-    'sgguserid', // tambahkan ini
-];
+        'name',
+        'email',
+        'password',
+        'role',
+        'sgguserid',
+        'avatar', // ← Tambahkan ini
+    ];
 
     protected $hidden = [
         'password',
@@ -39,5 +40,27 @@ class User extends Authenticatable
     public function relasi()
     {
         return $this->hasMany(RelasiTour::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get avatar URL with fallback
+     */
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar) {
+            return $this->avatar;
+        }
+
+        // Fallback ke initial avatar
+        return $this->generateInitialAvatar();
+    }
+
+    /**
+     * Generate avatar URL from UI Avatars API
+     */
+    private function generateInitialAvatar()
+    {
+        $name = urlencode($this->name);
+        return "https://ui-avatars.com/api/?name={$name}&size=128&background=FF2146&color=F2F2F2&bold=true";
     }
 }

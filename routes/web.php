@@ -80,8 +80,25 @@ Route::prefix('admin')->middleware(['auth', 'verified', \App\Http\Middleware\Adm
 
 });
 
+// routes/web.php
+
+
+
 Route::get('/leaderboards', [LeaderboardController::class, 'index'])->name('leaderboards.index');
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
+
+// OAuth Routes
+Route::prefix('oauth')->name('oauth.')->group(function () {
+    Route::get('/redirect', [App\Http\Controllers\Auth\StartGGOAuthController::class, 'redirect'])->name('redirect');
+    Route::get('/callback', [App\Http\Controllers\Auth\StartGGOAuthController::class, 'callback'])->name('callback');
+});
+Route::get('/profile', function () {
+    return Inertia::render('Profile', [
+        'auth' => [
+            'user' => Auth::user(),
+        ],
+    ]);
+})->middleware(['auth'])->name('profile');
 
 Route::fallback(function () {
     return Inertia::render('Errors/NotFound', [

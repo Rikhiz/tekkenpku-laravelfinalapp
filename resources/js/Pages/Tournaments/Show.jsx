@@ -207,7 +207,7 @@ const TournamentShow = ({ tournament }) => {
                             </h1>
 
                             <button
-                                onClick={() => router.visit("/tournaments")}
+                                onClick={() => window.history.back()}
                                 className="absolute top-20 md:top-32 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-[#F2F2F2] hover:text-[#FF2146] transition-colors bg-[#0D0C0C]/80 backdrop-blur-md px-3 md:px-4 py-2 md:py-2.5 rounded-lg border border-[#69747C]/30 hover:border-[#FF2146]/50 text-sm md:text-base z-30 shadow-lg"
                             >
                                 <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
@@ -275,7 +275,8 @@ const TournamentShow = ({ tournament }) => {
                                         </h2>
                                         <h1 className="text-lg md:text-m font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
                                             Jika tidak bisa, silahkan melalui
-                                            link View On Start GG  atau dibawah 'mobile'
+                                            link View On Start GG atau dibawah
+                                            'mobile'
                                         </h1>
                                         <div className="relative w-full overflow-hidden rounded-lg border border-[#69747C]/30">
                                             <iframe
