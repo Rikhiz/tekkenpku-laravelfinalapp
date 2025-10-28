@@ -89,7 +89,7 @@ const LeaderboardIndex = ({
                             LEADERBOARD
                         </h1>
                         <p className="text-[#69747C] text-lg">
-                            Top Players Ranking by Total Points
+                            Top Players Ranking For Super Smash Society League
                         </p>
                     </div>
                 </div>

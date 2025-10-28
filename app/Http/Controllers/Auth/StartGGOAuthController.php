@@ -133,6 +133,15 @@ class StartGGOAuthController extends Controller
 
             // Find or Create User
             $user = User::where('sgguserid', $playerId)->first();
+            if (!$user) {
+                Log::info('OAuth: start.gg user not found in local DB', [
+                    'player_id' => $playerId,
+                    'gamerTag' => $gamerTag ?? null,
+                ]);
+
+                return redirect('/')
+                    ->with('error', 'Akun start.gg-mu belum terdaftar di sistem. Silakan mendaftar dahulu atau hubungi admin.');
+            }
             $gamerTag = $userData['player']['gamerTag'] ?? 'Player';
             $prefix = $userData['player']['prefix'] ?? null;
             $fullName = $prefix ? "{$prefix} | {$gamerTag}" : $gamerTag;
@@ -152,7 +161,8 @@ class StartGGOAuthController extends Controller
                     return redirect()->route('dashboard')->with('success', 'Welcome back, ' . $user->name . '!');
                 } else {
                     // Player redirect ke home
-                    return redirect('/')->with('success', 'Welcome back, ' . $user->name . '!');
+                    return redirect('/')->with('success', 'Welcome back, ' . $user->name . '!')->with('Succes', 'Welcome back, ' . $user->name . '');
+                    
 
                 }
             }
@@ -171,9 +181,6 @@ class StartGGOAuthController extends Controller
         }
     }
 
-    /**
-     * Get user data from start.gg GraphQL API
-     */
     private function getUserData($accessToken)
     {
         $query = <<<'GRAPHQL'
@@ -247,18 +254,7 @@ class StartGGOAuthController extends Controller
         }
     }
 
-    /**
-     * Create new user from start.gg data
-     */
-    /**
-     * Create new user from start.gg data
-     */
 
-
-
-    /**
-     * Update existing user data from start.gg
-     */
     private function updateUserFromStartGG(User $user, array $userData): User
     {
         $updateData = [];
@@ -304,7 +300,7 @@ class StartGGOAuthController extends Controller
         try {
             if (!empty($updateData)) {
                 $user->update($updateData);
-                
+
             } else {
                 Log::info('No fields updated for user', ['user_id' => $user->id]);
             }

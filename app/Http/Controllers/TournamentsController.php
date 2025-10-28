@@ -36,19 +36,25 @@ class TournamentsController extends Controller
                 $dojoFormat = null;
                 if ($tournament->dojo === 'Yes') {
                     $dojoLevels = [16, 32, 48, 64, 96];
-                    $foundLevel = null;
 
-                    foreach ($dojoLevels as $level) {
-                        if ($participantCount <= $level) {
-                            $foundLevel = $level;
+
+                    foreach ($dojoLevels as $i => $level) {
+                        $nextLevel = $dojoLevels[$i + 1] ?? null;
+
+                        if ($participantCount == $level) {
+                            $dojoFormat = "Dojo {$level}";
                             break;
                         }
-                    }
 
-                    if ($foundLevel) {
-                        $dojoFormat = "Dojo {$foundLevel}";
-                    } else {
-                        $dojoFormat = "Dojo 96+";
+                        if ($nextLevel !== null && $participantCount > $level && $participantCount < $nextLevel) {
+                            $dojoFormat = "Dojo {$level}+";
+                            break;
+                        }
+
+                        // Jika sudah lebih besar dari semua level
+                        if ($nextLevel === null && $participantCount > $level) {
+                            $dojoFormat = "Dojo {$level}+";
+                        }
                     }
                 }
 
@@ -107,7 +113,7 @@ class TournamentsController extends Controller
      */
     public function show(Tournament $tournament)
     {
-        
+
 
         // Status mapping
         $statusColor = $tournament->status === 'Pendaftaran Dibuka'
@@ -137,19 +143,25 @@ class TournamentsController extends Controller
         $dojoFormat = null;
         if ($tournament->dojo === 'Yes') {
             $dojoLevels = [16, 32, 48, 64, 96];
-            $foundLevel = null;
+            $dojoFormat = null;
 
-            foreach ($dojoLevels as $level) {
-                if ($participantCount <= $level) {
-                    $foundLevel = $level;
+            foreach ($dojoLevels as $i => $level) {
+                $nextLevel = $dojoLevels[$i + 1] ?? null;
+
+                if ($participantCount == $level) {
+                    $dojoFormat = "Dojo {$level}";
                     break;
                 }
-            }
 
-            if ($foundLevel) {
-                $dojoFormat = "Dojo {$foundLevel}";
-            } else {
-                $dojoFormat = "Dojo 96+";
+                if ($nextLevel !== null && $participantCount > $level && $participantCount < $nextLevel) {
+                    $dojoFormat = "Dojo {$level}+";
+                    break;
+                }
+
+                // Jika sudah lebih besar dari semua level
+                if ($nextLevel === null && $participantCount > $level) {
+                    $dojoFormat = "Dojo {$level}+";
+                }
             }
         }
 
