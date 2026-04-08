@@ -14,17 +14,24 @@ class Leaderboard extends Model
 
     protected $fillable = [
         'user_id',
+        'season',
         'player_name',
-        'major',
-        'minor',
-        'mini',
+        'finals',
+        'prime',
+        'core',
+        'bit',
+        'scout',
         'total_points',
-        'counted_major_events',
-        'counted_minor_events',
-        'counted_mini_events',
-        'total_major_events',
-        'total_minor_events',
-        'total_mini_events',
+        'counted_finals_events',
+        'counted_prime_events',
+        'counted_core_events',
+        'counted_bit_events',
+        'counted_scout_events',
+        'total_finals_events',
+        'total_prime_events',
+        'total_core_events',
+        'total_bit_events',
+        'total_scout_events',
     ];
 
     public function user()

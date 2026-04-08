@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('ban_lists', function (Blueprint $table) {
             $table->id();
-            $table->enum('major', ['Yes', 'No'])->default('No');
-            $table->enum('minor', ['Yes', 'No'])->default('No');
-            $table->enum('mini', ['Yes', 'No'])->default('No');
+            $table->enum('finals', ['Yes', 'No'])->default('No');
+            $table->enum('prime', ['Yes', 'No'])->default('No');
+            $table->enum('core', ['Yes', 'No'])->default('No');
+            $table->enum('bit', ['Yes', 'No'])->default('No');
+            $table->enum('scout', ['Yes', 'No'])->default('No');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

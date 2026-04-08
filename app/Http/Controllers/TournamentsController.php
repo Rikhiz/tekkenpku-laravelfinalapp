@@ -24,18 +24,20 @@ class TournamentsController extends Controller
 
                 // Category mapping
                 $categoryMap = [
-                    1 => ['name' => 'Major', 'color' => 'text-yellow-400', 'bg' => 'bg-yellow-400/10'],
-                    2 => ['name' => 'Minor', 'color' => 'text-blue-400', 'bg' => 'bg-blue-400/10'],
-                    3 => ['name' => 'Mini', 'color' => 'text-green-400', 'bg' => 'bg-green-400/10'],
+                    1 => ['name' => 'Finals', 'color' => 'text-yellow-400', 'bg' => 'bg-yellow-400/10'],
+                    2 => ['name' => 'Prime', 'color' => 'text-red-400', 'bg' => 'bg-red-400/10'],
+                    3 => ['name' => 'Core', 'color' => 'text-blue-400', 'bg' => 'bg-blue-400/10'],
+                    4 => ['name' => 'Bit', 'color' => 'text-green-400', 'bg' => 'bg-green-400/10'],
+                    5 => ['name' => 'Scout', 'color' => 'text-purple-400', 'bg' => 'bg-purple-400/10'],
                 ];
 
-                $category = $categoryMap[$tournament->category] ?? ['name' => 'Unknown', 'color' => 'text-gray-400', 'bg' => 'bg-gray-400/10'];
+                $category = $categoryMap[$tournament->category] ?? ['name' => '-', 'color' => 'text-gray-400', 'bg' => 'bg-gray-400/10'];
 
                 // Count participants
                 $participantCount = $tournament->relasi()->count();
                 $dojoFormat = null;
                 if ($tournament->dojo === 'Yes') {
-                    $dojoLevels = [16, 32, 48, 64, 96];
+                    $dojoLevels = [16, 32, 64, 96];
 
 
                     foreach ($dojoLevels as $i => $level) {
@@ -84,6 +86,7 @@ class TournamentsController extends Controller
 
                     'dojo' => $tournament->dojo,
                     'dojo' => $dojoFormat,
+                    'season' => $tournament->season,
 
                 ];
             });
@@ -122,12 +125,14 @@ class TournamentsController extends Controller
 
         // Category mapping
         $categoryMap = [
-            1 => ['name' => 'Major', 'color' => 'text-red-400', 'bg' => 'bg-blue-400/10'],
-            2 => ['name' => 'Minor', 'color' => 'text-blue-400', 'bg' => 'bg-blue-400/10'],
-            3 => ['name' => 'Mini', 'color' => 'text-green-400', 'bg' => 'bg-green-500/30'],
+            1 => ['name' => 'Finals', 'color' => 'text-yellow-400', 'bg' => 'bg-yellow-400/10'],
+            2 => ['name' => 'Prime', 'color' => 'text-red-400', 'bg' => 'bg-red-400/10'],
+            3 => ['name' => 'Core', 'color' => 'text-blue-400', 'bg' => 'bg-blue-400/10'],
+            4 => ['name' => 'Bit', 'color' => 'text-green-400', 'bg' => 'bg-green-400/10'],
+            5 => ['name' => 'Scout', 'color' => 'text-purple-400', 'bg' => 'bg-purple-400/10'],
         ];
 
-        $category = $categoryMap[$tournament->category] ?? ['name' => 'Unknown', 'color' => 'text-gray-400', 'bg' => 'bg-gray-400/10'];
+        $category = $categoryMap[$tournament->category] ?? ['name' => '-', 'color' => 'text-gray-400', 'bg' => 'bg-gray-400/10'];
 
         // Get participants
         $participants = $tournament->relasi->map(function ($relasi) {
@@ -142,7 +147,7 @@ class TournamentsController extends Controller
 
         $dojoFormat = null;
         if ($tournament->dojo === 'Yes') {
-            $dojoLevels = [16, 32, 48, 64, 96];
+            $dojoLevels = [16, 32, 64, 96];
             $dojoFormat = null;
 
             foreach ($dojoLevels as $i => $level) {

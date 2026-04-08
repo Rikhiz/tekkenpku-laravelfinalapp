@@ -16,15 +16,26 @@ class AdminLeaderboardController extends Controller
     /**
      * Display a listing of the leaderboard.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $availableSeasons = Tournament::whereNotNull('season')
+            ->distinct()
+            ->pluck('season')
+            ->sortDesc()
+            ->values();
+
+        $selectedSeason = (int) $request->input('season', $availableSeasons->first());
+
         $leaderboardAll = Leaderboard::with('user')
+            ->where('season', $selectedSeason)
             ->orderBy('total_points', 'desc')
             ->get();
 
         return Inertia::render('Admin/Leaderboard/Index', [
             'leaderboardAll' => $leaderboardAll,
-            'authUser' => auth()->user()
+            'authUser' => auth()->user(),
+            'availableSeasons' => $availableSeasons,
+            'selectedSeason' => $selectedSeason
         ]);
     }
 
@@ -41,7 +52,10 @@ class AdminLeaderboardController extends Controller
             $results = RelasiTour::with(['user', 'tournament'])
                 ->whereHas('tournament')
                 ->whereHas('user', function ($query) {
-                    $query->where('sgguserid', '!=', 4747588);
+                    $query->where(function($q) {
+                        $q->where('sgguserid', '!=', 4747588)
+                          ->orWhereNull('sgguserid');
+                    });
                 })
                 ->get();
 
@@ -49,8 +63,8 @@ class AdminLeaderboardController extends Controller
                 return back()->with('error', 'No tournament results found in relasitour table.');
             }
 
-            // Group results by user
-            $participantResults = [];
+            // Group results by season and user
+            $participantResults = []; // [season => [userId => [data]]]
 
             foreach ($results as $result) {
                 $user = $result->user;
@@ -63,6 +77,11 @@ class AdminLeaderboardController extends Controller
                 if ($user->sgguserid == 4747588)
                     continue;
 
+                $season = (int) $tournament->season;
+                // If a tournament has no season configured somehow, we can put it in season 1 or skip it.
+                // It's safer to skip or default to 1. Defaulting to 1.
+                if (!$season) $season = 1;
+
                 $userId = $user->id;
                 $playerName = $user->name;
                 $placement = (int) $result->placement;
@@ -72,13 +91,15 @@ class AdminLeaderboardController extends Controller
                 // Calculate points based on placement and category
                 $points = $this->calculatePoints($placement, $entrants, $category);
 
-                if (!isset($participantResults[$userId])) {
-                    $participantResults[$userId] = [
+                if (!isset($participantResults[$season][$userId])) {
+                    $participantResults[$season][$userId] = [
                         'user_id' => $userId,
                         'player_name' => $playerName,
-                        'majorEvents' => [],
-                        'minorEvents' => [],
-                        'miniEvents' => [],
+                        'finalsEvents' => [],
+                        'primeEvents' => [],
+                        'coreEvents' => [],
+                        'bitEvents' => [],
+                        'scoutEvents' => [],
                     ];
                 }
 
@@ -94,48 +115,68 @@ class AdminLeaderboardController extends Controller
 
                 // Categorize events
                 if ($category === 1) {
-                    $participantResults[$userId]['majorEvents'][] = $eventData;
+                    $participantResults[$season][$userId]['finalsEvents'][] = $eventData;
                 } elseif ($category === 2) {
-                    $participantResults[$userId]['minorEvents'][] = $eventData;
+                    $participantResults[$season][$userId]['primeEvents'][] = $eventData;
                 } elseif ($category === 3) {
-                    $participantResults[$userId]['miniEvents'][] = $eventData;
+                    $participantResults[$season][$userId]['coreEvents'][] = $eventData;
+                } elseif ($category === 4) {
+                    $participantResults[$season][$userId]['bitEvents'][] = $eventData;
+                } elseif ($category === 5) {
+                    $participantResults[$season][$userId]['scoutEvents'][] = $eventData;
                 }
             }
 
             // Calculate final scores and update leaderboard
             $leaderboardData = [];
 
-            foreach ($participantResults as $userId => $data) {
-                // Sort events by points (descending)
-                $sortedMajor = collect($data['majorEvents'])->sortByDesc('points')->values()->all();
-                $sortedMinor = collect($data['minorEvents'])->sortByDesc('points')->values()->all();
-                $sortedMini = collect($data['miniEvents'])->sortByDesc('points')->values()->all();
+            foreach ($participantResults as $season => $usersData) {
+                foreach ($usersData as $userId => $data) {
+                    // Sort events by points (descending)
+                    $sortedFinals = collect($data['finalsEvents'] ?? [])->sortByDesc('points')->values()->all();
+                    $sortedPrime = collect($data['primeEvents'] ?? [])->sortByDesc('points')->values()->all();
+                    $sortedCore = collect($data['coreEvents'] ?? [])->sortByDesc('points')->values()->all();
+                    $sortedBit = collect($data['bitEvents'] ?? [])->sortByDesc('points')->values()->all();
+                    $sortedScout = collect($data['scoutEvents'] ?? [])->sortByDesc('points')->values()->all();
 
-                // Take top events according to rules
-                $countedMajorEvents = array_slice($sortedMajor, 0, 1);
-                $countedMinorEvents = array_slice($sortedMinor, 0, 2);
-                $countedMiniEvents = array_slice($sortedMini, 0, 4);
+                    // Take top events according to rules
+                    // Finals=1, Prime=1, Core=2, Bit=3, Scout=4
+                    $countedFinalsEvents = array_slice($sortedFinals, 0, 1);
+                    $countedPrimeEvents = array_slice($sortedPrime, 0, 1);
+                    $countedCoreEvents = array_slice($sortedCore, 0, 2);
+                    $countedBitEvents = array_slice($sortedBit, 0, 3);
+                    $countedScoutEvents = array_slice($sortedScout, 0, 4);
 
-                // Calculate points
-                $majorPoints = array_sum(array_column($countedMajorEvents, 'points'));
-                $minorPoints = array_sum(array_column($countedMinorEvents, 'points'));
-                $miniPoints = array_sum(array_column($countedMiniEvents, 'points'));
-                $totalPoints = $majorPoints + $minorPoints + $miniPoints;
+                    // Calculate points
+                    $finalsPoints = array_sum(array_column($countedFinalsEvents, 'points'));
+                    $primePoints = array_sum(array_column($countedPrimeEvents, 'points'));
+                    $corePoints = array_sum(array_column($countedCoreEvents, 'points'));
+                    $bitPoints = array_sum(array_column($countedBitEvents, 'points'));
+                    $scoutPoints = array_sum(array_column($countedScoutEvents, 'points'));
+                    $totalPoints = $primePoints + $corePoints + $bitPoints;
 
-                $leaderboardData[] = [
-                    'user_id' => $userId,
+                    $leaderboardData[] = [
+                        'user_id' => $userId,
+                        'season' => $season,
                     'player_name' => $data['player_name'],
-                    'major' => $majorPoints,
-                    'minor' => $minorPoints,
-                    'mini' => $miniPoints,
+                    'finals' => $finalsPoints,
+                    'prime' => $primePoints,
+                    'core' => $corePoints,
+                    'bit' => $bitPoints,
+                    'scout' => $scoutPoints,
                     'total_points' => $totalPoints,
-                    'counted_major_events' => count($countedMajorEvents),
-                    'counted_minor_events' => count($countedMinorEvents),
-                    'counted_mini_events' => count($countedMiniEvents),
-                    'total_major_events' => count($sortedMajor),
-                    'total_minor_events' => count($sortedMinor),
-                    'total_mini_events' => count($sortedMini),
-                ];
+                    'counted_finals_events' => count($countedFinalsEvents),
+                    'counted_prime_events' => count($countedPrimeEvents),
+                    'counted_core_events' => count($countedCoreEvents),
+                    'counted_bit_events' => count($countedBitEvents),
+                    'counted_scout_events' => count($countedScoutEvents),
+                    'total_finals_events' => count($sortedFinals),
+                    'total_prime_events' => count($sortedPrime),
+                    'total_core_events' => count($sortedCore),
+                    'total_bit_events' => count($sortedBit),
+                        'total_scout_events' => count($sortedScout),
+                    ];
+                }
             }
 
             // Clear existing leaderboard and insert new data
@@ -162,38 +203,20 @@ class AdminLeaderboardController extends Controller
     private function calculatePoints($placement, $entrants, $category)
     {
         $pointTable = [
-            1 => [ // Major Events
-                1 => 800,
-                2 => 560,
-                3 => 430,
-                4 => 220,
-                5 => 150,
-                7 => 120,
-                9 => 70,
-                13 => 50,
-                17 => 30
+            1 => [ // Finals - as requested, Finals generate 0 points
+                1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 7 => 0, 9 => 0, 13 => 0, 17 => 0
             ],
-            2 => [ // Minor Events
-                1 => 400,
-                2 => 300,
-                3 => 220,
-                4 => 150,
-                5 => 70,
-                7 => 50,
-                9 => 30,
-                13 => 15,
-                17 => 10
+            2 => [ // Prime (Old Major)
+                1 => 800, 2 => 560, 3 => 430, 4 => 220, 5 => 150, 7 => 120, 9 => 70, 13 => 50, 17 => 30
             ],
-            3 => [ // Mini Events
-                1 => 220,
-                2 => 150,
-                3 => 100,
-                4 => 70,
-                5 => 50,
-                7 => 30,
-                9 => 15,
-                13 => 10,
-                17 => 5
+            3 => [ // Core (Old Minor)
+                1 => 400, 2 => 300, 3 => 220, 4 => 150, 5 => 70, 7 => 50, 9 => 30, 13 => 15, 17 => 10
+            ],
+            4 => [ // Bit (Old Mini)
+                1 => 220, 2 => 150, 3 => 100, 4 => 70, 5 => 50, 7 => 30, 9 => 15, 13 => 10, 17 => 5
+            ],
+            5 => [ // Scout
+                1 => 150, 2 => 100, 3 => 70, 4 => 50, 5 => 30, 7 => 15, 9 => 10, 13 => 5, 17 => 2
             ]
         ];
 

@@ -474,13 +474,17 @@ class AdminParticipantController extends Controller
      */
     private function getCategoryName($category)
     {
-        switch ($category) {
+        switch ((int)$category) {
             case 1:
-                return 'Major';
+                return 'Finals';
             case 2:
-                return 'Minor';
+                return 'Prime';
             case 3:
-                return 'Mini';
+                return 'Core';
+            case 4:
+                return 'Bit';
+            case 5:
+                return 'Scout';
             default:
                 return 'Unknown';
         }

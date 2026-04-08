@@ -127,10 +127,14 @@ class AdminActivityController extends Controller
 
             if ($response->successful()) {
                 $fileContent = $response->body();
-                $filename = 'activities/' . Str::random(40) . '.jpg';
+                $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+                $image = $manager->read($fileContent);
+                $encoded = $image->toWebp(80);
 
-                // ✅ Simpan file tetap di storage/app/public/tournaments/
-                Storage::disk('public')->put($filename, $fileContent);
+                $filename = 'activities/' . Str::random(40) . '.webp';
+
+                // ✅ Simpan file tetap di storage/app/public/activities/
+                Storage::disk('public')->put($filename, $encoded->toString());
 
                 // ✅ URL untuk database (tambahkan app/public di tengah)
                 return url('storage/app/public/' . $filename);

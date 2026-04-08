@@ -25,7 +25,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
         created_by: "",
-        category: 3,
+        category: 6,
         total: 0,
         start_date: "",
         end_date: "",
@@ -41,17 +41,21 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
     });
 
     const categoryLabels = {
-        1: "Major",
-        2: "Minor",
-        3: "Mini",
-        4: "Non-Sanction",
+        1: "Finals",
+        2: "Prime",
+        3: "Core",
+        4: "Bit",
+        5: "Scout",
+        6: "Non-Sanction",
     };
 
     const categoryColors = {
-        1: "bg-red-500 text-white",
-        2: "bg-yellow-500 text-white",
-        3: "bg-green-500 text-white",
-        4: "bg-white text-black",
+        1: "bg-yellow-500 text-white",
+        2: "bg-red-500 text-white",
+        3: "bg-blue-500 text-white",
+        4: "bg-green-500 text-white",
+        5: "bg-purple-500 text-white",
+        6: "bg-white text-black",
     };
 
     const openModal = (tournament = null) => {
@@ -82,7 +86,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
             setEditingTournament(null);
             reset();
             setData("status", "Pendaftaran Dibuka");
-            setData("category", 4);
+            setData("category", 6);
 
             setData("dojo", "");
         }
@@ -430,10 +434,12 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
                                         required
                                     >
-                                        <option value={1}>Major</option>
-                                        <option value={2}>Minor</option>
-                                        <option value={3}>Mini</option>
-                                        <option value={4}>Non-Sanction</option>
+                                        <option value={1}>Finals</option>
+                                        <option value={2}>Prime</option>
+                                        <option value={3}>Core</option>
+                                        <option value={4}>Bit</option>
+                                        <option value={5}>Scout</option>
+                                        <option value={6}>Non-Sanction</option>
                                     </select>
                                     {errors.category && (
                                         <p className="mt-1 text-xs text-red-400">

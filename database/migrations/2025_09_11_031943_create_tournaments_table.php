@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('desc')->nullable();
             $table->integer('prizepool')->nullable();
             $table->integer('max_pemain')->nullable();
+            $table->integer('season')->nullable();
             $table->integer('sggid')->nullable()->unique();
             $table->string('url_yt')->nullable();
              $table->string('url_ig')->nullable();

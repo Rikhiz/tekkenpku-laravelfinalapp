@@ -10,9 +10,11 @@ class BanList extends Model
     use HasFactory;
 
     protected $fillable = [
-        'major',
-        'minor',
-        'mini',
+        'finals',
+        'prime',
+        'core',
+        'bit',
+        'scout',
         'user_id',
     ];
 

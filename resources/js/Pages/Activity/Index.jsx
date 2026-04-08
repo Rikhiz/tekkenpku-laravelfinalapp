@@ -11,7 +11,7 @@ import {
     Sparkles,
 } from "lucide-react";
 import { router } from "@inertiajs/react";
-import herobg from "@/images/comm-background.png";
+import herobg from "@/images/comm-background.webp";
 
 const ActivityIndex = ({
     activities = [],

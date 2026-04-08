@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AppLayout from "@/Layouts/AppLayout";
 import { router } from "@inertiajs/react";
+import logo from "@/images/logosss.png";
 import {
     Trophy,
     Medal,
@@ -15,10 +16,12 @@ import {
 
 const LeaderboardIndex = ({
     leaderboards,
-    maxPoints,
     mostover8,
     mostover4,
-    tourtotal,
+    availableSeasons = [],
+    selectedSeason,
+    finalsChampion,
+    board = 'normal'
 }) => {
     const [hoveredPlayer, setHoveredPlayer] = useState(null);
     const [expandedPlayer, setExpandedPlayer] = useState(null);
@@ -38,9 +41,11 @@ const LeaderboardIndex = ({
     };
 
     const getCategoryBadge = (category) => {
-        if (category === 1) return { color: "bg-red-500", text: "MAJOR" };
-        if (category === 2) return { color: "bg-blue-500", text: "MINOR" };
-        if (category === 3) return { color: "bg-green-500", text: "MINI" };
+        if (category === 1) return { color: "bg-yellow-500", text: "FINALS" };
+        if (category === 2) return { color: "bg-red-500", text: "PRIME" };
+        if (category === 3) return { color: "bg-blue-500", text: "CORE" };
+        if (category === 4) return { color: "bg-green-500", text: "BIT" };
+        if (category === 5) return { color: "bg-purple-500", text: "SCOUT" };
         return { color: "bg-gray-400", text: "UNKNOWN" };
     };
 
@@ -91,52 +96,117 @@ const LeaderboardIndex = ({
                         <p className="text-[#69747C] text-lg">
                             Top Players Ranking For Super Smash Society League
                         </p>
+                        
+                        {/* Season Selection UI */}
+                        <div className="flex justify-center flex-wrap gap-4 mt-8">
+                            {availableSeasons.map((season) => (
+                                <button
+                                    key={season}
+                                    onClick={() => router.visit(`/leaderboards?season=${season}&board=${board}`, { preserveState: true, preserveScroll: true })}
+                                    className={`relative group overflow-hidden rounded-xl border-2 transition-all duration-300 w-28 md:w-36 h-10 md:h-12 ${
+                                        parseInt(selectedSeason) === parseInt(season)
+                                            ? "border-[#FF2146] shadow-[0_0_15px_rgba(255,33,70,0.5)] scale-105"
+                                            : "border-[#69747C]/30 hover:border-[#FF2146]/50"
+                                    }`}
+                                >
+                                    <img
+                                        src={logo}
+                                        alt="Season Logo"
+                                        className="absolute inset-0 w-full h-full object-cover object-center opacity-40 group-hover:opacity-70 transition-opacity"
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <span
+                                            className={`font-black text-sm md:text-base drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] ${
+                                                parseInt(selectedSeason) === parseInt(season)
+                                                    ? "text-white"
+                                                    : "text-gray-300 group-hover:text-white"
+                                            }`}
+                                        >
+                                            SEASON {season}
+                                        </span>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                        
+                        {/* Finals Champion Banner */}
+                        {finalsChampion && (
+                            <div className="mt-8 animate-slideDownFull">
+                                <div className="bg-gradient-to-r from-yellow-500/20 via-yellow-400/10 to-yellow-500/20 border border-yellow-500/50 rounded-2xl p-6 md:p-8 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-4 opacity-20">
+                                        <Trophy size={100} className="text-yellow-400 transform rotate-12" />
+                                    </div>
+                                    <h2 className="text-sm md:text-lg font-bold text-yellow-400 mb-2 uppercase tracking-widest">
+                                        SEASON {selectedSeason} CHAMPION
+                                    </h2>
+                                    <div className="flex items-center justify-center gap-4">
+                                        <div className="text-5xl md:text-7xl font-black text-white drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
+                                            {finalsChampion.user?.name}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
+                </div>
+
+                {/* Leaderboard Type Toggle */}
+                <div className="max-w-xs mx-auto mt-6 flex p-1 bg-[#1a1a1a] rounded-lg border border-[#69747C]/30 shadow-inner">
+                    <button
+                        onClick={() => router.visit(`/leaderboards?season=${selectedSeason}&board=normal`, { preserveScroll: true, preserveState: true })}
+                        className={`flex-1 py-1.5 px-2 rounded font-bold text-xs transition-all duration-300 ${
+                            board === 'normal'
+                                ? 'bg-[#FF2146] text-white shadow-md shadow-[#FF2146]/30'
+                                : 'text-[#69747C] hover:text-white'
+                        }`}
+                    >
+                        Normal Leaderboard
+                    </button>
+                    <button
+                        onClick={() => router.visit(`/leaderboards?season=${selectedSeason}&board=scout`, { preserveScroll: true, preserveState: true })}
+                        className={`flex-1 py-1.5 px-2 rounded font-bold text-xs transition-all duration-300 ${
+                            board === 'scout'
+                                ? 'bg-purple-600 text-white shadow-md shadow-purple-500/30'
+                                : 'text-[#69747C] hover:text-white'
+                        }`}
+                    >
+                        Scout Leaderboard
+                    </button>
                 </div>
 
                 {/* Stats Footer */}
-                <div className="max-w-7xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#FF2146]/50 transition-all">
-                        <div className="text-4xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                            {leaderboards.total|| "N/A"}
+                {leaderboards.data.length > 0 && (
+                    <>
+                        <div className="max-w-7xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#FF2146]/50 transition-all">
+                                <div className="text-2xl md:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent truncate">
+                                    {mostover8?.user?.name || "-"}
+                                </div>
+                                <div className="text-[#69747C] font-semibold mt-2">
+                                    Most Top 8
+                                </div>
+                            </div>
+                            <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#FF2146]/50 transition-all">
+                                <div className="text-2xl md:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent truncate">
+                                    {mostover4?.user?.name || "-"}
+                                </div>
+                                <div className="text-[#69747C] font-semibold mt-2">
+                                    Most Total Events Played
+                                </div>
+                            </div>
                         </div>
-                        <div className="text-[#69747C] font-semibold mt-2">
-                            Total Players
-                        </div>
-                    </div>
-                    <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#FF2146]/50 transition-all">
-                        <div className="text-2xl md:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent truncate">
-                            {mostover8.user?.name || "N/A"}
-                        </div>
-                        <div className="text-[#69747C] font-semibold mt-2">
-                            Most Top 8
-                        </div>
-                    </div>
-                    <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#FF2146]/50 transition-all">
-                        <div className="text-2xl md:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent truncate">
-                            {mostover4.user?.name || "N/A"}
-                        </div>
-                        <div className="text-[#69747C] font-semibold mt-2">
-                            Most Top 4
-                        </div>
-                    </div>
-                    <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#FF2146]/50 transition-all">
-                        <div className="text-4xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                            {tourtotal || "N/A"}
-                        </div>
-                        <div className="text-[#69747C] font-semibold mt-2">
-                            Total Tournaments
-                        </div>
-                    </div>
-                </div>
-                <br />
+                        <br />
+                    </>
+                )}
 
                 {/* Leaderboard Container */}
                 <div className="max-w-7xl mx-auto">
-                    <div className="space-y-4">
-                        {leaderboards.data.map((player) => {
-                            const percentage =
-                                (player.total_points / maxPoints) * 100;
+                    {leaderboards.data.length > 0 ? (
+                        <div className="space-y-4">
+                            {leaderboards.data.map((player) => {
+                                const mainPoints = board === 'scout' ? player.scout || 0 : player.total_points || 0;
+                                const highestPoints = board === 'scout' ? (leaderboards.data[0]?.scout || 1) : (leaderboards.data[0]?.total_points || 1);
+                                const percentage = Math.min((mainPoints / highestPoints) * 100, 100);
                             const isExpanded = isPlayerExpanded(player.id);
                             const isTopThree = player.rank <= 3;
                             const barHeight = isTopThree ? "h-28" : "h-20";
@@ -211,13 +281,13 @@ const LeaderboardIndex = ({
                                             {/* Total Points */}
                                             <div className="flex-shrink-0 text-right">
                                                 <div
-                                                    className={`font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent ${
+                                                    className={`font-black bg-gradient-to-r ${board === 'scout' ? 'from-purple-500' : 'from-[#FF2146]'} to-[#F2AF29] bg-clip-text text-transparent ${
                                                         isTopThree
                                                             ? "text-2xl md:text-4xl"
                                                             : "text-xl md:text-3xl"
                                                     }`}
                                                 >
-                                                    {player.total_points}
+                                                    {mainPoints}
                                                 </div>
                                                 <div className="text-[10px] md:text-xs text-[#69747C] font-medium">
                                                     POINTS
@@ -242,67 +312,39 @@ const LeaderboardIndex = ({
                                                             Points
                                                         </h4>
                                                         <div className="flex gap-2">
-                                                            {/* Major */}
-                                                            <div className="bg-[#0D0C0C]/60 border border-red-500/30 rounded-lg p-2 w-24 h-[90px] md:h-[116px] flex flex-col justify-between">
-                                                                <div className="text-[8px] text-[#69747C] font-bold uppercase">
-                                                                    MAJOR
-                                                                </div>
-                                                                <div className="text-2xl md:text-3xl font-black text-red-500 leading-none text-center">
-                                                                    {
-                                                                        player.major
-                                                                    }
-                                                                </div>
-                                                                <div className="text-[8px] text-[#69747C] text-center">
-                                                                    {
-                                                                        player.counted_major_events
-                                                                    }
-                                                                    /
-                                                                    {
-                                                                        player.total_major_events
-                                                                    }
-                                                                </div>
+                                                            {/* Finals */}
+                                                            <div className="bg-[#0D0C0C]/60 border border-yellow-500/30 rounded-lg p-2 w-16 md:w-20 lg:w-24 h-[90px] md:h-[116px] flex flex-col justify-between">
+                                                                <div className="text-[8px] text-[#69747C] font-bold uppercase truncate text-center">FINALS</div>
+                                                                <div className="text-lg md:text-3xl font-black text-yellow-500 leading-none text-center">{player.finals}</div>
+                                                                <div className="text-[8px] text-[#69747C] text-center">{player.counted_finals_events}/{player.total_finals_events}</div>
+                                                            </div>
+                                                            
+                                                            {/* Prime */}
+                                                            <div className="bg-[#0D0C0C]/60 border border-red-500/30 rounded-lg p-2 w-16 md:w-20 lg:w-24 h-[90px] md:h-[116px] flex flex-col justify-between">
+                                                                <div className="text-[8px] text-[#69747C] font-bold uppercase truncate text-center">PRIME</div>
+                                                                <div className="text-lg md:text-3xl font-black text-red-500 leading-none text-center">{player.prime}</div>
+                                                                <div className="text-[8px] text-[#69747C] text-center">{player.counted_prime_events}/{player.total_prime_events}</div>
                                                             </div>
 
-                                                            {/* Minor */}
-                                                            <div className="bg-[#0D0C0C]/60 border border-blue-500/30 rounded-lg p-2 w-24 h-[90px] md:h-[116px] flex flex-col justify-between">
-                                                                <div className="text-[8px] text-[#69747C] font-bold uppercase">
-                                                                    MINOR
-                                                                </div>
-                                                                <div className="text-3xl font-black text-blue-500 leading-none text-center">
-                                                                    {
-                                                                        player.minor
-                                                                    }
-                                                                </div>
-                                                                <div className="text-[8px] text-[#69747C] text-center">
-                                                                    {
-                                                                        player.counted_minor_events
-                                                                    }
-                                                                    /
-                                                                    {
-                                                                        player.total_minor_events
-                                                                    }
-                                                                </div>
+                                                            {/* Core */}
+                                                            <div className="bg-[#0D0C0C]/60 border border-blue-500/30 rounded-lg p-2 w-16 md:w-20 lg:w-24 h-[90px] md:h-[116px] flex flex-col justify-between">
+                                                                <div className="text-[8px] text-[#69747C] font-bold uppercase truncate text-center">CORE</div>
+                                                                <div className="text-lg md:text-3xl font-black text-blue-500 leading-none text-center">{player.core}</div>
+                                                                <div className="text-[8px] text-[#69747C] text-center">{player.counted_core_events}/{player.total_core_events}</div>
                                                             </div>
 
-                                                            {/* Mini */}
-                                                            <div className="bg-[#0D0C0C]/60 border border-green-500/30 rounded-lg p-2 w-24 h-[90px] md:h-[116px] flex flex-col justify-between">
-                                                                <div className="text-[8px] text-[#69747C] font-bold uppercase">
-                                                                    MINI
-                                                                </div>
-                                                                <div className="text-3xl font-black text-green-500 leading-none text-center">
-                                                                    {
-                                                                        player.mini
-                                                                    }
-                                                                </div>
-                                                                <div className="text-[8px] text-[#69747C] text-center">
-                                                                    {
-                                                                        player.counted_mini_events
-                                                                    }
-                                                                    /
-                                                                    {
-                                                                        player.total_mini_events
-                                                                    }
-                                                                </div>
+                                                            {/* Bit */}
+                                                            <div className="bg-[#0D0C0C]/60 border border-green-500/30 rounded-lg p-2 w-16 md:w-20 lg:w-24 h-[90px] md:h-[116px] flex flex-col justify-between">
+                                                                <div className="text-[8px] text-[#69747C] font-bold uppercase truncate text-center">BIT</div>
+                                                                <div className="text-lg md:text-3xl font-black text-green-500 leading-none text-center">{player.bit}</div>
+                                                                <div className="text-[8px] text-[#69747C] text-center">{player.counted_bit_events}/{player.total_bit_events}</div>
+                                                            </div>
+
+                                                            {/* Scout */}
+                                                            <div className="bg-[#0D0C0C]/60 border border-purple-500/30 rounded-lg p-2 w-16 md:w-20 lg:w-24 h-[90px] md:h-[116px] flex flex-col justify-between">
+                                                                <div className="text-[8px] text-[#69747C] font-bold uppercase truncate text-center">SCOUT</div>
+                                                                <div className="text-lg md:text-3xl font-black text-purple-500 leading-none text-center">{player.scout}</div>
+                                                                <div className="text-[8px] text-[#69747C] text-center">{player.counted_scout_events}/{player.total_scout_events}</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -411,9 +453,18 @@ const LeaderboardIndex = ({
                             );
                         })}
                     </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center py-20 text-center">
+                            <Trophy className="w-20 h-20 text-[#69747C]/50 mb-6" />
+                            <h2 className="text-2xl font-bold text-[#F2F2F2] mb-2">No Rankings Yet</h2>
+                            <p className="text-[#69747C] max-w-md">
+                                There are currently no players on the {board === 'scout' ? 'Scout Leaderboard' : 'Leaderboard'} for this season. Complete tournaments to see the rankings!
+                            </p>
+                        </div>
+                    )}
 
-                    {/* Pagination */}
-                    {leaderboards.last_page > 1 && (
+                    {/* Pagination - Modified for array data */}
+                    {leaderboards.data && leaderboards.data.length > 0 && leaderboards.last_page > 1 && (
                         <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
                             {/* Previous Button */}
                             <button

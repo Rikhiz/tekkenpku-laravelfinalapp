@@ -23,7 +23,7 @@ import {
     Shield,
 } from "lucide-react";
 import { router } from "@inertiajs/react";
-import herobg from "@/images/tournament-background.png";
+import herobg from "@/images/tournament-background.webp";
 
 const TournamentsIndex = ({
     tournaments = [],
@@ -32,36 +32,58 @@ const TournamentsIndex = ({
 }) => {
     const [filterCategory, setFilterCategory] = useState("all");
     const [filterStatus, setFilterStatus] = useState("all");
+    const [filterSeason, setFilterSeason] = useState("all");
     const [showBanListModal, setShowBanListModal] = useState(false);
+
+    const availableSeasons = useMemo(() => {
+        const seasons = tournaments
+            .map((t) => t.season)
+            .filter((s) => s !== null && s !== undefined);
+        return [...new Set(seasons)].sort((a, b) => b - a); // sort descending
+    }, [tournaments]);
 
     const categoryConfig = {
         1: {
-            name: "MAJOR",
+            name: "FINALS",
+            bgColor: "bg-gradient-to-r from-yellow-600 to-yellow-500",
+            textColor: "text-white",
+            borderColor: "border-yellow-400",
+            glowColor: "shadow-yellow-500/50",
+        },
+        2: {
+            name: "PRIME",
             bgColor: "bg-gradient-to-r from-red-600 to-red-500",
             textColor: "text-white",
             borderColor: "border-red-400",
             glowColor: "shadow-red-500/50",
         },
-        2: {
-            name: "MINOR",
-            bgColor: "bg-gradient-to-r from-cyan-500 to-blue-500",
-            textColor: "text-white",
-            borderColor: "border-cyan-400",
-            glowColor: "shadow-cyan-500/50",
-        },
         3: {
-            name: "MINI",
+            name: "CORE",
+            bgColor: "bg-gradient-to-r from-blue-600 to-blue-500",
+            textColor: "text-white",
+            borderColor: "border-blue-400",
+            glowColor: "shadow-blue-500/50",
+        },
+        4: {
+            name: "BIT",
             bgColor: "bg-gradient-to-r from-green-600 to-emerald-500",
             textColor: "text-white",
             borderColor: "border-green-400",
             glowColor: "shadow-green-500/50",
         },
-        4: {
+        5: {
+            name: "SCOUT",
+            bgColor: "bg-gradient-to-r from-purple-600 to-purple-500",
+            textColor: "text-white",
+            borderColor: "border-purple-400",
+            glowColor: "shadow-purple-500/50",
+        },
+        6: {
             name: "Non-Sanctioned",
             bgColor: "bg-white",
             textColor: "text-black",
-            borderColor: "border-green-400",
-            glowColor: "shadow-green-500/50",
+            borderColor: "border-gray-400",
+            glowColor: "shadow-gray-500/50",
         },
     };
 
@@ -131,9 +153,11 @@ const TournamentsIndex = ({
                 tournament.category == filterCategory;
             const statusMatch =
                 filterStatus === "all" || tournament.status === filterStatus;
-            return categoryMatch && statusMatch;
+            const seasonMatch =
+                filterSeason === "all" || tournament.season == filterSeason;
+            return categoryMatch && statusMatch && seasonMatch;
         });
-    }, [tournaments, filterCategory, filterStatus]);
+    }, [tournaments, filterCategory, filterStatus, filterSeason]);
 
     const getBanBadge = (status) => {
         return status === "Yes" || status === true ? (
@@ -227,6 +251,49 @@ const TournamentsIndex = ({
 
                 <br />
 
+                {/* Season Filter Banner */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-6 md:mb-8">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                        <h2 className="text-[#F2F2F2] font-black text-xl md:text-2xl tracking-widest uppercase mb-2">Select Season</h2>
+                        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+                            {/* Semua Season Button */}
+                            <button
+                                onClick={() => setFilterSeason("all")}
+                                className={`relative overflow-hidden group rounded-xl px-6 py-3 transition-all duration-300 font-black tracking-wide text-sm md:text-base border-2 ${
+                                    filterSeason === "all"
+                                        ? "border-[#FF2146] bg-gradient-to-r from-[#FF2146]/20 to-[#F2AF29]/20 text-white shadow-[0_0_15px_rgba(255,33,70,0.5)] scale-105"
+                                        : "border-[#69747C]/50 bg-[#1a1a1a] text-[#69747C] hover:border-[#FF2146]/50 hover:text-white"
+                                }`}
+                            >
+                                SEMUA SEASON
+                            </button>
+
+                            {/* Dynamically Generated Season Buttons using logosss */}
+                            {availableSeasons.map((season) => (
+                                <button
+                                    key={season}
+                                    onClick={() => setFilterSeason(season)}
+                                    className={`relative group overflow-hidden rounded-xl w-32 h-14 md:w-40 md:h-16 flex items-center justify-center transition-all duration-300 ${
+                                        filterSeason === season
+                                            ? "scale-110 shadow-[0_0_20px_rgba(242,175,41,0.6)] ring-2 ring-[#F2AF29] z-10"
+                                            : "opacity-70 hover:opacity-100 hover:scale-105 saturate-50 hover:saturate-100"
+                                    }`}
+                                >
+                                    <img
+                                        src={logosss}
+                                        alt={`Season ${season}`}
+                                        className="absolute inset-0 w-full h-full object-cover z-0"
+                                    />
+                                    <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors z-10"></div>
+                                    <span className="relative z-20 font-black text-white text-lg md:text-xl tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-[#F2AF29] transition-colors">
+                                        SEASON {season}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
                 {/* Filters */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-6 md:mb-8">
                     <div className="bg-gradient-to-r from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
@@ -250,10 +317,12 @@ const TournamentsIndex = ({
                                     className="w-full bg-[#0D0C0C] border border-[#69747C]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#FF2146] focus:outline-none"
                                 >
                                     <option value="all">All Categories</option>
-                                    <option value="1">Major Events</option>
-                                    <option value="2">Minor Events</option>
-                                    <option value="3">Mini Events</option>
-                                    <option value="4">Non-Sanction</option>
+                                    <option value="1">Finals</option>
+                                    <option value="2">Prime Events</option>
+                                    <option value="3">Core Events</option>
+                                    <option value="4">Bit Events</option>
+                                    <option value="5">Scout Events</option>
+                                    <option value="6">Non-Sanction</option>
                                 </select>
                             </div>
 
@@ -295,7 +364,7 @@ const TournamentsIndex = ({
                             {filteredTournaments.map((tournament) => {
                                 const catConfig =
                                     categoryConfig[tournament.category] ||
-                                    categoryConfig[3];
+                                    categoryConfig[6];
                                 const statConfig =
                                     statusConfig[tournament.status] ||
                                     statusConfig["Selesai"];
@@ -519,13 +588,19 @@ const TournamentsIndex = ({
                                                     Email
                                                 </th>
                                                 <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
-                                                    Major
+                                                    Finals
                                                 </th>
                                                 <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
-                                                    Minor
+                                                    Prime
                                                 </th>
                                                 <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
-                                                    Mini
+                                                    Core
+                                                </th>
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                    Bit
+                                                </th>
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                    Scout
                                                 </th>
                                                 <th className="hidden md:table-cell text-left py-3 px-4 text-[#F2AF29] font-semibold text-sm">
                                                     Banned Since
@@ -550,13 +625,19 @@ const TournamentsIndex = ({
                                                         {ban.user_email}
                                                     </td>
                                                     <td className="py-3 px-2 sm:px-4 text-center">
-                                                        {getBanBadge(ban.major)}
+                                                        {getBanBadge(ban.finals)}
                                                     </td>
                                                     <td className="py-3 px-2 sm:px-4 text-center">
-                                                        {getBanBadge(ban.minor)}
+                                                        {getBanBadge(ban.prime)}
                                                     </td>
                                                     <td className="py-3 px-2 sm:px-4 text-center">
-                                                        {getBanBadge(ban.mini)}
+                                                        {getBanBadge(ban.core)}
+                                                    </td>
+                                                    <td className="py-3 px-2 sm:px-4 text-center">
+                                                        {getBanBadge(ban.bit)}
+                                                    </td>
+                                                    <td className="py-3 px-2 sm:px-4 text-center">
+                                                        {getBanBadge(ban.scout)}
                                                     </td>
                                                     <td className="hidden md:table-cell py-3 px-4 text-[#69747C] text-sm">
                                                         <div className="flex items-center gap-1">
@@ -593,7 +674,7 @@ const TournamentsIndex = ({
                                 <p>
                                     Players on this list are restricted from
                                     participating in tournaments based on their
-                                    ban category (Major, Minor, or Mini events).
+                                    ban category (Finals, Prime, Core, Bit, or Scout events).
                                 </p>
                             </div>
                         </div>

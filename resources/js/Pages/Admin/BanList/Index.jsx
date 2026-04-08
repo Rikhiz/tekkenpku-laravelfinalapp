@@ -7,9 +7,11 @@ import Modal from "@/Components/Modal";
 const BanListIndex = ({ banlists = [], authUser, users = [] }) => {
     const { data, setData, post, put, processing, reset } = useForm({
         user_id: "",
-        major: "No",
-        minor: "No",
-        mini: "No",
+        finals: "No",
+        prime: "No",
+        core: "No",
+        bit: "No",
+        scout: "No",
     });
 
     const [showModal, setShowModal] = useState(false);
@@ -44,9 +46,11 @@ const BanListIndex = ({ banlists = [], authUser, users = [] }) => {
     const openEdit = (ban) => {
         setData({
             user_id: ban.user_id,
-            major: ban.major,
-            minor: ban.minor,
-            mini: ban.mini,
+            finals: ban.finals,
+            prime: ban.prime,
+            core: ban.core,
+            bit: ban.bit,
+            scout: ban.scout,
         });
         setEditing(ban.id);
         setSearchQuery("");
@@ -117,7 +121,7 @@ const BanListIndex = ({ banlists = [], authUser, users = [] }) => {
                                 Ban List Management
                             </h1>
                             <p className="text-gray-400 mt-1 text-sm">
-                                Manage banned users for Major, Minor, and Mini
+                                Manage banned users for Finals, Prime, Core, Bit, and Scout
                                 events
                             </p>
                         </div>
@@ -149,31 +153,23 @@ const BanListIndex = ({ banlists = [], authUser, users = [] }) => {
                     <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-800/20 border border-yellow-500/30 rounded-xl p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-yellow-400 text-sm font-medium">
-                                    Major Bans
-                                </p>
+                                <p className="text-yellow-400 text-sm font-medium">Finals Bans</p>
                                 <p className="text-3xl font-bold text-white mt-1">
-                                    {banlists.data?.filter(
-                                        (b) => b.major === "Yes"
-                                    ).length || 0}
+                                    {banlists.data?.filter((b) => b.finals === "Yes").length || 0}
                                 </p>
                             </div>
                             <Shield className="text-yellow-500" size={40} />
                         </div>
                     </div>
-                    <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/20 border border-blue-500/30 rounded-xl p-4">
+                    <div className="bg-gradient-to-br from-red-900/30 to-red-800/20 border border-red-500/30 rounded-xl p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-blue-400 text-sm font-medium">
-                                    Minor Bans
-                                </p>
+                                <p className="text-red-400 text-sm font-medium">Prime Bans</p>
                                 <p className="text-3xl font-bold text-white mt-1">
-                                    {banlists.data?.filter(
-                                        (b) => b.minor === "Yes"
-                                    ).length || 0}
+                                    {banlists.data?.filter((b) => b.prime === "Yes").length || 0}
                                 </p>
                             </div>
-                            <Shield className="text-blue-500" size={40} />
+                            <Shield className="text-red-500" size={40} />
                         </div>
                     </div>
                 </div>
@@ -187,15 +183,11 @@ const BanListIndex = ({ banlists = [], authUser, users = [] }) => {
                                     <th className="py-4 px-6 text-left font-semibold">
                                         User
                                     </th>
-                                    <th className="py-4 px-6 text-center font-semibold">
-                                        Major
-                                    </th>
-                                    <th className="py-4 px-6 text-center font-semibold">
-                                        Minor
-                                    </th>
-                                    <th className="py-4 px-6 text-center font-semibold">
-                                        Mini
-                                    </th>
+                                    <th className="py-4 px-6 text-center font-semibold">Finals</th>
+                                    <th className="py-4 px-6 text-center font-semibold">Prime</th>
+                                    <th className="py-4 px-6 text-center font-semibold">Core</th>
+                                    <th className="py-4 px-6 text-center font-semibold">Bit</th>
+                                    <th className="py-4 px-6 text-center font-semibold">Scout</th>
                                     <th className="py-4 px-6 text-center font-semibold">
                                         Actions
                                     </th>
@@ -252,30 +244,28 @@ const BanListIndex = ({ banlists = [], authUser, users = [] }) => {
                                                 </div>
                                             </td>
                                             <td className="py-4 px-6 text-center">
-                                                <span
-                                                    className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getBadgeColor(
-                                                        ban.major
-                                                    )}`}
-                                                >
-                                                    {ban.major}
+                                                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getBadgeColor(ban.finals)}`}>
+                                                    {ban.finals}
                                                 </span>
                                             </td>
                                             <td className="py-4 px-6 text-center">
-                                                <span
-                                                    className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getBadgeColor(
-                                                        ban.minor
-                                                    )}`}
-                                                >
-                                                    {ban.minor}
+                                                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getBadgeColor(ban.prime)}`}>
+                                                    {ban.prime}
                                                 </span>
                                             </td>
                                             <td className="py-4 px-6 text-center">
-                                                <span
-                                                    className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getBadgeColor(
-                                                        ban.mini
-                                                    )}`}
-                                                >
-                                                    {ban.mini}
+                                                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getBadgeColor(ban.core)}`}>
+                                                    {ban.core}
+                                                </span>
+                                            </td>
+                                            <td className="py-4 px-6 text-center">
+                                                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getBadgeColor(ban.bit)}`}>
+                                                    {ban.bit}
+                                                </span>
+                                            </td>
+                                            <td className="py-4 px-6 text-center">
+                                                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${getBadgeColor(ban.scout)}`}>
+                                                    {ban.scout}
                                                 </span>
                                             </td>
                                             <td className="py-4 px-6 text-center">
@@ -492,14 +482,12 @@ const BanListIndex = ({ banlists = [], authUser, users = [] }) => {
                         </p>
                     </div>
 
-                    {/* Major */}
+                    {/* Finals */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Major Events
-                        </label>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">Finals Events</label>
                         <select
-                            value={data.major}
-                            onChange={(e) => setData("major", e.target.value)}
+                            value={data.finals}
+                            onChange={(e) => setData("finals", e.target.value)}
                             className="w-full bg-gray-800 border border-gray-700 rounded-lg text-white px-4 py-3 focus:border-blue-500 focus:outline-none transition-colors"
                         >
                             <option value="No">No - Allowed</option>
@@ -507,14 +495,12 @@ const BanListIndex = ({ banlists = [], authUser, users = [] }) => {
                         </select>
                     </div>
 
-                    {/* Minor */}
+                    {/* Prime */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Minor Events
-                        </label>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">Prime Events</label>
                         <select
-                            value={data.minor}
-                            onChange={(e) => setData("minor", e.target.value)}
+                            value={data.prime}
+                            onChange={(e) => setData("prime", e.target.value)}
                             className="w-full bg-gray-800 border border-gray-700 rounded-lg text-white px-4 py-3 focus:border-blue-500 focus:outline-none transition-colors"
                         >
                             <option value="No">No - Allowed</option>
@@ -522,14 +508,38 @@ const BanListIndex = ({ banlists = [], authUser, users = [] }) => {
                         </select>
                     </div>
 
-                    {/* Mini */}
+                    {/* Core */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Mini Events
-                        </label>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">Core Events</label>
                         <select
-                            value={data.mini}
-                            onChange={(e) => setData("mini", e.target.value)}
+                            value={data.core}
+                            onChange={(e) => setData("core", e.target.value)}
+                            className="w-full bg-gray-800 border border-gray-700 rounded-lg text-white px-4 py-3 focus:border-blue-500 focus:outline-none transition-colors"
+                        >
+                            <option value="No">No - Allowed</option>
+                            <option value="Yes">Yes - Banned</option>
+                        </select>
+                    </div>
+
+                    {/* Bit */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">Bit Events</label>
+                        <select
+                            value={data.bit}
+                            onChange={(e) => setData("bit", e.target.value)}
+                            className="w-full bg-gray-800 border border-gray-700 rounded-lg text-white px-4 py-3 focus:border-blue-500 focus:outline-none transition-colors"
+                        >
+                            <option value="No">No - Allowed</option>
+                            <option value="Yes">Yes - Banned</option>
+                        </select>
+                    </div>
+
+                    {/* Scout */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">Scout Events</label>
+                        <select
+                            value={data.scout}
+                            onChange={(e) => setData("scout", e.target.value)}
                             className="w-full bg-gray-800 border border-gray-700 rounded-lg text-white px-4 py-3 focus:border-blue-500 focus:outline-none transition-colors"
                         >
                             <option value="No">No - Allowed</option>

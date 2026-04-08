@@ -3,7 +3,7 @@ import AppLayout from "@/Layouts/AppLayout";
 import TypingEffect from "@/Components/TypingEffect";
 import { Trophy, Gamepad2 } from "lucide-react";
 import { useInView } from "react-intersection-observer";
-import herobg from "@/images/hero-background.jpg";
+import herobg from "@/images/hero-background.webp";
 import { Link, router } from "@inertiajs/react";
 
 const Welcome = ({

@@ -90,10 +90,14 @@ class AdminTournamentsController extends Controller
 
             if ($response->successful()) {
                 $fileContent = $response->body();
-                $filename = 'tournaments/' . Str::random(40) . '.jpg';
+                $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+                $image = $manager->read($fileContent);
+                $encoded = $image->toWebp(80);
+
+                $filename = 'tournaments/' . Str::random(40) . '.webp';
 
                 // ✅ Simpan file tetap di storage/app/public/tournaments/
-                Storage::disk('public')->put($filename, $fileContent);
+                Storage::disk('public')->put($filename, $encoded->toString());
 
                 // ✅ URL untuk database (tambahkan app/public di tengah)
                 return url('storage/app/public/' . $filename);
@@ -184,9 +188,11 @@ class AdminTournamentsController extends Controller
     private function resetBanListForCategory(int $category)
     {
         $columnToReset = match ($category) {
-            1 => 'major',
-            2 => 'minor',
-            3 => 'mini',
+            1 => 'finals',
+            2 => 'prime',
+            3 => 'core',
+            4 => 'bit',
+            5 => 'scout',
             default => null
         };
 

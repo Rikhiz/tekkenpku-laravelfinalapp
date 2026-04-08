@@ -3,7 +3,7 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { Calculator, Trophy, Eye, RefreshCw, Users, Award } from "lucide-react";
 import { router } from "@inertiajs/react";
 
-const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
+const LeaderboardIndex = ({ leaderboardAll = [], authUser, availableSeasons = [], selectedSeason }) => {
   const [calculating, setCalculating] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
@@ -65,10 +65,20 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
     }
   };
 
-  // Sort leaderboard by total points
-  const sortedLeaderboard = [...leaderboardAll].sort((a, b) => 
-    (b.total_points || 0) - (a.total_points || 0)
-  );
+  const [boardType, setBoardType] = useState('normal');
+
+  // Sort and filter leaderboard by selected board type
+  const sortedLeaderboard = [...leaderboardAll]
+    .filter((player) => {
+      if (boardType === 'scout') return player.scout > 0;
+      return player.total_points > 0;
+    })
+    .sort((a, b) => {
+      if (boardType === 'scout') {
+        return (b.scout || 0) - (a.scout || 0);
+      }
+      return (b.total_points || 0) - (a.total_points || 0);
+    });
 
   // Player details modal
   const PlayerDetailsModal = ({ player, onClose }) => {
@@ -94,34 +104,48 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
           </div>
 
           <div className="p-6">
-            {/* Total Points Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
               <div className="bg-gray-800 border border-yellow-500 rounded-lg p-4">
-                <div className="text-yellow-400 text-sm mb-1">Major Points</div>
-                <div className="text-3xl font-bold text-white">{player.major || 0}</div>
+                <div className="text-yellow-400 text-sm mb-1">Finals Points</div>
+                <div className="text-xl font-bold text-white">{player.finals || 0}</div>
                 <div className="text-gray-400 text-xs mt-1">
-                  {player.counted_major_events || 0}/1 counted
-                </div>
-              </div>
-              <div className="bg-gray-800 border border-blue-500 rounded-lg p-4">
-                <div className="text-blue-400 text-sm mb-1">Minor Points</div>
-                <div className="text-3xl font-bold text-white">{player.minor || 0}</div>
-                <div className="text-gray-400 text-xs mt-1">
-                  {player.counted_minor_events || 0}/2 counted
-                </div>
-              </div>
-              <div className="bg-gray-800 border border-green-500 rounded-lg p-4">
-                <div className="text-green-400 text-sm mb-1">Mini Points</div>
-                <div className="text-3xl font-bold text-white">{player.mini || 0}</div>
-                <div className="text-gray-400 text-xs mt-1">
-                  {player.counted_mini_events || 0}/4 counted
+                  {player.counted_finals_events || 0}/1 counted
                 </div>
               </div>
               <div className="bg-gray-800 border border-red-500 rounded-lg p-4">
-                <div className="text-red-400 text-sm mb-1">Total Points</div>
+                <div className="text-red-400 text-sm mb-1">Prime Points</div>
+                <div className="text-xl font-bold text-white">{player.prime || 0}</div>
+                <div className="text-gray-400 text-xs mt-1">
+                  {player.counted_prime_events || 0}/1 counted
+                </div>
+              </div>
+              <div className="bg-gray-800 border border-blue-500 rounded-lg p-4">
+                <div className="text-blue-400 text-sm mb-1">Core Points</div>
+                <div className="text-xl font-bold text-white">{player.core || 0}</div>
+                <div className="text-gray-400 text-xs mt-1">
+                  {player.counted_core_events || 0}/2 counted
+                </div>
+              </div>
+              <div className="bg-gray-800 border border-green-500 rounded-lg p-4">
+                <div className="text-green-400 text-sm mb-1">Bit Points</div>
+                <div className="text-xl font-bold text-white">{player.bit || 0}</div>
+                <div className="text-gray-400 text-xs mt-1">
+                  {player.counted_bit_events || 0}/3 counted
+                </div>
+              </div>
+              <div className="bg-gray-800 border border-purple-500 rounded-lg p-4">
+                <div className="text-purple-400 text-sm mb-1">Scout Points</div>
+                <div className="text-xl font-bold text-white">{player.scout || 0}</div>
+                <div className="text-gray-400 text-xs mt-1">
+                  {player.counted_scout_events || 0}/4 counted
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gray-800 border border-gray-500 rounded-lg p-4 mb-4">
+                <div className="text-gray-400 text-sm mb-1">Total Points</div>
                 <div className="text-3xl font-bold text-white">{player.total_points || 0}</div>
                 <div className="text-gray-400 text-xs mt-1">Overall Score</div>
-              </div>
             </div>
 
             {/* Events Participated */}
@@ -130,24 +154,36 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
                 <Users size={18} />
                 Events Participated
               </h3>
-              <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="grid grid-cols-5 gap-4 text-center">
                 <div>
                   <div className="text-yellow-400 text-2xl font-bold">
-                    {player.total_major_events || 0}
+                    {player.total_finals_events || 0}
                   </div>
-                  <div className="text-gray-400 text-sm">Major Events</div>
+                  <div className="text-gray-400 text-xs">Finals</div>
+                </div>
+                <div>
+                  <div className="text-red-400 text-2xl font-bold">
+                    {player.total_prime_events || 0}
+                  </div>
+                  <div className="text-gray-400 text-xs">Prime</div>
                 </div>
                 <div>
                   <div className="text-blue-400 text-2xl font-bold">
-                    {player.total_minor_events || 0}
+                    {player.total_core_events || 0}
                   </div>
-                  <div className="text-gray-400 text-sm">Minor Events</div>
+                  <div className="text-gray-400 text-xs">Core</div>
                 </div>
                 <div>
                   <div className="text-green-400 text-2xl font-bold">
-                    {player.total_mini_events || 0}
+                    {player.total_bit_events || 0}
                   </div>
-                  <div className="text-gray-400 text-sm">Mini Events</div>
+                  <div className="text-gray-400 text-xs">Bit</div>
+                </div>
+                <div>
+                  <div className="text-purple-400 text-2xl font-bold">
+                    {player.total_scout_events || 0}
+                  </div>
+                  <div className="text-gray-400 text-xs">Scout</div>
                 </div>
               </div>
             </div>
@@ -171,22 +207,63 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-3">
               <Award className="text-red-500" size={32} />
-              Global Leaderboard
+              {boardType === 'scout' ? 'Scout Leaderboard' : 'Global Leaderboard'}
             </h1>
             <p className="text-gray-400 mt-1">Tournament ranking system</p>
           </div>
-          <button
-            onClick={handleRecalculate}
-            disabled={calculating}
-            className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 disabled:from-gray-600 disabled:to-gray-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all shadow-lg hover:shadow-green-500/50"
-          >
-            {calculating ? (
-              <RefreshCw size={18} className="animate-spin" />
-            ) : (
-              <Calculator size={18} />
-            )}
-            {calculating ? "Calculating..." : "Recalculate Points"}
-          </button>
+          <div className="flex flex-wrap gap-2">
+            {/* Season Filter Banner */}
+            <div className="flex bg-gray-800 rounded-lg p-1 mr-2">
+                {availableSeasons.map((season) => (
+                    <button
+                        key={season}
+                        onClick={() => router.visit(`/admin/leaderboard?season=${season}`, { preserveState: true, preserveScroll: true })}
+                        className={`px-4 py-2 rounded-md font-bold text-sm transition-all ${
+                            parseInt(selectedSeason) === parseInt(season)
+                                ? "bg-blue-600 text-white shadow-lg"
+                                : "text-gray-400 hover:text-white"
+                        }`}
+                    >
+                        Season {season}
+                    </button>
+                ))}
+            </div>
+
+            <div className="flex bg-gray-800 rounded-lg p-1 mr-2">
+                <button
+                  onClick={() => setBoardType('normal')}
+                  className={`px-4 py-2 rounded-md font-bold text-sm transition-all ${
+                    boardType === 'normal' 
+                      ? 'bg-red-600 text-white shadow-lg' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Normal
+                </button>
+                <button
+                  onClick={() => setBoardType('scout')}
+                  className={`px-4 py-2 rounded-md font-bold text-sm transition-all ${
+                    boardType === 'scout' 
+                      ? 'bg-purple-600 text-white shadow-lg' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Scout
+                </button>
+            </div>
+            <button
+              onClick={handleRecalculate}
+              disabled={calculating}
+              className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 disabled:from-gray-600 disabled:to-gray-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all shadow-lg hover:shadow-green-500/50"
+            >
+              {calculating ? (
+                <RefreshCw size={18} className="animate-spin" />
+              ) : (
+                <Calculator size={18} />
+              )}
+              {calculating ? "Calculating..." : "Recalculate Points"}
+            </button>
+          </div>
         </div>
 
         {/* Rules Card */}
@@ -196,10 +273,11 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
             Leaderboard Scoring Rules
           </h3>
           <p className="text-blue-100 text-sm leading-relaxed">
-            Players are ranked by total points from: <strong>Top 1 Major event</strong> + <strong>Top 2 Minor events</strong> + <strong>Top 4 Mini events</strong>
+            Players are ranked by total points from: <strong>Top 1 Prime</strong> + <strong>Top 2 Core</strong> + <strong>Top 3 Bit</strong> events per player. 
+            <br/>(Scout Leaderboard utilizes up to <strong>Top 4 Scout</strong> events).
           </p>
           <p className="text-blue-200 text-xs mt-2">
-            Additional events in each category are recorded but not counted towards total points.
+            Additional events in each category are recorded but not counted towards total points. Finals events stand separately.
           </p>
         </div>
 
@@ -231,7 +309,7 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
               <div>
                 <div className="text-gray-400 text-sm">Highest Score</div>
                 <div className="text-2xl font-bold text-white">
-                  {sortedLeaderboard[0]?.total_points || 0}
+                  {boardType === 'scout' ? (sortedLeaderboard[0]?.scout || 0) : (sortedLeaderboard[0]?.total_points || 0)}
                 </div>
               </div>
             </div>
@@ -247,9 +325,11 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
                   <th className="py-4 px-4 text-left font-semibold">Rank</th>
                   <th className="py-4 px-4 text-left font-semibold">Player</th>
                   <th className="py-4 px-4 text-left font-semibold">User Account</th>
-                  <th className="py-4 px-4 text-center font-semibold">Major</th>
-                  <th className="py-4 px-4 text-center font-semibold">Minor</th>
-                  <th className="py-4 px-4 text-center font-semibold">Mini</th>
+                  <th className="py-4 px-4 text-center font-semibold">Finals</th>
+                  <th className="py-4 px-4 text-center font-semibold">Prime</th>
+                  <th className="py-4 px-4 text-center font-semibold">Core</th>
+                  <th className="py-4 px-4 text-center font-semibold">Bit</th>
+                  <th className="py-4 px-4 text-center font-semibold">Scout</th>
                   <th className="py-4 px-4 text-center font-semibold">Total Points</th>
                   <th className="py-4 px-4 text-center font-semibold">Events</th>
                   <th className="py-4 px-4 text-center font-semibold">Actions</th>
@@ -290,25 +370,41 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
                       </td>
                       <td className="py-4 px-4 text-center">
                         <div className="flex flex-col items-center">
-                          <span className="text-yellow-400 font-bold text-lg">{player.major || 0}</span>
+                          <span className="text-yellow-400 font-bold text-lg">{player.finals || 0}</span>
                           <span className="text-gray-500 text-xs">
-                            {player.counted_major_events || 0}/1
+                            {player.counted_finals_events || 0}/1
                           </span>
                         </div>
                       </td>
                       <td className="py-4 px-4 text-center">
                         <div className="flex flex-col items-center">
-                          <span className="text-blue-400 font-bold text-lg">{player.minor || 0}</span>
+                          <span className="text-red-400 font-bold text-lg">{player.prime || 0}</span>
                           <span className="text-gray-500 text-xs">
-                            {player.counted_minor_events || 0}/2
+                            {player.counted_prime_events || 0}/1
                           </span>
                         </div>
                       </td>
                       <td className="py-4 px-4 text-center">
                         <div className="flex flex-col items-center">
-                          <span className="text-green-400 font-bold text-lg">{player.mini || 0}</span>
+                          <span className="text-blue-400 font-bold text-lg">{player.core || 0}</span>
                           <span className="text-gray-500 text-xs">
-                            {player.counted_mini_events || 0}/4
+                            {player.counted_core_events || 0}/2
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <div className="flex flex-col items-center">
+                          <span className="text-green-400 font-bold text-lg">{player.bit || 0}</span>
+                          <span className="text-gray-500 text-xs">
+                            {player.counted_bit_events || 0}/3
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <div className="flex flex-col items-center">
+                          <span className="text-purple-400 font-bold text-lg">{player.scout || 0}</span>
+                          <span className="text-gray-500 text-xs">
+                            {player.counted_scout_events || 0}/4
                           </span>
                         </div>
                       </td>
@@ -319,9 +415,11 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
                       </td>
                       <td className="py-4 px-4">
                         <div className="text-xs text-gray-400 text-center space-y-1">
-                          <div>Major: {player.total_major_events || 0}</div>
-                          <div>Minor: {player.total_minor_events || 0}</div>
-                          <div>Mini: {player.total_mini_events || 0}</div>
+                          <div>F: {player.total_finals_events || 0}</div>
+                          <div>P: {player.total_prime_events || 0}</div>
+                          <div>C: {player.total_core_events || 0}</div>
+                          <div>B: {player.total_bit_events || 0}</div>
+                          <div>S: {player.total_scout_events || 0}</div>
                         </div>
                       </td>
                       <td className="py-4 px-4 text-center">
@@ -349,7 +447,7 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser }) => {
           <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
             <p className="text-sm text-gray-400">
               <strong className="text-white">Scoring Rule:</strong> Only the highest-scoring events count towards total points: 
-              Top 1 Major + Top 2 Minor + Top 4 Mini events per player.
+              Top 1 Finals + Top 1 Prime + Top 2 Core + Top 3 Bit + Top 4 Scout events per player.
             </p>
           </div>
         )}

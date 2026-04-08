@@ -50,9 +50,11 @@ class AdminBanListController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'major' => 'required|in:Yes,No',
-            'minor' => 'required|in:Yes,No',
-            'mini'  => 'required|in:Yes,No',
+            'finals' => 'required|in:Yes,No',
+            'prime' => 'required|in:Yes,No',
+            'core' => 'required|in:Yes,No',
+            'bit'  => 'required|in:Yes,No',
+            'scout'  => 'required|in:Yes,No',
             'user_id' => 'required|exists:users,id',
         ]);
 
@@ -95,9 +97,11 @@ class AdminBanListController extends Controller
         $banlist = BanList::findOrFail($id);
 
         $validated = $request->validate([
-            'major' => 'required|in:Yes,No',
-            'minor' => 'required|in:Yes,No',
-            'mini'  => 'required|in:Yes,No',
+            'finals' => 'required|in:Yes,No',
+            'prime' => 'required|in:Yes,No',
+            'core' => 'required|in:Yes,No',
+            'bit'  => 'required|in:Yes,No',
+            'scout'  => 'required|in:Yes,No',
             'user_id' => 'required|exists:users,id',
         ]);
 

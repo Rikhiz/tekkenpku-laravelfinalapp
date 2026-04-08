@@ -190,9 +190,11 @@ const ParticipantsIndex = ({
 
     const getCategoryBadge = (category) => {
         const badges = {
-            1: { text: "Major", class: "bg-red-600 text-red-100" },
-            2: { text: "Minor", class: "bg-blue-600 text-blue-100" },
-            3: { text: "Mini", class: "bg-green-600 text-green-100" },
+            1: { text: "Finals", class: "bg-yellow-600 text-yellow-100" },
+            2: { text: "Prime", class: "bg-red-600 text-red-100" },
+            3: { text: "Core", class: "bg-blue-600 text-blue-100" },
+            4: { text: "Bit", class: "bg-green-600 text-green-100" },
+            5: { text: "Scout", class: "bg-purple-600 text-purple-100" },
         };
 
         const badge = badges[category] || {
