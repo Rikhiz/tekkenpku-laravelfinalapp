@@ -328,6 +328,13 @@ const Header = () => {
                                         </button>
                                     )}
                                     <button
+                                        onClick={() => handleNavigation('/profile')}
+                                        className="w-full flex items-center justify-center gap-2 bg-[#69747C]/20 border border-[#69747C]/30 text-[#F2F2F2] px-4 py-3 rounded-lg hover:bg-[#69747C]/30 transition-all duration-300 font-bold"
+                                    >
+                                        <User size={18} />
+                                        <span>Profile</span>
+                                    </button>
+                                    <button
                                         onClick={handleLogout}
                                         className="w-full flex items-center justify-center gap-2 bg-[#C23B69]/20 border border-[#C23B69]/30 text-[#C23B69] px-4 py-3 rounded-lg hover:bg-[#C23B69]/30 transition-all duration-300 font-bold"
                                     >
