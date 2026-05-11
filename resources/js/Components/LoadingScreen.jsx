@@ -10,10 +10,11 @@ const LoadingScreen = () => {
           alt="Loading..."
           className="w-24 h-24 mx-auto mb-4 animate-bounce"
         />
-        <p className="text-[#FF2146] font-bold text-xl">Loading...</p>
+        <p className="text-[#C23B69] font-bold text-xl">Loading...</p>
       </div>
     </div>
   );
 };
 
 export default LoadingScreen;
+

@@ -39,7 +39,7 @@ const TournamentsIndex = ({
         const seasons = tournaments
             .map((t) => t.season)
             .filter((s) => s !== null && s !== undefined);
-        return [...new Set(seasons)].sort((a, b) => b - a); // sort descending
+        return [...new Set(seasons)].sort((a, b) => a - b); // sort ascending
     }, [tournaments]);
 
     const categoryConfig = {
@@ -191,8 +191,8 @@ const TournamentsIndex = ({
                     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col items-center">
                         {/* Title */}
                         <h1 className="flex items-center justify-center gap-3 sm:gap-4 text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-black text-white mb-3 md:mb-4 lg:mb-6 px-2">
-                            <Trophy className="w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 text-[#FF2146] drop-shadow-2xl" />
-                            <span className="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                            <Trophy className="w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 text-[#C23B69] drop-shadow-2xl" />
+                            <span className="bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent">
                                 TOURNAMENTS
                             </span>
                         </h1>
@@ -261,8 +261,8 @@ const TournamentsIndex = ({
                                 onClick={() => setFilterSeason("all")}
                                 className={`relative overflow-hidden group rounded-xl px-6 py-3 transition-all duration-300 font-black tracking-wide text-sm md:text-base border-2 ${
                                     filterSeason === "all"
-                                        ? "border-[#FF2146] bg-gradient-to-r from-[#FF2146]/20 to-[#F2AF29]/20 text-white shadow-[0_0_15px_rgba(255,33,70,0.5)] scale-105"
-                                        : "border-[#69747C]/50 bg-[#1a1a1a] text-[#69747C] hover:border-[#FF2146]/50 hover:text-white"
+                                        ? "border-[#C23B69] bg-gradient-to-r from-[#C23B69]/20 to-[#E57A9D]/20 text-white shadow-[0_0_15px_rgba(255,33,70,0.5)] scale-105"
+                                        : "border-[#69747C]/50 bg-[#1a1a1a] text-[#69747C] hover:border-[#C23B69]/50 hover:text-white"
                                 }`}
                             >
                                 SEMUA SEASON
@@ -275,7 +275,7 @@ const TournamentsIndex = ({
                                     onClick={() => setFilterSeason(season)}
                                     className={`relative group overflow-hidden rounded-xl w-32 h-14 md:w-40 md:h-16 flex items-center justify-center transition-all duration-300 ${
                                         filterSeason === season
-                                            ? "scale-110 shadow-[0_0_20px_rgba(242,175,41,0.6)] ring-2 ring-[#F2AF29] z-10"
+                                            ? "scale-110 shadow-[0_0_20px_rgba(242,175,41,0.6)] ring-2 ring-[#E57A9D] z-10"
                                             : "opacity-70 hover:opacity-100 hover:scale-105 saturate-50 hover:saturate-100"
                                     }`}
                                 >
@@ -285,7 +285,7 @@ const TournamentsIndex = ({
                                         className="absolute inset-0 w-full h-full object-cover z-0"
                                     />
                                     <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors z-10"></div>
-                                    <span className="relative z-20 font-black text-white text-lg md:text-xl tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-[#F2AF29] transition-colors">
+                                    <span className="relative z-20 font-black text-white text-lg md:text-xl tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-[#E57A9D] transition-colors">
                                         SEASON {season}
                                     </span>
                                 </button>
@@ -298,7 +298,7 @@ const TournamentsIndex = ({
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-6 md:mb-8">
                     <div className="bg-gradient-to-r from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
                         <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
-                            <Filter className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                            <Filter className="w-4 h-4 md:w-5 md:h-5 text-[#E57A9D] flex-shrink-0" />
                             <h3 className="text-white font-bold text-sm md:text-base lg:text-lg">
                                 Filter Tournaments
                             </h3>
@@ -314,7 +314,7 @@ const TournamentsIndex = ({
                                     onChange={(e) =>
                                         setFilterCategory(e.target.value)
                                     }
-                                    className="w-full bg-[#0D0C0C] border border-[#69747C]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#FF2146] focus:outline-none"
+                                    className="w-full bg-[#0D0C0C] border border-[#69747C]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#C23B69] focus:outline-none"
                                 >
                                     <option value="all">All Categories</option>
                                     <option value="1">Finals</option>
@@ -335,7 +335,7 @@ const TournamentsIndex = ({
                                     onChange={(e) =>
                                         setFilterStatus(e.target.value)
                                     }
-                                    className="w-full bg-[#0D0C0C] border border-[#69747C]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#FF2146] focus:outline-none"
+                                    className="w-full bg-[#0D0C0C] border border-[#69747C]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#C23B69] focus:outline-none"
                                 >
                                     <option value="all">All Status</option>
                                     <option value="Pendaftaran Dibuka">
@@ -377,7 +377,7 @@ const TournamentsIndex = ({
                                                 tournament.url_startgg
                                             )
                                         }
-                                        className="group relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-300 hover:border-[#FF2146]/50 active:scale-95 md:hover:scale-[1.02] cursor-pointer h-[560px] sm:h-[580px]"
+                                        className="group relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-300 hover:border-[#C23B69]/50 active:scale-95 md:hover:scale-[1.02] cursor-pointer h-[560px] sm:h-[580px]"
                                     >
                                         {/* Image Section */}
                                         <div className="relative h-40 sm:h-44 md:h-48 overflow-hidden flex-shrink-0">
@@ -432,7 +432,7 @@ const TournamentsIndex = ({
                                         {/* Content Section */}
                                         <div className="flex flex-col flex-grow p-4 md:p-5">
                                             <div className="h-12 sm:h-14 mb-2 md:mb-3">
-                                                <h3 className="text-[#F2F2F2] font-bold text-sm sm:text-base md:text-lg leading-tight group-hover:text-[#FF2146] transition-colors line-clamp-2">
+                                                <h3 className="text-[#F2F2F2] font-bold text-sm sm:text-base md:text-lg leading-tight group-hover:text-[#C23B69] transition-colors line-clamp-2">
                                                     {tournament.name}
                                                 </h3>
                                             </div>
@@ -447,17 +447,17 @@ const TournamentsIndex = ({
                                             <div className="space-y-2 mb-3 md:mb-4">
                                                 {tournament.dojo && (
                                                     <div className="flex items-center gap-2 text-xs md:text-sm h-5">
-                                                        <Home className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF2146] flex-shrink-0" />
+                                                        <Home className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#C23B69] flex-shrink-0" />
                                                         <span className="text-[#69747C] flex-shrink-0">
                                                             Format:
                                                         </span>
-                                                        <span className="text-[#F2AF29] font-semibold truncate">
+                                                        <span className="text-[#E57A9D] font-semibold truncate">
                                                             {tournament.dojo}
                                                         </span>
                                                     </div>
                                                 )}
                                                 <div className="flex items-center gap-2 text-xs md:text-sm h-5">
-                                                    <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#F2AF29] flex-shrink-0" />
+                                                    <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#E57A9D] flex-shrink-0" />
                                                     <span className="text-[#69747C] flex-shrink-0">
                                                         Prize:
                                                     </span>
@@ -468,7 +468,7 @@ const TournamentsIndex = ({
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center gap-2 text-xs md:text-sm h-5">
-                                                    <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF2146] flex-shrink-0" />
+                                                    <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#C23B69] flex-shrink-0" />
                                                     <span className="text-[#69747C] flex-shrink-0">
                                                         Participants:
                                                     </span>
@@ -504,7 +504,7 @@ const TournamentsIndex = ({
                                                                 onClick={(e) =>
                                                                     e.stopPropagation()
                                                                 }
-                                                                className="flex items-center gap-1 text-xs text-[#FF2146] hover:text-[#FF2146]/80 transition-colors"
+                                                                className="flex items-center gap-1 text-xs text-[#C23B69] hover:text-[#C23B69]/80 transition-colors"
                                                             >
                                                                 <Youtube className="w-3.5 h-3.5 flex-shrink-0" />
                                                                 <span>
@@ -520,7 +520,7 @@ const TournamentsIndex = ({
                                                                 onClick={(e) =>
                                                                     e.stopPropagation()
                                                                 }
-                                                                className="flex items-center gap-1 text-xs text-[#F2AF29] hover:text-[#F2AF29]/80 transition-colors"
+                                                                className="flex items-center gap-1 text-xs text-[#E57A9D] hover:text-[#E57A9D]/80 transition-colors"
                                                             >
                                                                 <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
                                                                 <span>
@@ -540,7 +540,7 @@ const TournamentsIndex = ({
                                                             tournament.url_startgg
                                                         );
                                                     }}
-                                                    className="w-full px-3 md:px-4 py-2 md:py-2.5 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-xs sm:text-sm md:text-base rounded-lg transition-all duration-300 active:scale-95 md:group-hover:scale-105"
+                                                    className="w-full px-3 md:px-4 py-2 md:py-2.5 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] hover:from-[#C23B69]/90 hover:to-[#E57A9D]/90 text-[#F2F2F2] font-semibold text-xs sm:text-sm md:text-base rounded-lg transition-all duration-300 active:scale-95 md:group-hover:scale-105"
                                                 >
                                                     {tournament.status ===
                                                     "Pendaftaran Dibuka"
@@ -581,28 +581,25 @@ const TournamentsIndex = ({
                                     <table className="min-w-full">
                                         <thead>
                                             <tr className="border-b border-[#69747C]/30">
-                                                <th className="text-left py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                <th className="text-left py-3 px-2 sm:px-4 text-[#E57A9D] font-semibold text-xs sm:text-sm">
                                                     Player
                                                 </th>
-                                                <th className="hidden sm:table-cell text-left py-3 px-4 text-[#F2AF29] font-semibold text-sm">
-                                                    Email
-                                                </th>
-                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#E57A9D] font-semibold text-xs sm:text-sm">
                                                     Finals
                                                 </th>
-                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#E57A9D] font-semibold text-xs sm:text-sm">
                                                     Prime
                                                 </th>
-                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#E57A9D] font-semibold text-xs sm:text-sm">
                                                     Core
                                                 </th>
-                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#E57A9D] font-semibold text-xs sm:text-sm">
                                                     Bit
                                                 </th>
-                                                <th className="text-center py-3 px-2 sm:px-4 text-[#F2AF29] font-semibold text-xs sm:text-sm">
+                                                <th className="text-center py-3 px-2 sm:px-4 text-[#E57A9D] font-semibold text-xs sm:text-sm">
                                                     Scout
                                                 </th>
-                                                <th className="hidden md:table-cell text-left py-3 px-4 text-[#F2AF29] font-semibold text-sm">
+                                                <th className="hidden md:table-cell text-left py-3 px-4 text-[#E57A9D] font-semibold text-sm">
                                                     Banned Since
                                                 </th>
                                             </tr>
@@ -617,12 +614,6 @@ const TournamentsIndex = ({
                                                         <div className="text-white font-medium text-xs sm:text-sm">
                                                             {ban.user_name}
                                                         </div>
-                                                        <div className="sm:hidden text-[#69747C] text-xs mt-0.5">
-                                                            {ban.user_email}
-                                                        </div>
-                                                    </td>
-                                                    <td className="hidden sm:table-cell py-3 px-4 text-[#69747C] text-sm">
-                                                        {ban.user_email}
                                                     </td>
                                                     <td className="py-3 px-2 sm:px-4 text-center">
                                                         {getBanBadge(ban.finals)}
@@ -686,3 +677,4 @@ const TournamentsIndex = ({
 };
 
 export default TournamentsIndex;
+

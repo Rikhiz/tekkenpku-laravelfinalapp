@@ -19,7 +19,7 @@ const Modal = ({ title, show, onClose, children, width = "w-96" }) => {
                     </h2>
                     <button
                         onClick={onClose}
-                        className="p-2 text-white rounded-lg hover:bg-[#FF2146]/20 hover:text-[#FF2146] transition-colors"
+                        className="p-2 text-white rounded-lg hover:bg-[#C23B69]/20 hover:text-[#C23B69] transition-colors"
                     >
                         <X size={20} />
                     </button>
@@ -35,3 +35,4 @@ const Modal = ({ title, show, onClose, children, width = "w-96" }) => {
 };
 
 export default Modal;
+

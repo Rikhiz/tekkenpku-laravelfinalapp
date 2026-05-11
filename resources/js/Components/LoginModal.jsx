@@ -31,10 +31,10 @@ const LoginModal = ({ show, onClose }) => {
           icon: "success",
           background: "#0D0C0C",
           color: "#F2F2F2",
-          confirmButtonColor: "#FF2146",
+          confirmButtonColor: "#C23B69",
           confirmButtonText: "Lanjutkan",
           customClass: {
-            popup: "rounded-xl shadow-lg border border-[#FF2146]/30",
+            popup: "rounded-xl shadow-lg border border-[#C23B69]/30",
             confirmButton: "text-[#F2F2F2] font-semibold px-4 py-2",
           },
         });
@@ -49,12 +49,12 @@ const LoginModal = ({ show, onClose }) => {
           icon: "error",
           background: "#0D0C0C",
           color: "#F2F2F2",
-          iconColor: "#FF2146",
-          confirmButtonColor: "#F2AF29",
+          iconColor: "#C23B69",
+          confirmButtonColor: "#E57A9D",
           confirmButtonText: "Tutup",
           customClass: {
-            popup: "rounded-xl shadow-lg border border-[#FF2146]/30",
-            title: "text-[#FF2146] font-semibold",
+            popup: "rounded-xl shadow-lg border border-[#C23B69]/30",
+            title: "text-[#C23B69] font-semibold",
             confirmButton: "text-[#0D0C0C] font-semibold px-4 py-2 rounded-md",
           },
         });
@@ -83,7 +83,7 @@ const LoginModal = ({ show, onClose }) => {
       {/* OAuth Button - start.gg */}
       <button
         onClick={handleOAuthLogin}
-        className="w-full mb-6 flex items-center justify-center gap-3 px-4 py-3 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 group relative overflow-hidden"
+        className="w-full mb-6 flex items-center justify-center gap-3 px-4 py-3 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] hover:from-[#C23B69]/90 hover:to-[#E57A9D]/90 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 group relative overflow-hidden"
       >
         {/* Animated Background */}
         <div className="absolute inset-0 bg-white/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -121,7 +121,7 @@ const LoginModal = ({ show, onClose }) => {
             onChange={(e) => setData("login", e.target.value)}
             className={`bg-[#0D0C0C]/50 border rounded-md p-3 text-[#F2F2F2] text-base outline-none transition-colors ${
               errors.email ? "border-red-500" : "border-[#69747C]"
-            } focus:border-[#FF2146]`}
+            } focus:border-[#C23B69]`}
             placeholder="Enter your email or username"
             autoComplete="username"
             required
@@ -139,7 +139,7 @@ const LoginModal = ({ show, onClose }) => {
               onChange={(e) => setData("password", e.target.value)}
               className={`bg-[#0D0C0C]/50 border rounded-md p-3 pr-10 text-[#F2F2F2] text-base outline-none transition-colors w-full ${
                 errors.password ? "border-red-500" : "border-[#69747C]"
-              } focus:border-[#FF2146]`}
+              } focus:border-[#C23B69]`}
               placeholder="Enter your password"
               autoComplete="current-password"
               required
@@ -168,7 +168,7 @@ const LoginModal = ({ show, onClose }) => {
       <div className="mt-6 p-4 bg-[#0D0C0C]/50 border border-[#69747C]/30 rounded-md">
         <p className="text-[#69747C] text-sm mb-2">Login Information:</p>
         <div className="text-[#F2F2F2] text-xs space-y-1">
-          <p>• <strong className="text-[#FF2146]">start.gg Login:</strong> Untuk semua player yang sudah terdaftar di tournament</p>
+          <p>• <strong className="text-[#C23B69]">start.gg Login:</strong> Untuk semua player yang sudah terdaftar di tournament</p>
           <p>• <strong className="text-[#69747C]">Email Login:</strong> Khusus untuk Admin</p>
         </div>
       </div>

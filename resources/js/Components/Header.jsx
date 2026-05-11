@@ -82,7 +82,7 @@ const Header = () => {
                 className={`
                     fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out
                     ${isScrolled
-                        ? "bg-[#0D0C0C]/95 backdrop-blur-md shadow-lg border-b border-[#FF2146]/20"
+                        ? "bg-[#0D0C0C]/95 backdrop-blur-md shadow-lg border-b border-[#C23B69]/20"
                         : "bg-transparent"
                     }
                 `}
@@ -121,10 +121,10 @@ const Header = () => {
                                 <button
                                     onClick={() => handleNavigation(link.href)}
                                     className={`
-                                        relative text-[#F2F2F2] hover:text-[#FF2146] transition-all duration-300 font-black
+                                        relative text-[#F2F2F2] hover:text-[#C23B69] transition-all duration-300 font-black
                                         ${isScrolled ? "text-lg" : "text-xl"}
                                         before:content-[''] before:absolute before:w-0 before:h-0.5 before:bottom-0 before:left-0 
-                                        before:bg-gradient-to-r before:from-[#FF2146] before:to-[#F2AF29]
+                                        before:bg-gradient-to-r before:from-[#C23B69] before:to-[#E57A9D]
                                         hover:before:w-full before:transition-all before:duration-300
                                     `}
                                 >
@@ -143,7 +143,7 @@ const Header = () => {
                                     onClick={() => setShowUserMenu(!showUserMenu)}
                                     className={`
                                         flex items-center gap-3 px-2 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 
-                                        border border-[#69747C]/30 hover:border-[#FF2146]/50 rounded-lg transition-all duration-300
+                                        border border-[#69747C]/30 hover:border-[#C23B69]/50 rounded-lg transition-all duration-300
                                         ${isScrolled ? "text-sm" : "text-base"}
                                     `}
                                 >
@@ -152,14 +152,14 @@ const Header = () => {
                                         <img 
                                             src={user.avatar} 
                                             alt={user.name}
-                                            className="w-8 h-8 rounded-full object-cover border-2 border-[#FF2146]/30"
+                                            className="w-8 h-8 rounded-full object-cover border-2 border-[#C23B69]/30"
                                             onError={(e) => {
                                                 e.target.onerror = null;
                                                 e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=128&background=FF2146&color=F2F2F2&bold=true`;
                                             }}
                                         />
                                         {user.role === 'admin' && (
-                                            <Shield className="w-4 h-4 text-[#F2AF29]" />
+                                            <Shield className="w-4 h-4 text-[#E57A9D]" />
                                         )}
                                         <span className="text-[#F2F2F2] font-semibold max-w-[120px] truncate pr-2">
                                             {user.name}
@@ -173,7 +173,7 @@ const Header = () => {
                                         {/* User Info */}
                                         <div className="p-4 border-b border-[#69747C]/20">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-12 h-12 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] rounded-full flex items-center justify-center">
+                                                <div className="w-12 h-12 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] rounded-full flex items-center justify-center">
                                                     <span className="text-white font-bold text-lg">
                                                         {user.name.charAt(0).toUpperCase()}
                                                     </span>
@@ -188,8 +188,8 @@ const Header = () => {
                                                     <span className={`
                                                         inline-block mt-1 px-2 py-0.5 text-xs rounded-full
                                                         ${user.role === 'admin' 
-                                                            ? 'bg-[#F2AF29]/20 text-[#F2AF29]' 
-                                                            : 'bg-[#FF2146]/20 text-[#FF2146]'}
+                                                            ? 'bg-[#E57A9D]/20 text-[#E57A9D]' 
+                                                            : 'bg-[#C23B69]/20 text-[#C23B69]'}
                                                     `}>
                                                         {user.role === 'admin' ? '👑 Admin' : '🎮 Player'}
                                                     </span>
@@ -205,7 +205,7 @@ const Header = () => {
                                                         handleNavigation('/admin/dashboard');
                                                         setShowUserMenu(false);
                                                     }}
-                                                    className="w-full flex items-center gap-3 px-3 py-2 text-[#F2F2F2] hover:bg-[#FF2146]/10 rounded-md transition-colors"
+                                                    className="w-full flex items-center gap-3 px-3 py-2 text-[#F2F2F2] hover:bg-[#C23B69]/10 rounded-md transition-colors"
                                                 >
                                                     <Shield className="w-4 h-4" />
                                                     <span>Admin Dashboard</span>
@@ -216,7 +216,7 @@ const Header = () => {
                                                     handleNavigation('/profile');
                                                     setShowUserMenu(false);
                                                 }}
-                                                className="w-full flex items-center gap-3 px-3 py-2 text-[#F2F2F2] hover:bg-[#FF2146]/10 rounded-md transition-colors"
+                                                className="w-full flex items-center gap-3 px-3 py-2 text-[#F2F2F2] hover:bg-[#C23B69]/10 rounded-md transition-colors"
                                             >
                                                 <User className="w-4 h-4" />
                                                 <span>Profile</span>
@@ -227,7 +227,7 @@ const Header = () => {
                                         <div className="p-2 border-t border-[#69747C]/20">
                                             <button
                                                 onClick={handleLogout}
-                                                className="w-full flex items-center gap-3 px-3 py-2 text-[#FF2146] hover:bg-[#FF2146]/10 rounded-md transition-colors"
+                                                className="w-full flex items-center gap-3 px-3 py-2 text-[#C23B69] hover:bg-[#C23B69]/10 rounded-md transition-colors"
                                             >
                                                 <LogOut className="w-4 h-4" />
                                                 <span>Logout</span>
@@ -242,8 +242,8 @@ const Header = () => {
                                 <button
                                     onClick={() => setShowLoginModal(true)}
                                     className={`
-                                        bg-gradient-to-r from-[#FF2146] to-[#F2AF29] text-[#F2F2F2] rounded-lg 
-                                        hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 hover:shadow-lg hover:scale-105
+                                        bg-gradient-to-r from-[#C23B69] to-[#E57A9D] text-[#F2F2F2] rounded-lg 
+                                        hover:from-[#C23B69]/90 hover:to-[#E57A9D]/90 hover:shadow-lg hover:scale-105
                                         transition-all duration-300 font-bold relative overflow-hidden group
                                         ${isScrolled ? "px-4 py-2 text-sm" : "px-6 py-2.5 text-base"}
                                     `}
@@ -259,8 +259,8 @@ const Header = () => {
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className={`
-                            md:hidden text-[#F2F2F2] hover:text-[#FF2146] transition-all duration-300 p-2 rounded-lg
-                            hover:bg-[#FF2146]/10 border border-transparent hover:border-[#FF2146]/30
+                            md:hidden text-[#F2F2F2] hover:text-[#C23B69] transition-all duration-300 p-2 rounded-lg
+                            hover:bg-[#C23B69]/10 border border-transparent hover:border-[#C23B69]/30
                         `}
                     >
                         <Menu size={isScrolled ? 20 : 24} />
@@ -270,7 +270,7 @@ const Header = () => {
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
                     <div
-                        className={`md:hidden border-t border-[#FF2146]/20 
+                        className={`md:hidden border-t border-[#C23B69]/20 
                             ${isScrolled
                                 ? "bg-[#0D0C0C]/95 backdrop-blur-md"
                                 : "bg-[#0D0C0C]/90 backdrop-blur-sm"
@@ -282,7 +282,7 @@ const Header = () => {
                             {user && (
                                 <div className="mb-4 p-3 bg-[#69747C]/10 border border-[#69747C]/30 rounded-lg">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] rounded-full flex items-center justify-center flex-shrink-0">
+                                        <div className="w-10 h-10 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] rounded-full flex items-center justify-center flex-shrink-0">
                                             <span className="text-white font-bold">
                                                 {user.name.charAt(0).toUpperCase()}
                                             </span>
@@ -294,8 +294,8 @@ const Header = () => {
                                             <span className={`
                                                 inline-block mt-1 px-2 py-0.5 text-xs rounded-full
                                                 ${user.role === 'admin' 
-                                                    ? 'bg-[#F2AF29]/20 text-[#F2AF29]' 
-                                                    : 'bg-[#FF2146]/20 text-[#FF2146]'}
+                                                    ? 'bg-[#E57A9D]/20 text-[#E57A9D]' 
+                                                    : 'bg-[#C23B69]/20 text-[#C23B69]'}
                                             `}>
                                                 {user.role === 'admin' ? '👑 Admin' : '🎮 Player'}
                                             </span>
@@ -309,7 +309,7 @@ const Header = () => {
                                 <button
                                     key={link.href}
                                     onClick={() => handleNavigation(link.href)}
-                                    className="block w-full text-left text-[#F2F2F2] hover:text-[#FF2146] hover:bg-[#FF2146]/10 transition-all duration-300 font-bold text-base py-3 px-4 rounded-lg border border-transparent hover:border-[#FF2146]/20"
+                                    className="block w-full text-left text-[#F2F2F2] hover:text-[#C23B69] hover:bg-[#C23B69]/10 transition-all duration-300 font-bold text-base py-3 px-4 rounded-lg border border-transparent hover:border-[#C23B69]/20"
                                 >
                                     {link.label}
                                 </button>
@@ -321,7 +321,7 @@ const Header = () => {
                                     {user.role === 'admin' && (
                                         <button
                                             onClick={() => handleNavigation('/admin/dashboard')}
-                                            className="w-full flex items-center justify-center gap-2 bg-[#F2AF29]/20 border border-[#F2AF29]/30 text-[#F2AF29] px-4 py-3 rounded-lg hover:bg-[#F2AF29]/30 transition-all duration-300 font-bold"
+                                            className="w-full flex items-center justify-center gap-2 bg-[#E57A9D]/20 border border-[#E57A9D]/30 text-[#E57A9D] px-4 py-3 rounded-lg hover:bg-[#E57A9D]/30 transition-all duration-300 font-bold"
                                         >
                                             <Shield size={18} />
                                             <span>Admin Dashboard</span>
@@ -329,7 +329,7 @@ const Header = () => {
                                     )}
                                     <button
                                         onClick={handleLogout}
-                                        className="w-full flex items-center justify-center gap-2 bg-[#FF2146]/20 border border-[#FF2146]/30 text-[#FF2146] px-4 py-3 rounded-lg hover:bg-[#FF2146]/30 transition-all duration-300 font-bold"
+                                        className="w-full flex items-center justify-center gap-2 bg-[#C23B69]/20 border border-[#C23B69]/30 text-[#C23B69] px-4 py-3 rounded-lg hover:bg-[#C23B69]/30 transition-all duration-300 font-bold"
                                     >
                                         <LogOut size={18} />
                                         <span>Logout</span>
@@ -341,7 +341,7 @@ const Header = () => {
                                         setShowLoginModal(true);
                                         setIsMobileMenuOpen(false);
                                     }}
-                                    className="w-full bg-gradient-to-r from-[#FF2146] to-[#F2AF29] text-[#F2F2F2] px-4 py-3 rounded-lg hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 hover:shadow-lg transition-all duration-300 font-bold relative overflow-hidden group"
+                                    className="w-full bg-gradient-to-r from-[#C23B69] to-[#E57A9D] text-[#F2F2F2] px-4 py-3 rounded-lg hover:from-[#C23B69]/90 hover:to-[#E57A9D]/90 hover:shadow-lg transition-all duration-300 font-bold relative overflow-hidden group"
                                 >
                                     <span className="relative z-10">Sign In</span>
                                     <div className="absolute inset-0 bg-white/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

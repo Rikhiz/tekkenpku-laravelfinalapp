@@ -52,8 +52,8 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
                 <div className="min-h-screen bg-gradient-to-b from-[#0D0C0C] via-[#0D0C0C] to-[#1a1a1a] pt-24 pb-12 px-4 sm:px-6 lg:px-8">
                     {/* Background Effects */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <div className="absolute top-20 left-10 w-72 h-72 bg-[#FF2146]/10 rounded-full blur-3xl animate-pulse"></div>
-                        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#F2AF29]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                        <div className="absolute top-20 left-10 w-72 h-72 bg-[#C23B69]/10 rounded-full blur-3xl animate-pulse"></div>
+                        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#E57A9D]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
                     </div>
 
                     <div className="relative max-w-7xl mx-auto">
@@ -65,14 +65,14 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
                                     <img
                                         src={user.avatar}
                                         alt={user.name}
-                                        className="w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover border-4 border-[#FF2146]/50 shadow-2xl"
+                                        className="w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover border-4 border-[#C23B69]/50 shadow-2xl"
                                         onError={(e) => {
                                             e.target.onerror = null;
                                             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256&background=FF2146&color=F2F2F2&bold=true`;
                                         }}
                                     />
                                     {user.role === 'admin' && (
-                                        <div className="absolute -bottom-2 -right-2 bg-[#F2AF29] text-[#0D0C0C] rounded-full p-2 border-2 border-[#0D0C0C]">
+                                        <div className="absolute -bottom-2 -right-2 bg-[#E57A9D] text-[#0D0C0C] rounded-full p-2 border-2 border-[#0D0C0C]">
                                             <Award className="w-5 h-5" />
                                         </div>
                                     )}
@@ -80,14 +80,14 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
 
                                 {/* User Info */}
                                 <div className="flex-1 text-center md:text-left">
-                                    <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent mb-2">
+                                    <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent mb-2">
                                         {user.name}
                                     </h1>
                                     <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
                                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                             user.role === 'admin' 
-                                                ? 'bg-[#F2AF29]/20 text-[#F2AF29] border border-[#F2AF29]/30' 
-                                                : 'bg-[#FF2146]/20 text-[#FF2146] border border-[#FF2146]/30'
+                                                ? 'bg-[#E57A9D]/20 text-[#E57A9D] border border-[#E57A9D]/30' 
+                                                : 'bg-[#C23B69]/20 text-[#C23B69] border border-[#C23B69]/30'
                                         }`}>
                                             {user.role === 'admin' ? '👑 Admin' : '🎮 Player'}
                                         </span>
@@ -106,23 +106,31 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
                                 {leaderboardStats && (
                                     <div className="bg-[#0D0C0C]/50 border border-[#69747C]/30 rounded-xl p-4 min-w-[200px]">
                                         <div className="text-center">
-                                            <div className="text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                                            <div className="text-3xl font-black bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent">
                                                 {leaderboardStats.total_points}
                                             </div>
                                             <div className="text-xs text-[#69747C] mt-1">Total Points</div>
                                         </div>
-                                        <div className="grid grid-cols-3 gap-2 mt-3 text-center">
+                                        <div className="grid grid-cols-5 gap-2 mt-3 text-center overflow-x-auto pb-1">
                                             <div>
-                                                <div className="text-sm font-bold text-red-400">{leaderboardStats.major}</div>
-                                                <div className="text-xs text-[#69747C]">Major</div>
+                                                <div className="text-sm font-bold text-yellow-400">{leaderboardStats.finals}</div>
+                                                <div className="text-[10px] sm:text-xs text-[#69747C]">Finals</div>
                                             </div>
                                             <div>
-                                                <div className="text-sm font-bold text-blue-400">{leaderboardStats.minor}</div>
-                                                <div className="text-xs text-[#69747C]">Minor</div>
+                                                <div className="text-sm font-bold text-red-400">{leaderboardStats.prime}</div>
+                                                <div className="text-[10px] sm:text-xs text-[#69747C]">Prime</div>
                                             </div>
                                             <div>
-                                                <div className="text-sm font-bold text-green-400">{leaderboardStats.mini}</div>
-                                                <div className="text-xs text-[#69747C]">Mini</div>
+                                                <div className="text-sm font-bold text-blue-400">{leaderboardStats.core}</div>
+                                                <div className="text-[10px] sm:text-xs text-[#69747C]">Core</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-bold text-green-400">{leaderboardStats.bit}</div>
+                                                <div className="text-[10px] sm:text-xs text-[#69747C]">Bit</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-bold text-purple-400">{leaderboardStats.scout}</div>
+                                                <div className="text-[10px] sm:text-xs text-[#69747C]">Scout</div>
                                             </div>
                                         </div>
                                     </div>
@@ -132,10 +140,10 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
 
                         {/* Stats Grid */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl p-4 hover:border-[#FF2146]/50 transition-all duration-300">
+                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl p-4 hover:border-[#C23B69]/50 transition-all duration-300">
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className="p-2 bg-[#FF2146]/20 rounded-lg">
-                                        <Trophy className="w-5 h-5 text-[#FF2146]" />
+                                    <div className="p-2 bg-[#C23B69]/20 rounded-lg">
+                                        <Trophy className="w-5 h-5 text-[#C23B69]" />
                                     </div>
                                     <div className="text-2xl font-black text-[#F2F2F2]">
                                         {stats.total_tournaments}
@@ -144,7 +152,7 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
                                 <div className="text-xs text-[#69747C]">Total Tournaments</div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl p-4 hover:border-[#F2AF29]/50 transition-all duration-300">
+                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl p-4 hover:border-[#E57A9D]/50 transition-all duration-300">
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className="p-2 bg-yellow-400/20 rounded-lg">
                                         <Medal className="w-5 h-5 text-yellow-400" />
@@ -156,7 +164,7 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
                                 <div className="text-xs text-[#69747C]">1st Place Wins</div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl p-4 hover:border-[#FF2146]/50 transition-all duration-300">
+                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl p-4 hover:border-[#C23B69]/50 transition-all duration-300">
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className="p-2 bg-orange-400/20 rounded-lg">
                                         <Flame className="w-5 h-5 text-orange-400" />
@@ -168,10 +176,10 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
                                 <div className="text-xs text-[#69747C]">Podium Finishes</div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl p-4 hover:border-[#F2AF29]/50 transition-all duration-300">
+                            <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl p-4 hover:border-[#E57A9D]/50 transition-all duration-300">
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className="p-2 bg-[#F2AF29]/20 rounded-lg">
-                                        <Target className="w-5 h-5 text-[#F2AF29]" />
+                                    <div className="p-2 bg-[#E57A9D]/20 rounded-lg">
+                                        <Target className="w-5 h-5 text-[#E57A9D]" />
                                     </div>
                                     <div className="text-2xl font-black text-[#F2F2F2]">
                                         {stats.average_placement ? stats.average_placement.toFixed(1) : 'N/A'}
@@ -185,7 +193,7 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
                         <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-2xl p-6 md:p-8">
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-2xl font-black text-[#F2F2F2] flex items-center gap-2">
-                                    <TrendingUp className="w-6 h-6 text-[#FF2146]" />
+                                    <TrendingUp className="w-6 h-6 text-[#C23B69]" />
                                     Tournament History
                                 </h2>
                                 <div className="text-sm text-[#69747C]">
@@ -199,7 +207,7 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
                                         <button
                                             key={tournament.id}
                                             onClick={() => handleTournamentClick(tournament.url_startgg)}
-                                            className="group relative bg-[#0D0C0C]/50 border border-[#69747C]/30 rounded-xl overflow-hidden hover:border-[#FF2146]/50 transition-all duration-300 hover:transform hover:scale-[1.02] text-left"
+                                            className="group relative bg-[#0D0C0C]/50 border border-[#69747C]/30 rounded-xl overflow-hidden hover:border-[#C23B69]/50 transition-all duration-300 hover:transform hover:scale-[1.02] text-left"
                                         >
                                             {/* Image */}
                                             <div className="relative h-40 overflow-hidden">
@@ -231,7 +239,7 @@ const ProfileIndex = ({ tournaments = [], stats = {}, leaderboardStats = null, a
                                                     </span>
                                                 </div>
 
-                                                <h3 className="text-[#F2F2F2] font-bold text-sm mb-2 line-clamp-2 group-hover:text-[#FF2146] transition-colors">
+                                                <h3 className="text-[#F2F2F2] font-bold text-sm mb-2 line-clamp-2 group-hover:text-[#C23B69] transition-colors">
                                                     {tournament.name}
                                                 </h3>
 

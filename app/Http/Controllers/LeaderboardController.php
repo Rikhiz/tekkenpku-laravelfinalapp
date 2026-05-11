@@ -15,10 +15,10 @@ class LeaderboardController extends Controller
         $availableSeasons = Tournament::whereNotNull('season')
             ->distinct()
             ->pluck('season')
-            ->sortDesc()
+            ->sort()
             ->values();
 
-        $selectedSeason = $request->input('season', $availableSeasons->first());
+        $selectedSeason = $request->input('season', $availableSeasons->last());
         $board = $request->input('board', 'normal');
 
         $perPage = 32;

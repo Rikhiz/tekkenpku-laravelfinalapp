@@ -89,8 +89,8 @@ const LeaderboardIndex = ({
                 <br />
                 <div className="max-w-7xl mx-auto mb-12">
                     <div className="text-center space-y-4">
-                        <h1 className="flex items-center justify-center gap-3 md:gap-4 text-5xl md:text-6xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
-                            <Award className="w-12 h-12 md:w-16 md:h-16 text-[#FF2146] drop-shadow-2xl" />
+                        <h1 className="flex items-center justify-center gap-3 md:gap-4 text-5xl md:text-6xl font-black bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent">
+                            <Award className="w-12 h-12 md:w-16 md:h-16 text-[#C23B69] drop-shadow-2xl" />
                             LEADERBOARD
                         </h1>
                         <p className="text-[#69747C] text-lg">
@@ -105,8 +105,8 @@ const LeaderboardIndex = ({
                                     onClick={() => router.visit(`/leaderboards?season=${season}&board=${board}`, { preserveState: true, preserveScroll: true })}
                                     className={`relative group overflow-hidden rounded-xl border-2 transition-all duration-300 w-28 md:w-36 h-10 md:h-12 ${
                                         parseInt(selectedSeason) === parseInt(season)
-                                            ? "border-[#FF2146] shadow-[0_0_15px_rgba(255,33,70,0.5)] scale-105"
-                                            : "border-[#69747C]/30 hover:border-[#FF2146]/50"
+                                            ? "border-[#C23B69] shadow-[0_0_15px_rgba(255,33,70,0.5)] scale-105"
+                                            : "border-[#69747C]/30 hover:border-[#C23B69]/50"
                                     }`}
                                 >
                                     <img
@@ -156,11 +156,11 @@ const LeaderboardIndex = ({
                         onClick={() => router.visit(`/leaderboards?season=${selectedSeason}&board=normal`, { preserveScroll: true, preserveState: true })}
                         className={`flex-1 py-1.5 px-2 rounded font-bold text-xs transition-all duration-300 ${
                             board === 'normal'
-                                ? 'bg-[#FF2146] text-white shadow-md shadow-[#FF2146]/30'
+                                ? 'bg-[#C23B69] text-white shadow-md shadow-[#C23B69]/30'
                                 : 'text-[#69747C] hover:text-white'
                         }`}
                     >
-                        Normal Leaderboard
+                        Reguler Leaderboard
                     </button>
                     <button
                         onClick={() => router.visit(`/leaderboards?season=${selectedSeason}&board=scout`, { preserveScroll: true, preserveState: true })}
@@ -178,16 +178,16 @@ const LeaderboardIndex = ({
                 {leaderboards.data.length > 0 && (
                     <>
                         <div className="max-w-7xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#FF2146]/50 transition-all">
-                                <div className="text-2xl md:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent truncate">
+                            <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#C23B69]/50 transition-all">
+                                <div className="text-2xl md:text-3xl font-black bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent truncate">
                                     {mostover8?.user?.name || "-"}
                                 </div>
                                 <div className="text-[#69747C] font-semibold mt-2">
                                     Most Top 8
                                 </div>
                             </div>
-                            <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#FF2146]/50 transition-all">
-                                <div className="text-2xl md:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent truncate">
+                            <div className="bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl p-6 text-center hover:border-[#C23B69]/50 transition-all">
+                                <div className="text-2xl md:text-3xl font-black bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent truncate">
                                     {mostover4?.user?.name || "-"}
                                 </div>
                                 <div className="text-[#69747C] font-semibold mt-2">
@@ -214,7 +214,7 @@ const LeaderboardIndex = ({
                             return (
                                 <div key={player.id} className="relative group">
                                     <div
-                                        className={`relative bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl transition-all duration-300 hover:border-[#FF2146]/50 hover:shadow-lg hover:shadow-[#FF2146]/20 ${barHeight} ${
+                                        className={`relative bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-xl transition-all duration-300 hover:border-[#C23B69]/50 hover:shadow-lg hover:shadow-[#C23B69]/20 ${barHeight} ${
                                             isExpanded ? "rounded-b-none" : ""
                                         } cursor-pointer overflow-hidden`}
                                         onMouseEnter={() =>
@@ -237,7 +237,7 @@ const LeaderboardIndex = ({
                                         {/* Hover hint */}
                                         {hoveredPlayer === player.id &&
                                             !isExpanded && (
-                                                <div className="absolute bottom-0 left-0 right-0 bg-[#FF2146]/90 text-white text-center py-1 text-xs font-semibold animate-slideUp rounded-b-xl">
+                                                <div className="absolute bottom-0 left-0 right-0 bg-[#C23B69]/90 text-white text-center py-1 text-xs font-semibold animate-slideUp rounded-b-xl">
                                                     👆 Click to see details
                                                 </div>
                                             )}
@@ -281,7 +281,7 @@ const LeaderboardIndex = ({
                                             {/* Total Points */}
                                             <div className="flex-shrink-0 text-right">
                                                 <div
-                                                    className={`font-black bg-gradient-to-r ${board === 'scout' ? 'from-purple-500' : 'from-[#FF2146]'} to-[#F2AF29] bg-clip-text text-transparent ${
+                                                    className={`font-black bg-gradient-to-r ${board === 'scout' ? 'from-purple-500' : 'from-[#C23B69]'} to-[#E57A9D] bg-clip-text text-transparent ${
                                                         isTopThree
                                                             ? "text-2xl md:text-4xl"
                                                             : "text-xl md:text-3xl"
@@ -298,7 +298,7 @@ const LeaderboardIndex = ({
 
                                     {/* Expanded Details - Dropdown Below */}
                                     {isExpanded && (
-                                        <div className="bg-gradient-to-br from-[#0D0C0C] to-[#1a1a1a] rounded-b-xl border-x-2 border-b-2 border-[#FF2146] shadow-2xl overflow-hidden animate-slideDownFull">
+                                        <div className="bg-gradient-to-br from-[#0D0C0C] to-[#1a1a1a] rounded-b-xl border-x-2 border-b-2 border-[#C23B69] shadow-2xl overflow-hidden animate-slideDownFull">
                                             {/* Single Row Layout */}
                                             <div className="p-3 md:p-4">
                                                 <div className="flex flex-col lg:flex-row gap-3 md:gap-4 ">
@@ -307,7 +307,7 @@ const LeaderboardIndex = ({
                                                         <h4 className="text-xs font-bold text-[#F2F2F2] mb-2 flex items-center gap-1">
                                                             <Trophy
                                                                 size={12}
-                                                                className="text-[#FF2146]"
+                                                                className="text-[#C23B69]"
                                                             />
                                                             Points
                                                         </h4>
@@ -360,7 +360,7 @@ const LeaderboardIndex = ({
                                                                         size={
                                                                             12
                                                                         }
-                                                                        className="text-[#FF2146]"
+                                                                        className="text-[#C23B69]"
                                                                     />
                                                                     Tournament
                                                                     History
@@ -380,7 +380,7 @@ const LeaderboardIndex = ({
                                                                                     key={
                                                                                         index
                                                                                     }
-                                                                                    className="flex-shrink-0 bg-[#0D0C0C]/60 border border-[#69747C]/20 rounded-lg p-2 hover:border-[#FF2146]/40 transition-all cursor-pointer hover:scale-95 w-20"
+                                                                                    className="flex-shrink-0 bg-[#0D0C0C]/60 border border-[#69747C]/20 rounded-lg p-2 hover:border-[#C23B69]/40 transition-all cursor-pointer hover:scale-95 w-20"
                                                                                     onClick={(
                                                                                         e
                                                                                     ) =>
@@ -472,7 +472,7 @@ const LeaderboardIndex = ({
                                     handlePageChange(leaderboards.prev_page_url)
                                 }
                                 disabled={!leaderboards.prev_page_url}
-                                className="px-3 md:px-4 py-2 bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] hover:border-[#FF2146] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-1 md:gap-2 text-sm md:text-base"
+                                className="px-3 md:px-4 py-2 bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] hover:border-[#C23B69] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-1 md:gap-2 text-sm md:text-base"
                             >
                                 <ChevronLeft size={18} />
                                 <span className="hidden sm:inline">
@@ -520,8 +520,8 @@ const LeaderboardIndex = ({
                                                         className={`px-3 md:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm md:text-base ${
                                                             page ===
                                                             leaderboards.current_page
-                                                                ? "bg-gradient-to-r from-[#FF2146] to-[#F2AF29] text-white"
-                                                                : "bg-[#0D0C0C]/80 border border-[#69747C]/30 text-[#F2F2F2] hover:border-[#FF2146]"
+                                                                ? "bg-gradient-to-r from-[#C23B69] to-[#E57A9D] text-white"
+                                                                : "bg-[#0D0C0C]/80 border border-[#69747C]/30 text-[#F2F2F2] hover:border-[#C23B69]"
                                                         }`}
                                                     >
                                                         {page}
@@ -542,8 +542,8 @@ const LeaderboardIndex = ({
                                                 className={`px-3 md:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm md:text-base ${
                                                     page ===
                                                     leaderboards.current_page
-                                                        ? "bg-gradient-to-r from-[#FF2146] to-[#F2AF29] text-white"
-                                                        : "bg-[#0D0C0C]/80 border border-[#69747C]/30 text-[#F2F2F2] hover:border-[#FF2146]"
+                                                        ? "bg-gradient-to-r from-[#C23B69] to-[#E57A9D] text-white"
+                                                        : "bg-[#0D0C0C]/80 border border-[#69747C]/30 text-[#F2F2F2] hover:border-[#C23B69]"
                                                 }`}
                                             >
                                                 {page}
@@ -558,7 +558,7 @@ const LeaderboardIndex = ({
                                     handlePageChange(leaderboards.next_page_url)
                                 }
                                 disabled={!leaderboards.next_page_url}
-                                className="px-3 md:px-4 py-2 bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] hover:border-[#FF2146] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-1 md:gap-2 text-sm md:text-base"
+                                className="px-3 md:px-4 py-2 bg-[#0D0C0C]/80 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] hover:border-[#C23B69] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-1 md:gap-2 text-sm md:text-base"
                             >
                                 Next
                                 <ChevronRight size={18} />
@@ -610,11 +610,11 @@ const LeaderboardIndex = ({
                         border-radius: 10px;
                     }
                     .custom-scrollbar::-webkit-scrollbar-thumb {
-                        background: #FF2146;
+                        background: #C23B69;
                         border-radius: 10px;
                     }
                     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                        background: #F2AF29;
+                        background: #E57A9D;
                     }
                 `,
                 }}
@@ -624,3 +624,4 @@ const LeaderboardIndex = ({
 };
 
 export default LeaderboardIndex;
+

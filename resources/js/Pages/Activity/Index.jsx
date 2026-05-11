@@ -94,9 +94,9 @@ const ActivityIndex = ({
                     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col items-center">
                         {/* Icon & Title */}
                         <div className="flex items-center gap-4 mb-4">
-                            <BoomBox className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-[#FF2146] drop-shadow-2xl" />
+                            <BoomBox className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-[#C23B69] drop-shadow-2xl" />
                             <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-black text-white">
-                                <span className="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                                <span className="bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent">
                                     Community Activities
                                 </span>
                             </h1>
@@ -110,16 +110,16 @@ const ActivityIndex = ({
 
                         {/* Activity Stats */}
                         <div className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-md">
-                            <div className="bg-[#FF2146]/20 backdrop-blur-xl border border-[#FF2146]/30 rounded-xl p-4">
-                                <div className="text-3xl md:text-4xl font-black text-[#FF2146] mb-1">
+                            <div className="bg-[#C23B69]/20 backdrop-blur-xl border border-[#C23B69]/30 rounded-xl p-4">
+                                <div className="text-3xl md:text-4xl font-black text-[#C23B69] mb-1">
                                     {upcomingActivities.length}
                                 </div>
                                 <div className="text-xs md:text-sm text-gray-300">
                                     Upcoming Events
                                 </div>
                             </div>
-                            <div className="bg-[#F2AF29]/20 backdrop-blur-xl border border-[#F2AF29]/30 rounded-xl p-4">
-                                <div className="text-3xl md:text-4xl font-black text-[#F2AF29] mb-1">
+                            <div className="bg-[#E57A9D]/20 backdrop-blur-xl border border-[#E57A9D]/30 rounded-xl p-4">
+                                <div className="text-3xl md:text-4xl font-black text-[#E57A9D] mb-1">
                                     {completedActivities.length}
                                 </div>
                                 <div className="text-xs md:text-sm text-gray-300">
@@ -136,7 +136,7 @@ const ActivityIndex = ({
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-6 md:mb-8">
                     <div className="bg-gradient-to-r from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
                         <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
-                            <Filter className="w-4 h-4 md:w-5 md:h-5 text-[#FF2146] flex-shrink-0" />
+                            <Filter className="w-4 h-4 md:w-5 md:h-5 text-[#C23B69] flex-shrink-0" />
                             <h3 className="text-white font-bold text-sm md:text-base lg:text-lg">
                                 Filter Activities
                             </h3>
@@ -151,7 +151,7 @@ const ActivityIndex = ({
                                 onChange={(e) =>
                                     setFilterStatus(e.target.value)
                                 }
-                                className="w-full bg-[#0D0C0C] border border-[#FF2146]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#FF2146] focus:outline-none"
+                                className="w-full bg-[#0D0C0C] border border-[#C23B69]/30 rounded-lg px-3 md:px-4 py-2 text-sm md:text-base text-white focus:border-[#C23B69] focus:outline-none"
                             >
                                 <option value="all">All Activities</option>
                                 <option value="Mendatang">
@@ -187,7 +187,7 @@ const ActivityIndex = ({
                                         onClick={() =>
                                             handleActivityClick(activity.slug)
                                         }
-                                        className="group relative overflow-hidden bg-[#F2AF29]/20 backdrop-blur-xl border border-[#F2AF29]/30 rounded-2xl transition-all duration-300 hover:border-[#F2AF29]/30 hover:shadow-lg hover:shadow-[#F2AF29]/20 cursor-pointer"
+                                        className="group relative overflow-hidden bg-[#E57A9D]/20 backdrop-blur-xl border border-[#E57A9D]/30 rounded-2xl transition-all duration-300 hover:border-[#E57A9D]/30 hover:shadow-lg hover:shadow-[#E57A9D]/20 cursor-pointer"
                                     >
                                         {/* Horizontal Layout */}
                                         <div className="flex flex-col sm:flex-row">
@@ -232,7 +232,7 @@ const ActivityIndex = ({
 
                                             {/* Content Section - Right Side */}
                                             <div className="flex flex-col flex-grow p-5 md:p-6">
-                                                <h3 className="text-white font-bold text-lg md:text-xl leading-tight mb-3 group-hover:text-[#F2AF29] transition-colors line-clamp-2">
+                                                <h3 className="text-white font-bold text-lg md:text-xl leading-tight mb-3 group-hover:text-[#E57A9D] transition-colors line-clamp-2">
                                                     {activity.name}
                                                 </h3>
 
@@ -294,7 +294,7 @@ const ActivityIndex = ({
                                                             activity.slug
                                                         );
                                                     }}
-                                                    className="mt-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#F2AF29] hover:to-[#FF2146] text-white font-semibold text-sm rounded-lg transition-all duration-300 group-hover:scale-105 active:scale-95"
+                                                    className="mt-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] hover:from-[#E57A9D] hover:to-[#C23B69] text-white font-semibold text-sm rounded-lg transition-all duration-300 group-hover:scale-105 active:scale-95"
                                                 >
                                                     <span>View Details</span>
                                                     <ArrowRight className="w-4 h-4" />
@@ -303,15 +303,15 @@ const ActivityIndex = ({
                                         </div>
 
                                         {/* Decorative Elements */}
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF2146]/10 rounded-full blur-3xl"></div>
-                                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#FF2146]/20 rounded-full blur-3xl"></div>
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#C23B69]/10 rounded-full blur-3xl"></div>
+                                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#C23B69]/20 rounded-full blur-3xl"></div>
                                     </div>
                                 );
                             })}
                         </div>
                     ) : (
                         <div className="text-center py-12 md:py-20">
-                            <BoomBox className="w-16 h-16 md:w-20 md:h-20 text-[#FF2146] mx-auto mb-4 md:mb-6" />
+                            <BoomBox className="w-16 h-16 md:w-20 md:h-20 text-[#C23B69] mx-auto mb-4 md:mb-6" />
                             <h3 className="text-white text-xl md:text-2xl font-bold mb-2">
                                 No Activities Found
                             </h3>
@@ -325,16 +325,16 @@ const ActivityIndex = ({
                 {/* Upcoming Highlight Section */}
                 {upcomingActivities.length > 0 && filterStatus === "all" && (
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pb-12 md:pb-20">
-                        <div className="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] backdrop-blur-xl border border-[#F2AF29]/30 rounded-2xl p-6 md:p-8">
+                        <div className="bg-gradient-to-r from-[#C23B69] to-[#E57A9D] backdrop-blur-xl border border-[#E57A9D]/30 rounded-2xl p-6 md:p-8">
                             <div className="flex items-center gap-3 mb-6">
-                                <Sparkles className="w-6 h-6 text-[#F2AF29]" />
+                                <Sparkles className="w-6 h-6 text-[#E57A9D]" />
                                 <h2 className="text-2xl md:text-3xl font-black text-white">
                                     Don't Miss Out!
                                 </h2>
                             </div>
                             <p className="text-gray-300 text-sm md:text-base mb-4">
                                 We have{" "}
-                                <span className="text-[#F2AF29] font-bold">
+                                <span className="text-[#E57A9D] font-bold">
                                     {upcomingActivities.length}
                                 </span>{" "}
                                 upcoming event
@@ -351,3 +351,4 @@ const ActivityIndex = ({
 };
 
 export default ActivityIndex;
+

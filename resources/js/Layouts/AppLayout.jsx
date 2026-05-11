@@ -13,7 +13,7 @@ const LoadingScreen = () => {
                 alt="Loading..."
                 className="w-24 h-24 animate-bounce"
             />
-            <p className="mt-4 text-[#FF2146] font-bold text-lg animate-pulse">
+            <p className="mt-4 text-[#C23B69] font-bold text-lg animate-pulse">
                 Loading...
             </p>
         </div>
@@ -32,7 +32,7 @@ const AppLayout = ({ children }) => {
                 text: flash.error,
                 background: '#1E1E1E', // warna latar gelap
                 color: '#FFFFFF', // teks putih
-                confirmButtonColor: '#FF2146', // warna tombol
+                confirmButtonColor: '#C23B69', // warna tombol
                 confirmButtonText: 'Tutup',
                 customClass: {
                     popup: 'swal2-dark-popup', // opsional: bisa dipakai untuk animasi CSS tambahan
@@ -111,3 +111,4 @@ const AppLayout = ({ children }) => {
 };
 
 export default AppLayout;
+

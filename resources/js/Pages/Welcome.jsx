@@ -3,7 +3,7 @@ import AppLayout from "@/Layouts/AppLayout";
 import TypingEffect from "@/Components/TypingEffect";
 import { Trophy, Gamepad2 } from "lucide-react";
 import { useInView } from "react-intersection-observer";
-import herobg from "@/images/hero-background.webp";
+import herobg from "@/images/hero-background.jpeg";
 import { Link, router } from "@inertiajs/react";
 
 const Welcome = ({
@@ -123,14 +123,17 @@ const Welcome = ({
                         loading="lazy"
                         className="relative w-full h-full object-cover "
                     />
+                    
                     <div className="absolute inset-0 bg-gradient-to-br from-[#0D0C0C]/10 via-[#0D0C0C]/20 to-[#0D0C0C]/50"></div>
                     <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#0D0C0C] pointer-events-none"></div>
+
+                    
                 </div>
 
                 {/* Animated Blobs */}
                 <div className="absolute inset-0 z-10 overflow-hidden">
-                    <div className="absolute top-10 left-5 md:top-20 md:left-10 w-48 h-48 md:w-72 md:h-72 bg-[#FF2146]/10 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute bottom-10 right-5 md:bottom-20 md:right-10 w-64 h-64 md:w-96 md:h-96 bg-[#F2AF29]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                    <div className="absolute top-10 left-5 md:top-20 md:left-10 w-48 h-48 md:w-72 md:h-72 bg-[#C23B69]/10 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute bottom-10 right-5 md:bottom-20 md:right-10 w-64 h-64 md:w-96 md:h-96 bg-[#E57A9D]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
                 </div>
 
                 {/* Content */}
@@ -152,7 +155,7 @@ const Welcome = ({
                                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight text-white px-2">
                                     <br />
                                     <TypingEffect
-                                        text={`Welcome to <br/> <span class="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">Tekken Pekanbaru Community Hub</span>`}
+                                        text={`Welcome to <br/> <span class="bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent">Tekken Pekanbaru Community Hub</span>`}
                                         speed={50}
                                         className="text-white"
                                     />
@@ -170,7 +173,7 @@ const Welcome = ({
                             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center lg:justify-start px-2">
                                 <Link
                                     href={route("tournaments.index")}
-                                    className="group relative px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-bold rounded-xl shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden"
+                                    className="group relative px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] hover:from-[#C23B69]/90 hover:to-[#E57A9D]/90 text-[#F2F2F2] font-bold rounded-xl shadow-2xl transform hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden"
                                 >
                                     <Gamepad2 className="w-4 h-4 md:w-5 md:h-5 z-10 flex-shrink-0" />
                                     <span className="z-10 text-sm md:text-base">
@@ -179,7 +182,7 @@ const Welcome = ({
                                     <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                 </Link>
                                 <Link href={route("about")}>
-                                    <button className="w-full px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border-2 border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold rounded-xl transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29] active:scale-95 text-sm md:text-base">
+                                    <button className="w-full px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border-2 border-[#69747C] hover:border-[#E57A9D] text-[#F2F2F2] font-semibold rounded-xl transition-all duration-300 hover:bg-[#E57A9D]/10 hover:text-[#E57A9D] active:scale-95 text-sm md:text-base">
                                         Pelajari Tentang Kami
                                     </button>
                                 </Link>
@@ -193,7 +196,7 @@ const Welcome = ({
                                             key={index}
                                             className="text-center lg:text-left space-y-1"
                                         >
-                                            <div className="text-xl lg:text-2xl xl:text-3xl font-black bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent whitespace-nowrap overflow-visible overflow-x-auto no-scrollbar">
+                                            <div className="text-xl lg:text-2xl xl:text-3xl font-black bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent whitespace-nowrap overflow-visible overflow-x-auto no-scrollbar">
                                                 <span className="inline-block">
                                                     {formatStatValue(
                                                         stat.value,
@@ -230,7 +233,7 @@ const Welcome = ({
                         {videoInView && (
                             <>
                                 <div className="flex items-center gap-2 md:gap-3 mb-6 md:mb-8">
-                                    <div className="p-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] rounded-lg md:rounded-xl flex-shrink-0">
+                                    <div className="p-2 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] rounded-lg md:rounded-xl flex-shrink-0">
                                         <Gamepad2 className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-[#F2F2F2]" />
                                     </div>
                                     <h2 className="text-[#F2F2F2] text-xl sm:text-2xl lg:text-3xl font-bold">
@@ -243,7 +246,7 @@ const Welcome = ({
                                         {videoTournaments.map((video) => (
                                             <div
                                                 key={video.id}
-                                                className="group relative overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-500 hover:border-[#FF2146]/50 hover:transform hover:scale-[1.02]"
+                                                className="group relative overflow-hidden bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl transition-all duration-500 hover:border-[#C23B69]/50 hover:transform hover:scale-[1.02]"
                                             >
                                                 <div className="relative aspect-video overflow-hidden rounded-t-xl md:rounded-t-2xl">
                                                     <img
@@ -260,14 +263,14 @@ const Welcome = ({
                                                             href={video.url_yt}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="w-12 h-12 md:w-16 md:h-16 bg-[#FF2146]/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                                                            className="w-12 h-12 md:w-16 md:h-16 bg-[#C23B69]/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
                                                         >
                                                             <div className="w-0 h-0 border-l-[10px] md:border-l-[12px] border-l-[#F2F2F2] border-t-[6px] md:border-t-[8px] border-t-transparent border-b-[6px] md:border-b-[8px] border-b-transparent ml-1"></div>
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <div className="p-4 md:p-6">
-                                                    <h3 className="text-[#F2F2F2] font-bold text-base md:text-lg mb-2 group-hover:text-[#FF2146] transition-colors line-clamp-2">
+                                                    <h3 className="text-[#F2F2F2] font-bold text-base md:text-lg mb-2 group-hover:text-[#C23B69] transition-colors line-clamp-2">
                                                         {video.name}
                                                     </h3>
                                                     <p className="text-[#69747C] text-xs md:text-sm leading-relaxed mb-3 line-clamp-2">
@@ -313,10 +316,10 @@ const Welcome = ({
                     >
                         {tournamentInView && (
                             <>
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#FF2146]/5 to-[#F2AF29]/5"></div>
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#C23B69]/5 to-[#E57A9D]/5"></div>
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-2 md:gap-3 mb-6 lg:mb-8">
-                                        <div className="p-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] rounded-lg md:rounded-xl flex-shrink-0">
+                                        <div className="p-2 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] rounded-lg md:rounded-xl flex-shrink-0">
                                             <Trophy className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-[#F2F2F2]" />
                                         </div>
                                         <h2 className="text-[#F2F2F2] text-xl sm:text-2xl lg:text-3xl font-bold">
@@ -330,7 +333,7 @@ const Welcome = ({
                                                 (tournament) => (
                                                     <div
                                                         key={tournament.id}
-                                                        className="group relative overflow-hidden bg-gradient-to-r from-[#0D0C0C]/70 to-[#69747C]/20 rounded-lg md:rounded-xl border border-[#69747C]/20 hover:border-[#FF2146]/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
+                                                        className="group relative overflow-hidden bg-gradient-to-r from-[#0D0C0C]/70 to-[#69747C]/20 rounded-lg md:rounded-xl border border-[#69747C]/20 hover:border-[#C23B69]/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
                                                     >
                                                         <div className="p-4 md:p-6">
                                                             <div className="flex items-center justify-between mb-3 md:mb-4 gap-2">
@@ -348,7 +351,7 @@ const Welcome = ({
                                                                 </span>
                                                             </div>
 
-                                                            <h3 className="text-[#F2F2F2] font-bold text-base md:text-lg lg:text-xl mb-2 md:mb-3 group-hover:text-[#FF2146] transition-colors line-clamp-2">
+                                                            <h3 className="text-[#F2F2F2] font-bold text-base md:text-lg lg:text-xl mb-2 md:mb-3 group-hover:text-[#C23B69] transition-colors line-clamp-2">
                                                                 {
                                                                     tournament.name
                                                                 }
@@ -361,7 +364,7 @@ const Welcome = ({
 
                                                             <div className="grid grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                                                                 <div className="text-center bg-[#0D0C0C]/50 rounded-lg p-2 md:p-3">
-                                                                    <div className="text-base md:text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent truncate">
+                                                                    <div className="text-base md:text-lg font-bold bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent truncate">
                                                                         {formatCurrency(
                                                                             tournament.prize_pool
                                                                         )}
@@ -372,7 +375,7 @@ const Welcome = ({
                                                                     </div>
                                                                 </div>
                                                                 <div className="text-center bg-[#0D0C0C]/50 rounded-lg p-2 md:p-3">
-                                                                    <div className="text-base md:text-lg font-bold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                                                                    <div className="text-base md:text-lg font-bold bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent">
                                                                         {
                                                                             tournament.participants
                                                                         }
@@ -394,7 +397,7 @@ const Welcome = ({
                                                                             tournament.url_startgg
                                                                         )
                                                                     }
-                                                                    className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
+                                                                    className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] hover:from-[#C23B69]/90 hover:to-[#E57A9D]/90 text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
                                                                 >
                                                                     Register Now
                                                                 </button>
@@ -408,7 +411,7 @@ const Welcome = ({
                                                                             tournament.url_startgg
                                                                         )
                                                                     }
-                                                                    className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#F2AF29] text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 hover:bg-[#F2AF29]/10 hover:text-[#F2AF29] active:scale-95"
+                                                                    className="w-full px-3 md:px-4 py-2 bg-gradient-to-r from-[#69747C]/20 to-[#69747C]/10 border border-[#69747C] hover:border-[#E57A9D] text-[#F2F2F2] font-semibold text-sm md:text-base rounded-lg transition-all duration-300 hover:bg-[#E57A9D]/10 hover:text-[#E57A9D] active:scale-95"
                                                                 >
                                                                     View Results
                                                                 </button>
@@ -441,3 +444,5 @@ const Welcome = ({
 };
 
 export default Welcome;
+
+

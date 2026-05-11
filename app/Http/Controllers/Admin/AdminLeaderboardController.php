@@ -21,10 +21,10 @@ class AdminLeaderboardController extends Controller
         $availableSeasons = Tournament::whereNotNull('season')
             ->distinct()
             ->pluck('season')
-            ->sortDesc()
+            ->sort()
             ->values();
 
-        $selectedSeason = (int) $request->input('season', $availableSeasons->first());
+        $selectedSeason = (int) $request->input('season', $availableSeasons->last());
 
         $leaderboardAll = Leaderboard::with('user')
             ->where('season', $selectedSeason)
@@ -179,16 +179,44 @@ class AdminLeaderboardController extends Controller
                 }
             }
 
-            // Clear existing leaderboard and insert new data
-            Leaderboard::truncate();
+            // 🔒 Cari season mana saja yang memiliki turnamen kategori Finals (category = 1)
+            $lockedSeasons = \App\Models\Tournament::where('category', 1)
+                ->pluck('season')
+                ->filter()
+                ->unique()
+                ->toArray();
+
+            // Hapus data leaderboard lama HANYA untuk season yang TIDAK dilock
+            if (!empty($lockedSeasons)) {
+                Leaderboard::whereNotIn('season', $lockedSeasons)->delete();
+            } else {
+                Leaderboard::truncate(); // Jika tidak ada yang dilock, aman untuk truncate
+            }
+
+            $insertedCount = 0;
+            $skippedSeasons = [];
 
             foreach ($leaderboardData as $entry) {
+                // Jangan timpa data untuk season yang dilock
+                if (in_array($entry['season'], $lockedSeasons)) {
+                    if (!in_array($entry['season'], $skippedSeasons)) {
+                        $skippedSeasons[] = $entry['season'];
+                    }
+                    continue;
+                }
+
                 Leaderboard::create($entry);
+                $insertedCount++;
             }
 
             DB::commit();
 
-            return back()->with('success', 'Leaderboard recalculated successfully! Updated ' . count($leaderboardData) . ' players.');
+            $msg = 'Leaderboard recalculated successfully! Updated ' . $insertedCount . ' players.';
+            if (!empty($skippedSeasons)) {
+                $msg .= ' (Season ' . implode(', ', $skippedSeasons) . ' locked because Finals exist)';
+            }
+
+            return back()->with('success', $msg);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -267,16 +295,22 @@ class AdminLeaderboardController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'player_name' => 'required|string|max:255',
-            'major' => 'nullable|integer',
-            'minor' => 'nullable|integer',
-            'mini' => 'nullable|integer',
+            'finals' => 'nullable|integer',
+            'prime' => 'nullable|integer',
+            'core' => 'nullable|integer',
+            'bit' => 'nullable|integer',
+            'scout' => 'nullable|integer',
             'total_points' => 'nullable|integer',
-            'counted_major_events' => 'nullable|integer',
-            'counted_minor_events' => 'nullable|integer',
-            'counted_mini_events' => 'nullable|integer',
-            'total_major_events' => 'nullable|integer',
-            'total_minor_events' => 'nullable|integer',
-            'total_mini_events' => 'nullable|integer',
+            'counted_finals_events' => 'nullable|integer',
+            'counted_prime_events' => 'nullable|integer',
+            'counted_core_events' => 'nullable|integer',
+            'counted_bit_events' => 'nullable|integer',
+            'counted_scout_events' => 'nullable|integer',
+            'total_finals_events' => 'nullable|integer',
+            'total_prime_events' => 'nullable|integer',
+            'total_core_events' => 'nullable|integer',
+            'total_bit_events' => 'nullable|integer',
+            'total_scout_events' => 'nullable|integer',
         ]);
 
         Leaderboard::create($request->all());
@@ -314,16 +348,22 @@ class AdminLeaderboardController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'player_name' => 'required|string|max:255',
-            'major' => 'nullable|integer',
-            'minor' => 'nullable|integer',
-            'mini' => 'nullable|integer',
+            'finals' => 'nullable|integer',
+            'prime' => 'nullable|integer',
+            'core' => 'nullable|integer',
+            'bit' => 'nullable|integer',
+            'scout' => 'nullable|integer',
             'total_points' => 'nullable|integer',
-            'counted_major_events' => 'nullable|integer',
-            'counted_minor_events' => 'nullable|integer',
-            'counted_mini_events' => 'nullable|integer',
-            'total_major_events' => 'nullable|integer',
-            'total_minor_events' => 'nullable|integer',
-            'total_mini_events' => 'nullable|integer',
+            'counted_finals_events' => 'nullable|integer',
+            'counted_prime_events' => 'nullable|integer',
+            'counted_core_events' => 'nullable|integer',
+            'counted_bit_events' => 'nullable|integer',
+            'counted_scout_events' => 'nullable|integer',
+            'total_finals_events' => 'nullable|integer',
+            'total_prime_events' => 'nullable|integer',
+            'total_core_events' => 'nullable|integer',
+            'total_bit_events' => 'nullable|integer',
+            'total_scout_events' => 'nullable|integer',
         ]);
 
         $leaderboard->update($request->all());

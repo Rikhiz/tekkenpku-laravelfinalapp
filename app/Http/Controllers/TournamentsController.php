@@ -19,7 +19,7 @@ class TournamentsController extends Controller
             ->map(function ($tournament) {
                 // Status mapping
                 $statusColor = $tournament->status === 'Pendaftaran Dibuka'
-                    ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30'
+                    ? 'bg-[#E57A9D]/20 text-[#E57A9D] border-[#E57A9D]/30'
                     : 'bg-blue-500/20 text-blue-500 border-blue-500/30';
 
                 // Category mapping
@@ -120,7 +120,7 @@ class TournamentsController extends Controller
 
         // Status mapping
         $statusColor = $tournament->status === 'Pendaftaran Dibuka'
-            ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30'
+            ? 'bg-[#E57A9D]/20 text-[#E57A9D] border-[#E57A9D]/30'
             : 'bg-blue-500/20 text-green-400 border-green-500/30';
 
         // Category mapping

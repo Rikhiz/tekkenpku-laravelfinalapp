@@ -17,6 +17,7 @@ class Tournament extends Model
         'created_by',
         'category',
         'total',
+        'season',
         'start_date',
         'end_date',
         'image_url',

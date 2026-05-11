@@ -40,16 +40,18 @@ class ProfileController extends Controller
 
                 // Category mapping
                 $categoryMap = [
-                    1 => ['name' => 'Major', 'color' => 'text-red-400', 'bg' => 'bg-red-400/10'],
-                    2 => ['name' => 'Minor', 'color' => 'text-blue-400', 'bg' => 'bg-blue-400/10'],
-                    3 => ['name' => 'Mini', 'color' => 'text-green-400', 'bg' => 'bg-green-400/10'],
+                    1 => ['name' => 'Finals', 'color' => 'text-yellow-400', 'bg' => 'bg-yellow-400/10'],
+                    2 => ['name' => 'Prime', 'color' => 'text-red-400', 'bg' => 'bg-red-400/10'],
+                    3 => ['name' => 'Core', 'color' => 'text-blue-400', 'bg' => 'bg-blue-400/10'],
+                    4 => ['name' => 'Bit', 'color' => 'text-green-400', 'bg' => 'bg-green-400/10'],
+                    5 => ['name' => 'Scout', 'color' => 'text-purple-400', 'bg' => 'bg-purple-400/10'],
                 ];
 
                 $category = $categoryMap[$tournament->category] ?? ['name' => 'Unknown', 'color' => 'text-gray-400', 'bg' => 'bg-gray-400/10'];
 
                 // Status mapping
                 $statusColor = $tournament->status === 'Pendaftaran Dibuka'
-                    ? 'bg-[#F2AF29]/20 text-[#F2AF29] border-[#F2AF29]/30'
+                    ? 'bg-[#E57A9D]/20 text-[#E57A9D] border-[#E57A9D]/30'
                     : 'bg-[#69747C]/20 text-[#69747C] border-[#69747C]/30';
 
                 return [
@@ -78,12 +80,16 @@ class ProfileController extends Controller
         if (!$leaderboardStats) {
             $leaderboardStats = (object) [
                 'total_points' => 0,
-                'major' => 0,
-                'minor' => 0,
-                'mini' => 0,
-                'total_major_events' => 0,
-                'total_minor_events' => 0,
-                'total_mini_events' => 0,
+                'finals' => 0,
+                'prime' => 0,
+                'core' => 0,
+                'bit' => 0,
+                'scout' => 0,
+                'total_finals_events' => 0,
+                'total_prime_events' => 0,
+                'total_core_events' => 0,
+                'total_bit_events' => 0,
+                'total_scout_events' => 0,
                 'player_name' => $user->name,
             ];
         }
@@ -101,9 +107,11 @@ class ProfileController extends Controller
             'total_wins' => $tournaments->where('placement', 1)->count(),
             'podium_finishes' => $tournaments->where('placement', '<=', 3)->count(),
             'average_placement' => $tournaments->where('placement', '!=', null)->avg('placement'),
-            'major_events' => $tournaments->where('category', 1)->count(),
-            'minor_events' => $tournaments->where('category', 2)->count(),
-            'mini_events' => $tournaments->where('category', 3)->count(),
+            'finals_events' => $tournaments->where('category', 1)->count(),
+            'prime_events' => $tournaments->where('category', 2)->count(),
+            'core_events' => $tournaments->where('category', 3)->count(),
+            'bit_events' => $tournaments->where('category', 4)->count(),
+            'scout_events' => $tournaments->where('category', 5)->count(),
         ];
 
         // Kirim ke view
@@ -114,12 +122,16 @@ class ProfileController extends Controller
             'stats' => $stats,
             'leaderboardStats' => [
                 'total_points' => $leaderboardStats->total_points,
-                'major' => $leaderboardStats->major,
-                'minor' => $leaderboardStats->minor,
-                'mini' => $leaderboardStats->mini,
-                'total_major_events' => $leaderboardStats->total_major_events,
-                'total_minor_events' => $leaderboardStats->total_minor_events,
-                'total_mini_events' => $leaderboardStats->total_mini_events,
+                'finals' => $leaderboardStats->finals,
+                'prime' => $leaderboardStats->prime,
+                'core' => $leaderboardStats->core,
+                'bit' => $leaderboardStats->bit,
+                'scout' => $leaderboardStats->scout,
+                'total_finals_events' => $leaderboardStats->total_finals_events,
+                'total_prime_events' => $leaderboardStats->total_prime_events,
+                'total_core_events' => $leaderboardStats->total_core_events,
+                'total_bit_events' => $leaderboardStats->total_bit_events,
+                'total_scout_events' => $leaderboardStats->total_scout_events,
                 'rank' => $rank,
             ],
         ]);

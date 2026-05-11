@@ -208,7 +208,7 @@ const TournamentShow = ({ tournament }) => {
 
                             <button
                                 onClick={() => window.history.back()}
-                                className="absolute top-20 md:top-32 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-[#F2F2F2] hover:text-[#FF2146] transition-colors bg-[#0D0C0C]/80 backdrop-blur-md px-3 md:px-4 py-2 md:py-2.5 rounded-lg border border-[#69747C]/30 hover:border-[#FF2146]/50 text-sm md:text-base z-30 shadow-lg"
+                                className="absolute top-20 md:top-32 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-[#F2F2F2] hover:text-[#C23B69] transition-colors bg-[#0D0C0C]/80 backdrop-blur-md px-3 md:px-4 py-2 md:py-2.5 rounded-lg border border-[#69747C]/30 hover:border-[#C23B69]/50 text-sm md:text-base z-30 shadow-lg"
                             >
                                 <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
                                 <span className="font-semibold">Back</span>
@@ -216,20 +216,20 @@ const TournamentShow = ({ tournament }) => {
 
                             <div className="flex flex-wrap gap-3 md:gap-6 text-[#F2F2F2] text-xs md:text-base">
                                 <div className="flex items-center gap-1.5 md:gap-2">
-                                    <Calendar className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                                    <Calendar className="w-4 h-4 md:w-5 md:h-5 text-[#E57A9D] flex-shrink-0" />
                                     <span className="truncate">
                                         {formatDate(tournament.start_date)}
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-1.5 md:gap-2">
-                                    <Users className="w-4 h-4 md:w-5 md:h-5 text-[#FF2146] flex-shrink-0" />
+                                    <Users className="w-4 h-4 md:w-5 md:h-5 text-[#C23B69] flex-shrink-0" />
                                     <span>
                                         {tournament.participants_count}{" "}
                                         Participants
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-1.5 md:gap-2">
-                                    <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                                    <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-[#E57A9D] flex-shrink-0" />
                                     <span className="truncate">
                                         {formatCurrency(tournament.prize_pool)}
                                     </span>
@@ -237,7 +237,7 @@ const TournamentShow = ({ tournament }) => {
                                 {tournament.dojo &&
                                     tournament.dojo !== "Yes" && (
                                         <div className="flex items-center gap-1.5 md:gap-2">
-                                            <Shield className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                                            <Shield className="w-4 h-4 md:w-5 md:h-5 text-[#E57A9D] flex-shrink-0" />
                                             <span className="truncate">
                                                 {tournament.dojo}
                                             </span>
@@ -256,7 +256,7 @@ const TournamentShow = ({ tournament }) => {
                             {/* Description */}
                             <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
                                 <h2 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 flex items-center gap-2">
-                                    <Trophy className="w-5 h-5 md:w-6 md:h-6 text-[#F2AF29]" />
+                                    <Trophy className="w-5 h-5 md:w-6 md:h-6 text-[#E57A9D]" />
                                     Tournament Description
                                 </h2>
                                 <p className="text-[#F2F2F2] text-sm md:text-base leading-relaxed whitespace-pre-line">
@@ -270,7 +270,7 @@ const TournamentShow = ({ tournament }) => {
                                 tournament.status === "Pendaftaran Dibuka" && (
                                     <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
                                         <h2 className="text-lg md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
-                                            <Award className="w-5 h-5 md:w-6 md:h-6 text-[#F2AF29]" />
+                                            <Award className="w-5 h-5 md:w-6 md:h-6 text-[#E57A9D]" />
                                             Tournament Registration
                                         </h2>
                                         <h1 className="text-lg md:text-m font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
@@ -324,7 +324,7 @@ const TournamentShow = ({ tournament }) => {
                             {sortedParticipants.length > 0 && (
                                 <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
                                     <h2 className="text-lg md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
-                                        <Users className="w-5 h-5 md:w-6 md:h-6 text-[#FF2146]" />
+                                        <Users className="w-5 h-5 md:w-6 md:h-6 text-[#C23B69]" />
                                         Participants & Results
                                     </h2>
 
@@ -398,7 +398,7 @@ const TournamentShow = ({ tournament }) => {
                                         <span className="text-[#69747C] text-sm md:text-base">
                                             Prize Pool
                                         </span>
-                                        <span className="text-[#F2AF29] font-bold text-sm md:text-base truncate ml-2">
+                                        <span className="text-[#E57A9D] font-bold text-sm md:text-base truncate ml-2">
                                             {formatCurrency(
                                                 tournament.prize_pool
                                             )}
@@ -446,7 +446,7 @@ const TournamentShow = ({ tournament }) => {
                                             className={`font-bold text-sm md:text-base ${
                                                 tournament.status ===
                                                 "Pendaftaran Dibuka"
-                                                    ? "text-[#F2AF29]"
+                                                    ? "text-[#E57A9D]"
                                                     : "text-[#69747C]"
                                             }`}
                                         >
@@ -477,13 +477,13 @@ const TournamentShow = ({ tournament }) => {
                                             href={tournament.url_yt}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg bg-[#FF2146]/10 border border-[#FF2146]/30 hover:bg-[#FF2146]/20 active:scale-95 transition-all duration-300 group"
+                                            className="flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg bg-[#C23B69]/10 border border-[#C23B69]/30 hover:bg-[#C23B69]/20 active:scale-95 transition-all duration-300 group"
                                         >
-                                            <Youtube className="w-4 h-4 md:w-5 md:h-5 text-[#FF2146] flex-shrink-0" />
+                                            <Youtube className="w-4 h-4 md:w-5 md:h-5 text-[#C23B69] flex-shrink-0" />
                                             <span className="text-[#F2F2F2] font-semibold flex-1 text-sm md:text-base">
                                                 Watch on YouTube
                                             </span>
-                                            <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] group-hover:text-[#FF2146] transition-colors flex-shrink-0" />
+                                            <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] group-hover:text-[#C23B69] transition-colors flex-shrink-0" />
                                         </a>
                                     )}
 
@@ -492,13 +492,13 @@ const TournamentShow = ({ tournament }) => {
                                             href={`https://www.start.gg/tournament/${tournament.url_startgg}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg bg-[#F2AF29]/10 border border-[#F2AF29]/30 hover:bg-[#F2AF29]/20 active:scale-95 transition-all duration-300 group"
+                                            className="flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg bg-[#E57A9D]/10 border border-[#E57A9D]/30 hover:bg-[#E57A9D]/20 active:scale-95 transition-all duration-300 group"
                                         >
-                                            <Award className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29] flex-shrink-0" />
+                                            <Award className="w-4 h-4 md:w-5 md:h-5 text-[#E57A9D] flex-shrink-0" />
                                             <span className="text-[#F2F2F2] font-semibold flex-1 text-sm md:text-base">
                                                 View on Start.gg
                                             </span>
-                                            <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] group-hover:text-[#F2AF29] transition-colors flex-shrink-0" />
+                                            <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] group-hover:text-[#E57A9D] transition-colors flex-shrink-0" />
                                         </a>
                                     )}
 
@@ -527,3 +527,4 @@ const TournamentShow = ({ tournament }) => {
 };
 
 export default TournamentShow;
+

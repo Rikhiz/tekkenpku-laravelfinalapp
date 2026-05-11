@@ -33,18 +33,18 @@ const Footer = () => {
     ];
 
     const gradients = [
-        "from-[#FF2146] to-[#F2AF29]",
-        "from-[#F2AF29] to-[#FF2146]",
-        "from-[#FF2146] to-[#69747C]",
-        "from-[#69747C] to-[#F2AF29]",
+        "from-[#C23B69] to-[#E57A9D]",
+        "from-[#E57A9D] to-[#C23B69]",
+        "from-[#C23B69] to-[#69747C]",
+        "from-[#69747C] to-[#E57A9D]",
     ];
 
     return (
         <footer className="relative bg-gradient-to-br from-[#0D0C0C] via-[#0D0C0C] to-[#69747C]/20 border-t border-[#69747C]/30">
             {/* Animated Background */}
             <div className="absolute inset-0">
-                <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#FF2146]/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#F2AF29]/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#C23B69]/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#E57A9D]/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
             </div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-8 py-16">
@@ -52,13 +52,13 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                     {/* Brand Section */}
                     <div className="space-y-5 lg:col-span-2">
-                        <h3 className="text-3xl font-extrabold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                        <h3 className="text-3xl font-extrabold bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent">
                             TPC HUB
                         </h3>
                         <p className="text-[#9CA3AF] leading-relaxed max-w-2xl">
                             Routine offline meetup, event and tournament. Play,
                             Grow and Connect with us here
-                            <span className="font-semibold text-[#F2AF29]">
+                            <span className="font-semibold text-[#E57A9D]">
                                 {" "}
                                 TPC HUB{" "}
                             </span>
@@ -122,19 +122,19 @@ const Footer = () => {
                         <div className="flex space-x-6 text-sm">
                             <a
                                 href="#"
-                                className="text-[#69747C] hover:text-[#FF2146] transition-colors"
+                                className="text-[#69747C] hover:text-[#C23B69] transition-colors"
                             >
                                 RikaBogor
                             </a>
                             <a
                                 href="#"
-                                className="text-[#69747C] hover:text-[#FF2146] transition-colors"
+                                className="text-[#69747C] hover:text-[#C23B69] transition-colors"
                             >
                                 Salam
                             </a>
                             <a
                                 href="#"
-                                className="text-[#69747C] hover:text-[#FF2146] transition-colors"
+                                className="text-[#69747C] hover:text-[#C23B69] transition-colors"
                             >
                                 NakiRika
                             </a>
@@ -144,10 +144,11 @@ const Footer = () => {
             </div>
 
             {/* Floating Elements */}
-            <div className="absolute top-10 right-10 w-32 h-32 bg-gradient-to-r from-[#FF2146]/10 to-[#F2AF29]/10 rounded-full blur-2xl animate-bounce"></div>
-            <div className="absolute bottom-10 left-10 w-24 h-24 bg-gradient-to-r from-[#F2AF29]/10 to-[#69747C]/10 rounded-full blur-2xl animate-bounce delay-500"></div>
+            <div className="absolute top-10 right-10 w-32 h-32 bg-gradient-to-r from-[#C23B69]/10 to-[#E57A9D]/10 rounded-full blur-2xl animate-bounce"></div>
+            <div className="absolute bottom-10 left-10 w-24 h-24 bg-gradient-to-r from-[#E57A9D]/10 to-[#69747C]/10 rounded-full blur-2xl animate-bounce delay-500"></div>
         </footer>
     );
 };
 
 export default Footer;
+

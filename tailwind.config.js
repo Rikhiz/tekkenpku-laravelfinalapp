@@ -26,12 +26,12 @@ export default {
         'border-[#69747C]/30',
 
         // 💬 Warna status / kategori dinamis (dari event status)
-        'text-[#F2AF29]',
-        'text-[#FF2146]',
-        'bg-[#FF2146]/10',
-        'bg-[#F2AF29]/10',
-        'border-[#FF2146]/30',
-        'border-[#F2AF29]/30',
+        'text-[#E57A9D]',
+        'text-[#C23B69]',
+        'bg-[#C23B69]/10',
+        'bg-[#E57A9D]/10',
+        'border-[#C23B69]/30',
+        'border-[#E57A9D]/30',
 
         // 🟣 Warna Instagram Embed
         'text-pink-500',
@@ -51,3 +51,4 @@ export default {
 
     plugins: [forms],
 };
+

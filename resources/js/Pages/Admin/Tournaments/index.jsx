@@ -11,7 +11,6 @@ import {
     ExternalLink,
     X,
     Loader2,
-    Shield,
     Home,
 } from "lucide-react";
 
@@ -26,6 +25,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
         name: "",
         created_by: "",
         category: 6,
+        season: "",
         total: 0,
         start_date: "",
         end_date: "",
@@ -65,6 +65,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                 name: tournament.name,
                 created_by: tournament.created_by,
                 category: tournament.category,
+                season: tournament.season || "",
                 total: tournament.total || 0,
                 start_date: tournament.start_date
                     ? tournament.start_date.substring(0, 16)
@@ -87,8 +88,8 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
             reset();
             setData("status", "Pendaftaran Dibuka");
             setData("category", 6);
-
             setData("dojo", "");
+            setData("season", "");
         }
         setShowModal(true);
     };
@@ -102,7 +103,10 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (editingTournament) {
-            put(route("tournaments.update", editingTournament.url_startgg), {
+            router.post(route("tournaments.update", editingTournament.tourid), {
+                _method: 'put',
+                ...data
+            }, {
                 onSuccess: () => closeModal(),
             });
         } else {
@@ -120,8 +124,9 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
     const confirmDelete = () => {
         if (tournamentToDelete && !isDeleting) {
             setIsDeleting(true);
+            // ✅ FIX: Pakai tourid sebagai identifier, bukan url_startgg
             router.delete(
-                route("tournaments.destroy", tournamentToDelete.url_startgg),
+                route("tournaments.destroy", tournamentToDelete.tourid),
                 {
                     onSuccess: () => {
                         setShowDeleteModal(false);
@@ -211,6 +216,9 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         }`}
                                     >
                                         {categoryLabels[tournament.category]}
+                                        {tournament.season
+                                            ? ` S${tournament.season}`
+                                            : ""}
                                     </span>
                                 </div>
                             </div>
@@ -238,6 +246,13 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                             {tournament.creator?.name}
                                         </span>
                                     </div>
+
+                                    {tournament.season && (
+                                        <div className="flex items-center text-sm text-gray-400">
+                                            <Award className="h-4 w-4 mr-2 flex-shrink-0" />
+                                            <span>Season {tournament.season}</span>
+                                        </div>
+                                    )}
 
                                     {tournament.dojo && (
                                         <div className="flex items-center text-sm text-gray-400">
@@ -348,6 +363,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                 )}
             </div>
 
+            {/* ── Modal Tambah / Edit ── */}
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
                     <div className="relative bg-gray-800 border border-gray-700 w-full max-w-2xl max-h-[90vh] shadow-lg rounded-xl flex flex-col">
@@ -367,6 +383,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
 
                         <div className="flex-1 overflow-y-auto p-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {/* Nama */}
                                 <div className="md:col-span-2">
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Nama Tournament *
@@ -387,6 +404,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
+                                {/* Dibuat oleh */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Dibuat oleh *
@@ -394,20 +412,14 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     <select
                                         value={data.created_by}
                                         onChange={(e) =>
-                                            setData(
-                                                "created_by",
-                                                e.target.value
-                                            )
+                                            setData("created_by", e.target.value)
                                         }
                                         className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
                                         required
                                     >
                                         <option value="">Pilih User</option>
                                         {users.map((user) => (
-                                            <option
-                                                key={user.id}
-                                                value={user.id}
-                                            >
+                                            <option key={user.id} value={user.id}>
                                                 {user.name}
                                             </option>
                                         ))}
@@ -419,6 +431,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
+                                {/* Kategori */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Kategori *
@@ -426,10 +439,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     <select
                                         value={data.category}
                                         onChange={(e) =>
-                                            setData(
-                                                "category",
-                                                parseInt(e.target.value)
-                                            )
+                                            setData("category", parseInt(e.target.value))
                                         }
                                         className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
                                         required
@@ -448,28 +458,29 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
+                                {/* ✅ NEW: Season */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
-                                        Dojo
+                                        Season
                                     </label>
-                                    <select
-                                        value={data.dojo}
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={data.season}
                                         onChange={(e) =>
-                                            setData("dojo", e.target.value)
+                                            setData("season", e.target.value)
                                         }
+                                        placeholder="Contoh: 1, 2, 3..."
                                         className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
-                                    >
-                                        <option value="">Pilih Dojo</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                    {errors.dojo && (
+                                    />
+                                    {errors.season && (
                                         <p className="mt-1 text-xs text-red-400">
-                                            {errors.dojo}
+                                            {errors.season}
                                         </p>
                                     )}
                                 </div>
 
+                                {/* Status */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Status *
@@ -494,6 +505,30 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
+                                {/* Dojo */}
+                                <div>
+                                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                                        Dojo
+                                    </label>
+                                    <select
+                                        value={data.dojo}
+                                        onChange={(e) =>
+                                            setData("dojo", e.target.value)
+                                        }
+                                        className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
+                                    >
+                                        <option value="">Pilih Dojo</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    {errors.dojo && (
+                                        <p className="mt-1 text-xs text-red-400">
+                                            {errors.dojo}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Tanggal Mulai */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Tanggal Mulai
@@ -502,10 +537,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         type="datetime-local"
                                         value={data.start_date}
                                         onChange={(e) =>
-                                            setData(
-                                                "start_date",
-                                                e.target.value
-                                            )
+                                            setData("start_date", e.target.value)
                                         }
                                         className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
                                     />
@@ -516,6 +548,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
+                                {/* Tanggal Selesai */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Tanggal Selesai
@@ -535,6 +568,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
+                                {/* Prize Pool */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Prize Pool
@@ -554,6 +588,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
+                                {/* Max Pemain */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Max Pemain
@@ -562,10 +597,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         type="number"
                                         value={data.max_pemain}
                                         onChange={(e) =>
-                                            setData(
-                                                "max_pemain",
-                                                e.target.value
-                                            )
+                                            setData("max_pemain", e.target.value)
                                         }
                                         className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
                                     />
@@ -576,6 +608,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
+                                {/* URL YouTube */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         URL Youtube
@@ -594,6 +627,8 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         </p>
                                     )}
                                 </div>
+
+                                {/* Instagram */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Instagram Post URL
@@ -613,11 +648,11 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         </p>
                                     )}
                                     <p className="mt-1 text-xs text-gray-400">
-                                        Copy Instagram post URL (e.g.,
-                                        https://www.instagram.com/p/DOXgSwKkpgp/)
+                                        Copy Instagram post URL (e.g., https://www.instagram.com/p/DOXgSwKkpgp/)
                                     </p>
                                 </div>
 
+                                {/* URL Start.gg */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         URL Start.gg
@@ -626,10 +661,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         type="text"
                                         value={data.url_startgg}
                                         onChange={(e) =>
-                                            setData(
-                                                "url_startgg",
-                                                e.target.value
-                                            )
+                                            setData("url_startgg", e.target.value)
                                         }
                                         className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
                                     />
@@ -640,39 +672,33 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
+                                {/* URL Gambar */}
                                 <div className="md:col-span-2">
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
-                                        URL Gambar
+                                        Gambar Tournament (Kosongkan jika tidak ingin mengubah)
                                     </label>
                                     <input
-                                        type="url"
-                                        value={data.image_url}
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/webp, image/gif"
                                         onChange={(e) =>
-                                            setData("image_url", e.target.value)
+                                            setData("image_url", e.target.files[0])
                                         }
                                         className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
-                                        placeholder="https://example.com/image.jpg"
                                     />
                                     {errors.image_url && (
                                         <p className="mt-1 text-xs text-red-400">
                                             {errors.image_url}
                                         </p>
                                     )}
-                                    {data.image_url && (
-                                        <div className="mt-2">
-                                            <img
-                                                src={data.image_url}
-                                                alt="Preview"
-                                                className="w-full h-32 object-cover rounded-lg border border-gray-700"
-                                                onError={(e) =>
-                                                    (e.target.style.display =
-                                                        "none")
-                                                }
-                                            />
+                                    {editingTournament && typeof data.image_url === 'string' && data.image_url && (
+                                        <div className="mt-2 text-xs text-gray-400 flex items-center gap-2">
+                                            <span>Gambar saat ini:</span>
+                                            <img src={data.image_url} alt="Current" className="h-10 rounded border border-gray-600" />
                                         </div>
                                     )}
                                 </div>
 
+                                {/* Deskripsi */}
                                 <div className="md:col-span-2">
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Deskripsi
@@ -720,6 +746,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                 </div>
             )}
 
+            {/* ── Modal Delete ── */}
             {showDeleteModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
                     <div className="relative bg-gray-800 border border-gray-700 w-full max-w-md shadow-lg rounded-xl">

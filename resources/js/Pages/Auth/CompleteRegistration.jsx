@@ -39,8 +39,8 @@ const CompleteRegistration = ({ userData }) => {
             <div className="min-h-screen bg-gradient-to-br from-[#0D0C0C] via-[#1a1a1a] to-[#0D0C0C] flex items-center justify-center p-4">
                 {/* Background Effects */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-20 left-10 w-72 h-72 bg-[#FF2146]/10 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#F2AF29]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                    <div className="absolute top-20 left-10 w-72 h-72 bg-[#C23B69]/10 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#E57A9D]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
                 </div>
 
                 <div className="relative w-full max-w-md z-10">
@@ -58,10 +58,10 @@ const CompleteRegistration = ({ userData }) => {
                                     <img
                                         src={profileImage}
                                         alt={fullName}
-                                        className="w-20 h-20 rounded-full border-4 border-[#FF2146]/30 object-cover"
+                                        className="w-20 h-20 rounded-full border-4 border-[#C23B69]/30 object-cover"
                                     />
                                 ) : (
-                                    <div className="w-20 h-20 rounded-full border-4 border-[#FF2146]/30 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] flex items-center justify-center">
+                                    <div className="w-20 h-20 rounded-full border-4 border-[#C23B69]/30 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] flex items-center justify-center">
                                         <span className="text-white font-bold text-2xl">
                                             {gamerTag.charAt(0).toUpperCase()}
                                         </span>
@@ -77,9 +77,9 @@ const CompleteRegistration = ({ userData }) => {
                             
                             {/* Player Info */}
                             <div className="space-y-2">
-                                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#FF2146]/20 border border-[#FF2146]/30 rounded-full">
-                                    <CheckCircle size={16} className="text-[#FF2146]" />
-                                    <span className="text-xs text-[#FF2146] font-semibold">
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#C23B69]/20 border border-[#C23B69]/30 rounded-full">
+                                    <CheckCircle size={16} className="text-[#C23B69]" />
+                                    <span className="text-xs text-[#C23B69] font-semibold">
                                         start.gg ID: {playerId}
                                     </span>
                                 </div>
@@ -121,7 +121,7 @@ const CompleteRegistration = ({ userData }) => {
                                 {/* Email */}
                                 <div>
                                     <label className="block text-sm font-medium text-[#F2F2F2] mb-2">
-                                        Email <span className="text-[#FF2146]">*</span>
+                                        Email <span className="text-[#C23B69]">*</span>
                                     </label>
                                     <div className="relative">
                                         <Mail
@@ -134,15 +134,15 @@ const CompleteRegistration = ({ userData }) => {
                                             onChange={(e) => setData("email", e.target.value)}
                                             className={`w-full pl-10 pr-4 py-3 bg-[#0D0C0C]/50 border rounded-lg text-[#F2F2F2] placeholder-[#69747C] focus:outline-none transition-colors ${
                                                 errors.email 
-                                                    ? "border-[#FF2146] focus:border-[#FF2146]" 
-                                                    : "border-[#69747C]/30 focus:border-[#FF2146]"
+                                                    ? "border-[#C23B69] focus:border-[#C23B69]" 
+                                                    : "border-[#69747C]/30 focus:border-[#C23B69]"
                                             }`}
                                             placeholder="your@email.com"
                                             required
                                         />
                                     </div>
                                     {errors.email && (
-                                        <div className="flex items-center gap-2 mt-2 text-[#FF2146] text-sm">
+                                        <div className="flex items-center gap-2 mt-2 text-[#C23B69] text-sm">
                                             <AlertCircle size={16} />
                                             <span>{errors.email}</span>
                                         </div>
@@ -155,7 +155,7 @@ const CompleteRegistration = ({ userData }) => {
                                 {/* Password */}
                                 <div>
                                     <label className="block text-sm font-medium text-[#F2F2F2] mb-2">
-                                        Password <span className="text-[#FF2146]">*</span>
+                                        Password <span className="text-[#C23B69]">*</span>
                                     </label>
                                     <div className="relative">
                                         <Lock
@@ -168,8 +168,8 @@ const CompleteRegistration = ({ userData }) => {
                                             onChange={(e) => setData("password", e.target.value)}
                                             className={`w-full pl-10 pr-12 py-3 bg-[#0D0C0C]/50 border rounded-lg text-[#F2F2F2] placeholder-[#69747C] focus:outline-none transition-colors ${
                                                 errors.password 
-                                                    ? "border-[#FF2146] focus:border-[#FF2146]" 
-                                                    : "border-[#69747C]/30 focus:border-[#FF2146]"
+                                                    ? "border-[#C23B69] focus:border-[#C23B69]" 
+                                                    : "border-[#69747C]/30 focus:border-[#C23B69]"
                                             }`}
                                             placeholder="Min. 6 characters"
                                             required
@@ -184,7 +184,7 @@ const CompleteRegistration = ({ userData }) => {
                                         </button>
                                     </div>
                                     {errors.password && (
-                                        <div className="flex items-center gap-2 mt-2 text-[#FF2146] text-sm">
+                                        <div className="flex items-center gap-2 mt-2 text-[#C23B69] text-sm">
                                             <AlertCircle size={16} />
                                             <span>{errors.password}</span>
                                         </div>
@@ -194,7 +194,7 @@ const CompleteRegistration = ({ userData }) => {
                                 {/* Confirm Password */}
                                 <div>
                                     <label className="block text-sm font-medium text-[#F2F2F2] mb-2">
-                                        Confirm Password <span className="text-[#FF2146]">*</span>
+                                        Confirm Password <span className="text-[#C23B69]">*</span>
                                     </label>
                                     <div className="relative">
                                         <Lock
@@ -205,7 +205,7 @@ const CompleteRegistration = ({ userData }) => {
                                             type={showConfirmPassword ? "text" : "password"}
                                             value={data.password_confirmation}
                                             onChange={(e) => setData("password_confirmation", e.target.value)}
-                                            className="w-full pl-10 pr-12 py-3 bg-[#0D0C0C]/50 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] placeholder-[#69747C] focus:outline-none focus:border-[#FF2146] transition-colors"
+                                            className="w-full pl-10 pr-12 py-3 bg-[#0D0C0C]/50 border border-[#69747C]/30 rounded-lg text-[#F2F2F2] placeholder-[#69747C] focus:outline-none focus:border-[#C23B69] transition-colors"
                                             placeholder="Re-enter password"
                                             required
                                         />
@@ -218,7 +218,7 @@ const CompleteRegistration = ({ userData }) => {
                                         </button>
                                     </div>
                                     {data.password && data.password_confirmation && data.password !== data.password_confirmation && (
-                                        <div className="flex items-center gap-2 mt-2 text-[#FF2146] text-sm">
+                                        <div className="flex items-center gap-2 mt-2 text-[#C23B69] text-sm">
                                             <AlertCircle size={16} />
                                             <span>Passwords do not match</span>
                                         </div>
@@ -229,7 +229,7 @@ const CompleteRegistration = ({ userData }) => {
                                 <button
                                     type="submit"
                                     disabled={processing || data.password !== data.password_confirmation}
-                                    className="w-full px-4 py-3 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#FF2146]/90 hover:to-[#F2AF29]/90 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none relative overflow-hidden group"
+                                    className="w-full px-4 py-3 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] hover:from-[#C23B69]/90 hover:to-[#E57A9D]/90 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none relative overflow-hidden group"
                                 >
                                     <span className="relative z-10">
                                         {processing ? "Creating Account..." : "Complete Registration"}
@@ -243,7 +243,7 @@ const CompleteRegistration = ({ userData }) => {
                         <div className="p-4 bg-[#0D0C0C]/50 border-t border-[#69747C]/20 text-center">
                             <p className="text-xs text-[#69747C]">
                                 By completing registration, you agree to join{" "}
-                                <span className="text-[#FF2146] font-semibold">Tekken Pekanbaru Community</span>
+                                <span className="text-[#C23B69] font-semibold">Tekken Pekanbaru Community</span>
                             </p>
                         </div>
                     </div>
@@ -252,7 +252,7 @@ const CompleteRegistration = ({ userData }) => {
                     <div className="mt-6 text-center">
                         <p className="text-[#69747C] text-sm">
                             Having trouble?{" "}
-                            <a href="mailto:support@tekkenpekanbaru.com" className="text-[#FF2146] hover:underline">
+                            <a href="mailto:support@tekkenpekanbaru.com" className="text-[#C23B69] hover:underline">
                                 Contact Support
                             </a>
                         </p>

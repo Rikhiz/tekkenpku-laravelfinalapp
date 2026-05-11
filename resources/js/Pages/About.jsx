@@ -2,7 +2,7 @@ import React from "react";
 import AppLayout from "@/Layouts/AppLayout";
 import { Target, Eye, Gamepad2, Users, Instagram } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import herobg from "@/images/about-background.png";
+import herobg from "@/images/about-background.webp";
 
 const SectionTitle = ({ icon: Icon, color, children }) => (
     <div className="flex items-center gap-3 mb-6 text-center sm:text-left justify-center sm:justify-start">
@@ -11,7 +11,7 @@ const SectionTitle = ({ icon: Icon, color, children }) => (
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white uppercase tracking-wide">
                 {children}
             </h2>
-            <div className="h-1 w-16 sm:w-20 mt-2 rounded bg-gradient-to-r from-[#FF2146] to-[#F2AF29] mx-auto sm:mx-0" />
+            <div className="h-1 w-16 sm:w-20 mt-2 rounded bg-gradient-to-r from-[#C23B69] to-[#E57A9D] mx-auto sm:mx-0" />
         </div>
     </div>
 );
@@ -35,9 +35,9 @@ const About = ({ community }) => {
                     <div className="absolute inset-0 bg-gradient-to-br from-[#0D0C0C]/10 via-[#0D0C0C]/20 to-[#0D0C0C]/50"></div>
                     <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#0D0C0C] pointer-events-none"></div>
                     {/* Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0D0C0C]/80 via-[#0D0C0C]/70 to-[#0D0C0C]/80"></div>
-                    <div className="absolute top-10 right-10 w-72 h-72 bg-[#FF2146]/20 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-10 left-10 w-72 h-72 bg-[#F2AF29]/20 rounded-full blur-3xl"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0D0C0C]/40 via-[#0D0C0C]/50 to-[#0D0C0C]/40"></div>
+                    <div className="absolute top-10 right-10 w-72 h-72 bg-[#C23B69]/20 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-10 left-10 w-72 h-72 bg-[#E57A9D]/20 rounded-full blur-3xl"></div>
 
                     {/* Content */}
                     <motion.div
@@ -45,7 +45,7 @@ const About = ({ community }) => {
                         style={{ y: yHeading, opacity }}
                     >
                         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6">
-                            <span className="bg-gradient-to-r from-[#FF2146] to-[#F2AF29] bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-[#C23B69] to-[#E57A9D] bg-clip-text text-transparent">
                                 Tekken Pekanbaru Community
                             </span>
                         </h1>
@@ -69,9 +69,9 @@ const About = ({ community }) => {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
                             viewport={{ once: true, amount: 0.3 }}
-                            className="p-6 sm:p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-[#FF2146]/40 transition"
+                            className="p-6 sm:p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-[#C23B69]/40 transition"
                         >
-                            <SectionTitle icon={Target} color="text-[#FF2146]">
+                            <SectionTitle icon={Target} color="text-[#C23B69]">
                                 Misi
                             </SectionTitle>
                             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
@@ -87,9 +87,9 @@ const About = ({ community }) => {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.3 }}
                             viewport={{ once: true, amount: 0.3 }}
-                            className="p-6 sm:p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-[#F2AF29]/40 transition"
+                            className="p-6 sm:p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-[#E57A9D]/40 transition"
                         >
-                            <SectionTitle icon={Eye} color="text-[#F2AF29]">
+                            <SectionTitle icon={Eye} color="text-[#E57A9D]">
                                 Visi
                             </SectionTitle>
                             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
@@ -104,9 +104,9 @@ const About = ({ community }) => {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.4 }}
                         viewport={{ once: true, amount: 0.3 }}
-                        className="p-6 sm:p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-[#FF2146]/40 transition md:col-span-2"
+                        className="p-6 sm:p-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 hover:border-[#C23B69]/40 transition md:col-span-2"
                     >
-                        <SectionTitle icon={Gamepad2} color="text-[#FF2146]">
+                        <SectionTitle icon={Gamepad2} color="text-[#C23B69]">
                             Kegiatan Kami
                         </SectionTitle>
                         <ul className="list-disc list-inside text-gray-300 leading-relaxed space-y-2 text-sm sm:text-base">
@@ -123,9 +123,9 @@ const About = ({ community }) => {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
                         viewport={{ once: true, amount: 0.3 }}
-                        className="p-6 sm:p-8 bg-gradient-to-r from-[#FF2146]/20 to-[#F2AF29]/20 backdrop-blur-md rounded-2xl border border-white/10 md:col-span-2"
+                        className="p-6 sm:p-8 bg-gradient-to-r from-[#C23B69]/20 to-[#E57A9D]/20 backdrop-blur-md rounded-2xl border border-white/10 md:col-span-2"
                     >
-                        <SectionTitle icon={Users} color="text-[#FF2146]">
+                        <SectionTitle icon={Users} color="text-[#C23B69]">
                             Bergabunglah Bersama Kami
                         </SectionTitle>
                         <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
@@ -137,7 +137,7 @@ const About = ({ community }) => {
                             href="https://www.instagram.com/tekkenpku"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-6 inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold bg-gradient-to-r from-[#FF2146] to-[#F2AF29] text-white hover:scale-105 transition text-sm sm:text-base"
+                            className="mt-6 inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold bg-gradient-to-r from-[#C23B69] to-[#E57A9D] text-white hover:scale-105 transition text-sm sm:text-base"
                         >
                             <Instagram size={20} />
                             @tekkenpku
@@ -150,3 +150,4 @@ const About = ({ community }) => {
 };
 
 export default About;
+

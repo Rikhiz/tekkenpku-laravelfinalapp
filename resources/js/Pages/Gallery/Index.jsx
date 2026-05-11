@@ -13,12 +13,12 @@ const GalleryIndex = () => {
                     rel="noopener noreferrer"
                     className="max-w-md w-full p-10 bg-gradient-to-br from-[#1a1a1a]/90 to-[#69747C]/20 backdrop-blur-xl 
                                border border-[#69747C]/30 rounded-3xl shadow-2xl 
-                               transition-all duration-300 hover:scale-[1.02] hover:border-[#FF2146]/50 
+                               transition-all duration-300 hover:scale-[1.02] hover:border-[#C23B69]/50 
                                cursor-pointer block"
                 >
                     <div className="flex justify-center mb-6">
-                        <div className="p-4 bg-[#FF2146]/10 rounded-full">
-                            <Image className="w-16 h-16 text-[#FF2146]" />
+                        <div className="p-4 bg-[#C23B69]/10 rounded-full">
+                            <Image className="w-16 h-16 text-[#C23B69]" />
                         </div>
                     </div>
 
@@ -39,3 +39,4 @@ const GalleryIndex = () => {
 };
 
 export default GalleryIndex;
+

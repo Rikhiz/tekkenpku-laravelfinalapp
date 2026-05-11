@@ -144,7 +144,7 @@ const ActivityShow = ({ activity }) => {
                                 <div
                                     className={`${
                                         activity.status === "Mendatang"
-                                            ? "bg-[#FF2146]/80 border-[#FF2146]/40"
+                                            ? "bg-[#C23B69]/80 border-[#C23B69]/40"
                                             : "bg-gray-700/60 border-gray-500/40"
                                     } border backdrop-blur-sm rounded-full px-3 md:px-4 py-1 md:py-2 text-xs md:text-base text-white`}
                                 >
@@ -162,7 +162,7 @@ const ActivityShow = ({ activity }) => {
 
                             <button
                                 onClick={() => router.visit("/activity")}
-                                className="absolute top-20 md:top-32 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-white hover:text-[#F2AF29] transition-colors bg-[#0D0C0C]/80 backdrop-blur-md px-3 md:px-4 py-2 md:py-2.5 rounded-lg border border-[#FF2146]/30 hover:border-[#F2AF29]/60 text-sm md:text-base z-30 shadow-lg"
+                                className="absolute top-20 md:top-32 left-4 md:left-8 flex items-center gap-1.5 md:gap-2 text-white hover:text-[#E57A9D] transition-colors bg-[#0D0C0C]/80 backdrop-blur-md px-3 md:px-4 py-2 md:py-2.5 rounded-lg border border-[#C23B69]/30 hover:border-[#E57A9D]/60 text-sm md:text-base z-30 shadow-lg"
                             >
                                 <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
                                 <span className="font-semibold">Back</span>
@@ -171,7 +171,7 @@ const ActivityShow = ({ activity }) => {
                             <div className="flex flex-wrap gap-3 md:gap-6 text-white text-xs md:text-base">
                                 {activity.tanggal_kegiatan && (
                                     <div className="flex items-center gap-1.5 md:gap-2">
-                                        <Calendar className="w-4 h-4 md:w-5 md:h-5 text-[#FF2146]" />
+                                        <Calendar className="w-4 h-4 md:w-5 md:h-5 text-[#C23B69]" />
                                         <span>
                                             {formatDate(
                                                 activity.tanggal_kegiatan
@@ -181,7 +181,7 @@ const ActivityShow = ({ activity }) => {
                                 )}
                                 {formatTime(activity.tanggal_kegiatan) && (
                                     <div className="flex items-center gap-1.5 md:gap-2">
-                                        <Clock className="w-4 h-4 md:w-5 md:h-5 text-[#F2AF29]" />
+                                        <Clock className="w-4 h-4 md:w-5 md:h-5 text-[#E57A9D]" />
                                         <span>
                                             {formatTime(
                                                 activity.tanggal_kegiatan
@@ -190,7 +190,7 @@ const ActivityShow = ({ activity }) => {
                                     </div>
                                 )}
                                 <div className="flex items-center gap-1.5 md:gap-2">
-                                    <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#FF2146]" />
+                                    <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#C23B69]" />
                                     <span>{activity.alamat}</span>
                                 </div>
                             </div>
@@ -204,9 +204,9 @@ const ActivityShow = ({ activity }) => {
                         {/* Left Column */}
                         <div className="lg:col-span-2 space-y-4 md:space-y-8">
                             {/* Description */}
-                            <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#FF2146]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
-                                <h2 className="text-2xl font-bold text-[#F2AF29] mb-3 flex items-center gap-2">
-                                    <Info className="w-6 h-6 text-[#FF2146]" />
+                            <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#C23B69]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
+                                <h2 className="text-2xl font-bold text-[#E57A9D] mb-3 flex items-center gap-2">
+                                    <Info className="w-6 h-6 text-[#C23B69]" />
                                     Activity Details
                                 </h2>
                                 <p className="text-gray-300 text-base leading-relaxed whitespace-pre-line">
@@ -217,12 +217,12 @@ const ActivityShow = ({ activity }) => {
 
                             {/* Image */}
                             {activity.image_url && (
-                                <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#FF2146]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
-                                    <h2 className="text-2xl font-bold text-[#F2AF29] mb-3 flex items-center gap-2">
-                                        <BoomBox className="w-6 h-6 text-[#FF2146]" />
+                                <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#C23B69]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
+                                    <h2 className="text-2xl font-bold text-[#E57A9D] mb-3 flex items-center gap-2">
+                                        <BoomBox className="w-6 h-6 text-[#C23B69]" />
                                         Event Photos
                                     </h2>
-                                    <div className="rounded-lg overflow-hidden border border-[#FF2146]/30">
+                                    <div className="rounded-lg overflow-hidden border border-[#C23B69]/30">
                                         <img
                                             src={activity.image_url}
                                             alt={activity.name}
@@ -235,8 +235,8 @@ const ActivityShow = ({ activity }) => {
 
                             {/* Instagram Embed */}
                             {activity.url_ig && instagramEmbedHTML && (
-                                <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#FF2146]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
-                                    <h2 className="text-2xl font-bold text-[#F2AF29] mb-4 flex items-center gap-2">
+                                <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#C23B69]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
+                                    <h2 className="text-2xl font-bold text-[#E57A9D] mb-4 flex items-center gap-2">
                                         <Instagram className="w-6 h-6 text-pink-500" />
                                         Activity Highlights
                                     </h2>
@@ -261,16 +261,16 @@ const ActivityShow = ({ activity }) => {
 
                         {/* Right Column */}
                         <div className="space-y-6">
-                            <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#FF2146]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
-                                <h3 className="text-xl font-bold text-[#F2AF29] mb-4">
+                            <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#C23B69]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
+                                <h3 className="text-xl font-bold text-[#E57A9D] mb-4">
                                     Event Information
                                 </h3>
 
                                 <div className="space-y-4 text-white">
                                     {activity.tanggal_kegiatan && (
-                                        <div className="pb-3 border-b border-[#FF2146]/30">
+                                        <div className="pb-3 border-b border-[#C23B69]/30">
                                             <div className="flex gap-2">
-                                                <Calendar className="w-5 h-5 text-[#FF2146]" />
+                                                <Calendar className="w-5 h-5 text-[#C23B69]" />
                                                 <div>
                                                     <p className="text-gray-400 text-sm">
                                                         Date & Time
@@ -283,7 +283,7 @@ const ActivityShow = ({ activity }) => {
                                                     {formatTime(
                                                         activity.tanggal_kegiatan
                                                     ) && (
-                                                        <p className="text-[#F2AF29] text-sm">
+                                                        <p className="text-[#E57A9D] text-sm">
                                                             {formatTime(
                                                                 activity.tanggal_kegiatan
                                                             )}{" "}
@@ -295,9 +295,9 @@ const ActivityShow = ({ activity }) => {
                                         </div>
                                     )}
 
-                                    <div className="pb-3 border-b border-[#FF2146]/30">
+                                    <div className="pb-3 border-b border-[#C23B69]/30">
                                         <div className="flex gap-2">
-                                            <MapPin className="w-5 h-5 text-[#F2AF29]" />
+                                            <MapPin className="w-5 h-5 text-[#E57A9D]" />
                                             <div>
                                                 <p className="text-gray-400 text-sm">
                                                     Location
@@ -309,9 +309,9 @@ const ActivityShow = ({ activity }) => {
                                         </div>
                                     </div>
 
-                                    <div className="pb-3 border-b border-[#FF2146]/30">
+                                    <div className="pb-3 border-b border-[#C23B69]/30">
                                         <div className="flex gap-2">
-                                            <User className="w-5 h-5 text-[#FF2146]" />
+                                            <User className="w-5 h-5 text-[#C23B69]" />
                                             <div>
                                                 <p className="text-gray-400 text-sm">
                                                     Organized By
@@ -325,7 +325,7 @@ const ActivityShow = ({ activity }) => {
 
                                     <div>
                                         <div className="flex gap-2">
-                                            <Info className="w-5 h-5 text-[#F2AF29]" />
+                                            <Info className="w-5 h-5 text-[#E57A9D]" />
                                             <div>
                                                 <p className="text-gray-400 text-sm">
                                                     Status
@@ -334,7 +334,7 @@ const ActivityShow = ({ activity }) => {
                                                     className={`font-bold ${
                                                         activity.status ===
                                                         "Mendatang"
-                                                            ? "text-[#F2AF29]"
+                                                            ? "text-[#E57A9D]"
                                                             : "text-gray-400"
                                                     }`}
                                                 >
@@ -348,8 +348,8 @@ const ActivityShow = ({ activity }) => {
 
                             {/* Social Links */}
                             {activity.url_ig && (
-                                <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#FF2146]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
-                                    <h3 className="text-xl font-bold text-[#F2AF29] mb-3">
+                                <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#C23B69]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
+                                    <h3 className="text-xl font-bold text-[#E57A9D] mb-3">
                                         Social Media
                                     </h3>
                                     <a
@@ -367,13 +367,13 @@ const ActivityShow = ({ activity }) => {
                                 </div>
                             )}
 
-                            <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#FF2146]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
-                                <h3 className="text-xl font-bold text-[#F2AF29] mb-3">
+                            <div className="bg-gradient-to-br from-[#1A1A1A]/70 to-[#0D0C0C]/80 border border-[#C23B69]/30 rounded-2xl p-6 backdrop-blur-xl shadow-xl">
+                                <h3 className="text-xl font-bold text-[#E57A9D] mb-3">
                                     More Events
                                 </h3>
                                 <button
                                     onClick={() => router.visit("/activity")}
-                                    className="w-full px-4 py-2.5 bg-gradient-to-r from-[#FF2146] to-[#F2AF29] hover:from-[#F2AF29] hover:to-[#FF2146] text-white font-semibold rounded-lg transition-all hover:scale-105"
+                                    className="w-full px-4 py-2.5 bg-gradient-to-r from-[#C23B69] to-[#E57A9D] hover:from-[#E57A9D] hover:to-[#C23B69] text-white font-semibold rounded-lg transition-all hover:scale-105"
                                 >
                                     Browse All Activities
                                 </button>
@@ -387,3 +387,4 @@ const ActivityShow = ({ activity }) => {
 };
 
 export default ActivityShow;
+

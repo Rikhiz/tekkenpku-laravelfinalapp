@@ -11,15 +11,15 @@ const LeaderboardIndex = ({ leaderboardAll = [], authUser, availableSeasons = []
   // Point calculation function based on placement and category
   const calculatePoints = (placement, entrants, category) => {
     const pointTable = {
-      1: { // Major Events
+      1: { // Finals Events
         1: 800, 2: 560, 3: 430, 4: 220, 5: 150,
         7: 120, 9: 70, 13: 50, 17: 30
       },
-      2: { // Minor Events
+      2: { // Prime Events
         1: 400, 2: 300, 3: 220, 4: 150, 5: 70,
         7: 50, 9: 30, 13: 15, 17: 10
       },
-      3: { // Mini Events
+      3: { // Core Events
         1: 220, 2: 150, 3: 100, 4: 70, 5: 50,
         7: 30, 9: 15, 13: 10, 17: 5
       }

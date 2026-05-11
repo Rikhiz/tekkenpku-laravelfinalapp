@@ -11,6 +11,7 @@ import {
     Shield,
     Award,
     UserCheck,
+    Globe,
 } from "lucide-react";
 import { Link, usePage } from "@inertiajs/react";
 import { router } from "@inertiajs/react";
@@ -142,6 +143,13 @@ const AdminHeader = ({ user }) => {
             {/* Footer */}
             <div className="p-4 border-t border-gray-700">
                 <div className="space-y-3">
+                    <Link
+                        href="/"
+                        className="w-full flex items-center gap-3 px-3 py-3 text-gray-300 hover:bg-blue-600 hover:text-white rounded-lg transition-colors"
+                    >
+                        <Globe size={20} />
+                        <span>Back to Website</span>
+                    </Link>
                     
                     <button
                         onClick={handleLogout}

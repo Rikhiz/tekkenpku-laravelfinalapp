@@ -58,7 +58,7 @@ class WelcomeController extends Controller
             ->get()
             ->map(function ($tournament) {
                 $statusColor = $tournament->status === 'Pendaftaran Dibuka'
-                    ? 'bg-[#F2AF29]/20 text-[#F2AF29]'
+                    ? 'bg-[#E57A9D]/20 text-[#E57A9D]'
                     : 'bg-[#69747C]/20 text-[#69747C]';
 
                 $participantCount = $tournament->relasi()->count();
@@ -118,3 +118,4 @@ class WelcomeController extends Controller
         return "https://img.youtube.com/vi/{$videoId}/maxresdefault.jpg";
     }
 }
+
