@@ -98,9 +98,11 @@ class TournamentsController extends Controller
                 'user_id' => $ban->user_id,
                 'user_name' => $ban->user->name ?? 'Unknown',
                 'user_email' => $ban->user->email ?? 'N/A',
-                'major' => $ban->major,
-                'minor' => $ban->minor,
-                'mini' => $ban->mini,
+                'finals' => $ban->finals,
+                'prime' => $ban->prime,
+                'core' => $ban->core,
+                'bit' => $ban->bit,
+                'scout' => $ban->scout,
                 'created_at' => $ban->created_at,
             ];
         });
