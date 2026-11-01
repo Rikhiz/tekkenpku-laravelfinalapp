@@ -35,6 +35,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
         max_pemain: "",
         url_yt: "",
         url_ig: "",
+        instagram_recap_url: "",
         url_startgg: "",
         status: "Pendaftaran Dibuka",
         dojo: "",
@@ -79,6 +80,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                 max_pemain: tournament.max_pemain || "",
                 url_yt: tournament.url_yt || "",
                 url_ig: tournament.url_ig || "",
+                instagram_recap_url: tournament.instagram_recap_url || "",
                 url_startgg: tournament.url_startgg || "",
                 status: tournament.status,
                 dojo: tournament.dojo || "",
@@ -90,6 +92,8 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
             setData("category", 6);
             setData("dojo", "");
             setData("season", "");
+            setData("url_ig", "");
+            setData("instagram_recap_url", "");
         }
         setShowModal(true);
     };
@@ -293,8 +297,10 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                 </div>
 
                                 {(tournament.url_yt ||
-                                    tournament.url_startgg) && (
-                                    <div className="flex space-x-2 mb-4">
+                                    tournament.url_startgg ||
+                                    tournament.instagram_recap_url ||
+                                    tournament.url_ig) && (
+                                    <div className="flex flex-wrap gap-2 mb-4">
                                         {tournament.url_yt && (
                                             <a
                                                 href={tournament.url_yt}
@@ -315,6 +321,28 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                             >
                                                 <ExternalLink className="h-3 w-3 mr-1" />
                                                 Start.gg
+                                            </a>
+                                        )}
+                                        {tournament.url_ig && (
+                                            <a
+                                                href={tournament.url_ig}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center text-xs bg-pink-700 hover:bg-pink-800 text-white px-2 py-1 rounded transition-colors"
+                                            >
+                                                <ExternalLink className="h-3 w-3 mr-1" />
+                                                IG Post
+                                            </a>
+                                        )}
+                                        {tournament.instagram_recap_url && (
+                                            <a
+                                                href={tournament.instagram_recap_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center text-xs bg-pink-500 hover:bg-pink-600 text-white px-2 py-1 rounded transition-colors"
+                                            >
+                                                <ExternalLink className="h-3 w-3 mr-1" />
+                                                IG Recap
                                             </a>
                                         )}
                                     </div>
@@ -628,7 +656,7 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                     )}
                                 </div>
 
-                                {/* Instagram */}
+                                {/* Instagram Post */}
                                 <div>
                                     <label className="block text-xs font-medium text-gray-300 mb-1">
                                         Instagram Post URL
@@ -648,7 +676,34 @@ const AdminTournaments = ({ auth, tournaments, users }) => {
                                         </p>
                                     )}
                                     <p className="mt-1 text-xs text-gray-400">
-                                        Copy Instagram post URL (e.g., https://www.instagram.com/p/DOXgSwKkpgp/)
+                                        URL postingan Instagram turnamen (contoh: https://www.instagram.com/p/DOXgSwKkpgp/)
+                                    </p>
+                                </div>
+
+                                {/* Instagram Recap */}
+                                <div>
+                                    <label className="block text-xs font-medium text-gray-300 mb-1">
+                                        Instagram Recap URL
+                                    </label>
+                                    <input
+                                        type="url"
+                                        value={data.instagram_recap_url}
+                                        onChange={(e) =>
+                                            setData(
+                                                "instagram_recap_url",
+                                                e.target.value
+                                            )
+                                        }
+                                        className="w-full px-2.5 py-1.5 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-white text-sm"
+                                        placeholder="https://www.instagram.com/p/xxx/ atau https://www.instagram.com/reel/xxx/"
+                                    />
+                                    {errors.instagram_recap_url && (
+                                        <p className="mt-1 text-xs text-red-400">
+                                            {errors.instagram_recap_url}
+                                        </p>
+                                    )}
+                                    <p className="mt-1 text-xs text-gray-400">
+                                        URL postingan / reel Instagram recap turnamen (contoh: https://www.instagram.com/reel/xxxxxx/)
                                     </p>
                                 </div>
 

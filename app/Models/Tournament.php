@@ -26,6 +26,7 @@ class Tournament extends Model
         'max_pemain',
         'url_yt',
         'url_ig',
+        'instagram_recap_url',
         'url_startgg',
         'status',
         'tourid',
@@ -48,7 +49,7 @@ class Tournament extends Model
 
     public function galleries()
     {
-        return $this->hasMany(Gallery::class, 'tour_id', 'tourid');
+        return $this->hasMany(Galleries::class, 'tour_id', 'tourid');
     }
 
     public function relasi()

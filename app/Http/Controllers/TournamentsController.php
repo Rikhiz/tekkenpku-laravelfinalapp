@@ -190,11 +190,11 @@ class TournamentsController extends Controller
             'category_bg' => $category['bg'],
             'url_yt' => $tournament->url_yt,
             'url_ig' => $tournament->url_ig,
+            'instagram_recap_url' => $tournament->instagram_recap_url,
             'url_startgg' => $tournament->url_startgg,
             'created_by' => $tournament->creator->name ?? 'Unknown',
             'created_at' => $tournament->created_at,
             'participants' => $participants,
-            'dojo' => $tournament->dojo,
             'dojo' => $dojoFormat,
         ];
 

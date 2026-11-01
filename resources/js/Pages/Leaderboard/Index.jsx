@@ -60,8 +60,20 @@ const LeaderboardIndex = ({
 
     const handlePageChange = (url) => {
         if (url) {
-            router.visit(url);
+            router.visit(url, { preserveState: true, preserveScroll: true });
         }
+    };
+
+    const getPageUrl = (pageNumber) => {
+        const params = new URLSearchParams();
+        if (selectedSeason !== undefined && selectedSeason !== null && selectedSeason !== "") {
+            params.set("season", selectedSeason);
+        }
+        if (board) {
+            params.set("board", board);
+        }
+        params.set("page", pageNumber);
+        return `/leaderboards?${params.toString()}`;
     };
 
     const handlePlayerClick = (playerId) => {
@@ -512,9 +524,7 @@ const LeaderboardIndex = ({
                                                     <button
                                                         onClick={() =>
                                                             handlePageChange(
-                                                                leaderboards.path +
-                                                                    "?page=" +
-                                                                    page
+                                                                getPageUrl(page)
                                                             )
                                                         }
                                                         className={`px-3 md:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm md:text-base ${
@@ -534,9 +544,7 @@ const LeaderboardIndex = ({
                                                 key={page}
                                                 onClick={() =>
                                                     handlePageChange(
-                                                        leaderboards.path +
-                                                            "?page=" +
-                                                            page
+                                                        getPageUrl(page)
                                                     )
                                                 }
                                                 className={`px-3 md:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm md:text-base ${

@@ -32,7 +32,12 @@ class LeaderboardController extends Controller
         } else {
             $leaderboardsQuery->where('total_points', '>', 0)->orderBy('total_points', 'desc');
         }
-        $leaderboards = $leaderboardsQuery->paginate($perPage)->withQueryString();
+        $leaderboards = $leaderboardsQuery
+            ->paginate($perPage)
+            ->appends([
+                'season' => $selectedSeason,
+                'board' => $board,
+            ]);
 
         // Add rank and tournament history to each item
         $leaderboards->getCollection()->transform(function ($item, $key) use ($leaderboards, $selectedSeason) {

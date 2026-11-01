@@ -29,6 +29,13 @@ class AdminTournamentsController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->filled('instagram_recap_url') && !preg_match('~^https?://~i', $request->input('instagram_recap_url'))) {
+            $request->merge(['instagram_recap_url' => 'https://' . $request->input('instagram_recap_url')]);
+        }
+        if ($request->filled('url_ig') && !preg_match('~^https?://~i', $request->input('url_ig'))) {
+            $request->merge(['url_ig' => 'https://' . $request->input('url_ig')]);
+        }
+
         $rules = [
             'name' => 'required|string|max:255',
             'created_by' => 'required|exists:users,id',
@@ -41,7 +48,8 @@ class AdminTournamentsController extends Controller
             'prizepool' => 'nullable|integer',
             'max_pemain' => 'nullable|integer',
             'url_yt' => 'nullable|string|max:255',
-            'url_ig' => 'nullable|string|max:255',
+            'url_ig' => 'nullable|url|max:255',
+            'instagram_recap_url' => 'nullable|url|max:255',
             'url_startgg' => 'nullable|string|max:255',
             'status' => 'required|in:Selesai,Pendaftaran Dibuka',
             'sggid' => 'nullable|integer',
@@ -112,6 +120,13 @@ class AdminTournamentsController extends Controller
     {
         $tournament = Tournament::where('tourid', $id)->firstOrFail();
 
+        if ($request->filled('instagram_recap_url') && !preg_match('~^https?://~i', $request->input('instagram_recap_url'))) {
+            $request->merge(['instagram_recap_url' => 'https://' . $request->input('instagram_recap_url')]);
+        }
+        if ($request->filled('url_ig') && !preg_match('~^https?://~i', $request->input('url_ig'))) {
+            $request->merge(['url_ig' => 'https://' . $request->input('url_ig')]);
+        }
+
         $rules = [
             'name' => 'required|string|max:255',
             'created_by' => 'required|exists:users,id',
@@ -124,7 +139,8 @@ class AdminTournamentsController extends Controller
             'prizepool' => 'nullable|integer',
             'max_pemain' => 'nullable|integer',
             'url_yt' => 'nullable|string|max:255',
-            'url_ig' => 'nullable|string|max:255',
+            'url_ig' => 'nullable|url|max:255',
+            'instagram_recap_url' => 'nullable|url|max:255',
             'url_startgg' => 'nullable|string|max:255',
             'status' => 'required|in:Selesai,Pendaftaran Dibuka',
             'sggid' => 'nullable|integer',

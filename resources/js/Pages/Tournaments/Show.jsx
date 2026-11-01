@@ -16,25 +16,29 @@ import {
 import { router } from "@inertiajs/react";
 
 const TournamentShow = ({ tournament }) => {
-    const instagramRef = useRef(null);
+    const hasAnyInstagram = Boolean(
+        tournament.url_ig || tournament.instagram_recap_url
+    );
 
     // Generate Instagram embed HTML from URL
     const getInstagramEmbed = (url) => {
-        if (!url) return null;
+        if (!url || typeof url !== "string") return null;
 
-        // Extract post ID from various Instagram URL formats
-        let postUrl = url;
+        const trimmed = url.trim();
+        if (!trimmed) return null;
 
-        // Handle different IG URL formats
+        let postUrl = trimmed;
+
+        // Handle different IG URL formats (posts, reels, IGTV)
         if (
-            url.includes("instagram.com/p/") ||
-            url.includes("instagram.com/reel/")
+            trimmed.includes("instagram.com/p/") ||
+            trimmed.includes("instagram.com/reel/") ||
+            trimmed.includes("instagram.com/reels/") ||
+            trimmed.includes("instagram.com/tv/")
         ) {
-            // Clean URL - remove query parameters
-            postUrl = url.split("?")[0];
-
-            // Ensure it ends without trailing slash for consistency
-            postUrl = postUrl.replace(/\/$/, "");
+            postUrl = trimmed.split("?")[0].replace(/\/$/, "");
+        } else if (!trimmed.includes("instagram.com")) {
+            return null;
         }
 
         return `
@@ -42,13 +46,13 @@ const TournamentShow = ({ tournament }) => {
                 class="instagram-media" 
                 data-instgrm-permalink="${postUrl}/?utm_source=ig_embed&utm_campaign=loading"
                 data-instgrm-version="14" 
-                style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                style="background:#0D0C0C; border:0; border-radius:12px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 0 auto; max-width:540px; min-width:320px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
             </blockquote>
         `;
     };
 
     useEffect(() => {
-        if (!tournament.url_ig) return;
+        if (!hasAnyInstagram) return;
 
         const processInstagram = () => {
             if (window.instgrm && window.instgrm.Embeds) {
@@ -63,10 +67,8 @@ const TournamentShow = ({ tournament }) => {
             );
 
             if (existingScript) {
-                // Sudah ada script → cukup proses ulang embed
                 processInstagram();
             } else {
-                // Belum ada → tambahkan script ke body
                 const script = document.createElement("script");
                 script.src = "https://www.instagram.com/embed.js";
                 script.async = true;
@@ -76,23 +78,22 @@ const TournamentShow = ({ tournament }) => {
             }
         };
 
-        // 🧠 Gunakan MutationObserver untuk pastikan DOM <blockquote> sudah siap
-        const observer = new MutationObserver((mutations) => {
+        if (document.querySelector("blockquote.instagram-media")) {
+            loadInstagramScript();
+        }
+
+        const observer = new MutationObserver(() => {
             const hasInstagramBlockquote = !!document.querySelector(
                 "blockquote.instagram-media"
             );
             if (hasInstagramBlockquote) {
-                console.log(
-                    "✅ Instagram blockquote detected, loading embed..."
-                );
                 observer.disconnect();
-                setTimeout(loadInstagramScript, 400); // delay 400ms biar DOM benar-benar siap
+                setTimeout(loadInstagramScript, 300);
             }
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
 
-        // Jalankan fallback kalau observer gagal mendeteksi (misalnya embed langsung ada)
         const fallbackTimer = setTimeout(() => {
             loadInstagramScript();
         }, 800);
@@ -101,7 +102,7 @@ const TournamentShow = ({ tournament }) => {
             clearTimeout(fallbackTimer);
             observer.disconnect();
         };
-    }, [tournament.url_ig]);
+    }, [hasAnyInstagram]);
 
     const formatCurrency = (amount) => {
         if (!amount) return "TBA";
@@ -159,9 +160,13 @@ const TournamentShow = ({ tournament }) => {
         });
     }, [tournament.participants]);
 
-    const instagramEmbedHTML = useMemo(() => {
+    const postEmbedHTML = useMemo(() => {
         return getInstagramEmbed(tournament.url_ig);
     }, [tournament.url_ig]);
+
+    const recapEmbedHTML = useMemo(() => {
+        return getInstagramEmbed(tournament.instagram_recap_url);
+    }, [tournament.instagram_recap_url]);
 
     return (
         <AppLayout>
@@ -295,27 +300,44 @@ const TournamentShow = ({ tournament }) => {
                                     </div>
                                 )}
 
-                            {/* Instagram Embed - Generated from Link */}
-                            {tournament.url_ig && instagramEmbedHTML && (
+                            {/* Instagram Post Embed */}
+                            {tournament.url_ig && postEmbedHTML && (
                                 <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
                                     <h2 className="text-lg md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
                                         <Instagram className="w-5 h-5 md:w-6 md:h-6 text-pink-500" />
                                         Instagram Post
                                     </h2>
-                                    <div
-                                        ref={instagramRef}
-                                        className="flex justify-center items-center"
-                                    >
+                                    <div className="flex justify-center items-center overflow-hidden">
                                         <div
-                                            className="w-full max-w-xl mx-auto"
+                                            className="w-full max-w-xl mx-auto flex justify-center"
                                             dangerouslySetInnerHTML={{
-                                                __html: instagramEmbedHTML,
+                                                __html: postEmbedHTML,
                                             }}
                                         />
                                     </div>
                                     <p className="text-[#69747C] text-xs md:text-sm mt-3 text-center">
-                                        Check out our Instagram for more
-                                        tournament moments
+                                        Tournament Announcement & Updates
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Instagram Recap Embed */}
+                            {tournament.instagram_recap_url && recapEmbedHTML && (
+                                <div className="bg-gradient-to-br from-[#0D0C0C]/90 to-[#69747C]/20 backdrop-blur-xl border border-[#69747C]/30 rounded-xl md:rounded-2xl p-4 md:p-6">
+                                    <h2 className="text-lg md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center gap-2">
+                                        <Instagram className="w-5 h-5 md:w-6 md:h-6 text-pink-500" />
+                                        Instagram Recap
+                                    </h2>
+                                    <div className="flex justify-center items-center overflow-hidden">
+                                        <div
+                                            className="w-full max-w-xl mx-auto flex justify-center"
+                                            dangerouslySetInnerHTML={{
+                                                __html: recapEmbedHTML,
+                                            }}
+                                        />
+                                    </div>
+                                    <p className="text-[#69747C] text-xs md:text-sm mt-3 text-center">
+                                        Tournament Recap & Highlights
                                     </p>
                                 </div>
                             )}
@@ -511,7 +533,22 @@ const TournamentShow = ({ tournament }) => {
                                         >
                                             <Instagram className="w-4 h-4 md:w-5 md:h-5 text-pink-500 flex-shrink-0" />
                                             <span className="text-[#F2F2F2] font-semibold flex-1 text-sm md:text-base">
-                                                View on Instagram
+                                                Instagram Post
+                                            </span>
+                                            <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] group-hover:text-pink-500 transition-colors flex-shrink-0" />
+                                        </a>
+                                    )}
+
+                                    {tournament.instagram_recap_url && (
+                                        <a
+                                            href={tournament.instagram_recap_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-2 md:gap-3 p-2.5 md:p-3 rounded-lg bg-pink-500/10 border border-pink-500/30 hover:bg-pink-500/20 active:scale-95 transition-all duration-300 group"
+                                        >
+                                            <Instagram className="w-4 h-4 md:w-5 md:h-5 text-pink-500 flex-shrink-0" />
+                                            <span className="text-[#F2F2F2] font-semibold flex-1 text-sm md:text-base">
+                                                Instagram Recap
                                             </span>
                                             <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#69747C] group-hover:text-pink-500 transition-colors flex-shrink-0" />
                                         </a>
