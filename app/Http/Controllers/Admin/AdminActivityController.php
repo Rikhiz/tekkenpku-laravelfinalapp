@@ -32,20 +32,27 @@ class AdminActivityController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
             'url_ig' => 'nullable|string|max:255',
-            'image_url' => 'nullable|string|max:255',
             'created_by' => 'required|exists:users,id',
             'alamat' => 'required|string|max:255',
             'desc' => 'nullable|string',
             'status' => 'required|in:Mendatang,Selesai',
             'tanggal_kegiatan' => 'nullable|date',
-        ]);
+        ];
 
-        // 🎯 ubah link Google Drive -> direct link dan simpan ke storage
-        if (!empty($validated['image_url'])) {
-            $validated['image_url'] = $this->handleGoogleDriveImage($validated['image_url']);
+        if ($request->hasFile('image_url')) {
+            $rules['image_url'] = 'image|mimes:jpeg,png,jpg,gif,webp|max:5120';
+        } else {
+            $rules['image_url'] = 'nullable|string|max:255';
+        }
+
+        $validated = $request->validate($rules);
+
+        // 🎯 Proses upload gambar lokal
+        if ($request->hasFile('image_url')) {
+            $validated['image_url'] = $this->handleLocalImageUpload($request->file('image_url'));
         }
 
         Activity::create($validated);
@@ -58,36 +65,41 @@ class AdminActivityController extends Controller
      */
     public function update(Request $request, Activity $activity)
     {
-        $validated = $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
-            'image_url' => 'nullable|string|max:255',
             'url_ig' => 'nullable|string|max:255',
             'created_by' => 'required|exists:users,id',
             'alamat' => 'required|string|max:255',
             'desc' => 'nullable|string',
             'status' => 'required|in:Mendatang,Selesai',
             'tanggal_kegiatan' => 'nullable|date',
-        ]);
+        ];
 
-        // ✅ Hapus file lama kalau ada image baru DAN berbeda dari yang lama
-        if ($request->filled('image_url') && $request->image_url !== $activity->image_url) {
+        if ($request->hasFile('image_url')) {
+            $rules['image_url'] = 'image|mimes:jpeg,png,jpg,gif,webp|max:5120';
+        } else {
+            $rules['image_url'] = 'nullable|string|max:255';
+        }
+
+        $validated = $request->validate($rules);
+
+        // ✅ Hapus file lama kalau ada image baru
+        if ($request->hasFile('image_url')) {
             if ($activity->image_url) {
-                // ambil relative path dari URL lama
-                $oldPath = str_replace(Storage::disk('public')->url(''), '', $activity->image_url);
+                // ambil relative path dari URL lama (bisa format lama atau format baru)
+                $oldPath = str_replace([url('storage/app/public/'), url('storage/')], '', $activity->image_url);
+                $oldPath = ltrim($oldPath, '/');
 
                 if (Storage::disk('public')->exists($oldPath)) {
                     Storage::disk('public')->delete($oldPath);
                 }
             }
 
-            // Jika link baru dari Google Drive → proses download
-            if (str_contains($request->image_url, 'drive.google.com')) {
-                $validated['image_url'] = $this->handleGoogleDriveImage($request->image_url);
-            } else {
-                $validated['image_url'] = $request->image_url;
-            }
+            // Proses upload gambar lokal
+            $validated['image_url'] = $this->handleLocalImageUpload($request->file('image_url'));
         } else {
-            unset($validated['image_url']); // kalau kosong atau sama → jangan overwrite
+            // Jika tidak upload file, jangan ubah URL gambar yang lama
+            unset($validated['image_url']);
         }
 
         $activity->update($validated);
@@ -102,7 +114,8 @@ class AdminActivityController extends Controller
     {
         // Hapus file image jika ada
         if ($activity->image_url) {
-            $oldPath = str_replace(Storage::disk('public')->url(''), '', $activity->image_url);
+            $oldPath = str_replace([url('storage/app/public/'), url('storage/')], '', $activity->image_url);
+            $oldPath = ltrim($oldPath, '/');
             if (Storage::disk('public')->exists($oldPath)) {
                 Storage::disk('public')->delete($oldPath);
             }
@@ -114,37 +127,28 @@ class AdminActivityController extends Controller
     }
 
     /**
-     * Handle Google Drive image download and storage
+     * Handle local image upload and compression
      */
-    private function handleGoogleDriveImage(string $url): ?string
-{
-    if (preg_match('/file\/d\/([^\/]+)/', $url, $matches)) {
-        $fileId = $matches[1];
-        $downloadUrl = "https://drive.google.com/uc?export=download&id=" . $fileId;
-
+    private function handleLocalImageUpload($file): ?string
+    {
         try {
-            $response = Http::get($downloadUrl);
+            $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+            $image = $manager->read($file->getRealPath());
+            $encoded = $image->toWebp(80);
 
-            if ($response->successful()) {
-                $fileContent = $response->body();
-                $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
-                $image = $manager->read($fileContent);
-                $encoded = $image->toWebp(80);
+            // Simpan di folder tournaments seperti instruksi user
+            $filename = 'tournaments/' . Str::random(40) . '.webp';
 
-                $filename = 'activities/' . Str::random(40) . '.webp';
+            // ✅ Simpan file ke storage/app/public/tournaments/
+            Storage::disk('public')->put($filename, $encoded->toString());
 
-                // ✅ Simpan file tetap di storage/app/public/activities/
-                Storage::disk('public')->put($filename, $encoded->toString());
-
-                // ✅ URL untuk database (tambahkan app/public di tengah)
-                return url('storage/app/public/' . $filename);
-            }
+            // ✅ URL standar Laravel melalui symlink public/storage
+            return Storage::disk('public')->url($filename);
         } catch (\Exception $e) {
-            \Log::error("Failed to download Google Drive image (Tournament): " . $e->getMessage());
+            \Log::error("Failed to process activity image: " . $e->getMessage());
         }
-    }
 
-    return null;
-}
+        return null;
+    }
 
 }

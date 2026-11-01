@@ -66,7 +66,10 @@ const AdminActivities = ({ auth, activities, users }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (editingActivity) {
-            put(route("activity.update", editingActivity.slug), {
+            router.post(route("activity.update", editingActivity.slug), {
+                _method: 'put',
+                ...data
+            }, {
                 onSuccess: () => closeModal(),
             });
         } else {
@@ -410,37 +413,25 @@ const AdminActivities = ({ auth, activities, users }) => {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-300 mb-1">
-                                        URL Gambar (Google Drive Link)
+                                        Gambar Activity (Kosongkan jika tidak ingin mengubah)
                                     </label>
                                     <input
-                                        type="text"
-                                        value={data.image_url}
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/webp, image/gif"
                                         onChange={(e) =>
-                                            setData("image_url", e.target.value)
+                                            setData("image_url", e.target.files[0])
                                         }
                                         className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 text-white text-sm"
-                                        placeholder="https://drive.google.com/file/d/..."
                                     />
                                     {errors.image_url && (
                                         <p className="mt-1 text-xs text-red-400">
                                             {errors.image_url}
                                         </p>
                                     )}
-                                    <p className="mt-1 text-xs text-gray-400">
-                                        Paste link Google Drive. Gambar akan
-                                        otomatis didownload dan disimpan.
-                                    </p>
-                                    {data.image_url && (
-                                        <div className="mt-2">
-                                            <img
-                                                src={data.image_url}
-                                                alt="Preview"
-                                                className="w-full h-32 object-cover rounded-lg border border-gray-700"
-                                                onError={(e) =>
-                                                    (e.target.style.display =
-                                                        "none")
-                                                }
-                                            />
+                                    {editingActivity && typeof data.image_url === 'string' && data.image_url && (
+                                        <div className="mt-2 text-xs text-gray-400 flex items-center gap-2">
+                                            <span>Gambar saat ini:</span>
+                                            <img src={data.image_url} alt="Current" className="h-10 rounded border border-gray-600" />
                                         </div>
                                     )}
                                 </div>
